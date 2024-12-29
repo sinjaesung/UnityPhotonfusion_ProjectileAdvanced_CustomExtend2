@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HugeMan_Kaya
+  m_Controller: {fileID: 9100000, guid: 4bde127c46d3c8d48933665c55f88069, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: dd0e64ecc8e6af440b0bb3446e8d07d5,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 5facf7e4cf342c7429dedec2962bc9ce,
+      type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: e56ff228fd05c8a45b20f448ff50ad44,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 62beefcd0a501524bb69dd15d6710c2d,
+      type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: e14ed14afb440d84793efda6a2dba7e3,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 4f09f311e7b9ff443903ede749a35071,
+      type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 49c590fb79dad5c44b79795e617408ea,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 4f09f311e7b9ff443903ede749a35071,
+      type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 9e147e3bf3b9c3240af3005cbcd760b6,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 3d03e04034c82bd45909895558a69172,
+      type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 496e5ab766728e840a94f4b36abbe524,
+      type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 5facf7e4cf342c7429dedec2962bc9ce,
+      type: 3}
