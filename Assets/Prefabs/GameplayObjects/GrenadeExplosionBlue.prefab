@@ -78,9 +78,9 @@ MonoBehaviour:
   _explosionCheckOffset: {x: 0, y: 0.5, z: 0}
   _innerRadius: 1.5
   _outerRadius: 4
-  _innerDamage: 140
-  _outerDamage: 50
-  _canDamageOwner: 1
+  _innerDamage: 800
+  _outerDamage: 600
+  _canDamageOwner: 0
   _despawnDelay: 3
   _effectRoot: {fileID: 0}
 --- !u!114 &-4641811800484251662

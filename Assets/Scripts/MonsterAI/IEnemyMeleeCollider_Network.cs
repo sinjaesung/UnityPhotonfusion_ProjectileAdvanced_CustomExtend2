@@ -101,7 +101,7 @@ namespace Projectiles
                         hitData.Direction = (targetPosition - transform.position).normalized;
                         hitData.Normal = Vector3.up;
                         hitData.Target = target;
-                        hitData.HitType = EHitType.Suicide;
+                        hitData.HitType = EHitType.Explosion;
 
                         HitUtility.ProcessHit(ref hitData);
                     }

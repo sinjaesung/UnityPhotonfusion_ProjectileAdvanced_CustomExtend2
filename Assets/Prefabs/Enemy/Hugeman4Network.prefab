@@ -2488,7 +2488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthRefer: {fileID: 2505497674171303196}
-  DeathTime: 36
+  DeathTime: 70
   VisualRoot: {fileID: 5556748150757781569}
   DeathRoot: {fileID: 4056288760802100708}
   _CurrentHealth: 0
@@ -2504,8 +2504,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a5d59a8dbdf59d49b96104063a3b73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _CurrentHealth: 1400
-  _maxHealth: 1400
+  _CurrentHealth: 21000
+  _maxHealth: 21000
   _headPivot: {fileID: 4427564133401979988}
   _bodyPivot: {fileID: 4427564133401979988}
   _groundPivot: {fileID: 4427564133401979988}

@@ -13,7 +13,11 @@ namespace Projectiles
     {
         // PRIVATE MEMBERS
 
-        [SerializeField] public float attackDamage;
+        [SerializeField] public float _damagePerSecond=20f;
+        [SerializeField] private int _hitsPerSecond = 4;
+
+        [Networked]
+        private TickTimer _cooldown { get; set; }
         public HashSet<IHitTarget> _targets = new();
 
         public GameObject ImpactPrefab;
@@ -24,10 +28,12 @@ namespace Projectiles
         private EInputButton _fireButton = EInputButton.Fire;
 
         public NetworkButtons Buttons;
-       // public NetworkButtons PressedButtons;
+        // public NetworkButtons PressedButtons;
 
+        public GameObject TrailRender;
         [Networked] private TickTimer AttackTimer { get; set; }
         public bool IsAttackTime => !(AttackTimer.ExpiredOrNotRunning(Runner));
+        public float attackcooldown = 1f;
 
         public Transform motherCharacter;
         /* public bool CanFire()
@@ -49,11 +55,16 @@ namespace Projectiles
         }
         public override void FixedUpdateNetwork()
         {
-            if (attackDamage <= 0f)
+            if (_damagePerSecond <= 0f)
                 return;
 
             // Remove invalid targets
             _targets.RemoveWhere(t => t.IsActive == false);
+
+            if (_cooldown.ExpiredOrNotRunning(Runner) == true)
+            {
+                Fire();
+            }
 
             ProcessInput();
         }
@@ -89,18 +100,19 @@ namespace Projectiles
                     if (!IsAttackTime)
                     {
                         Debug.Log("PlayerMelee 근접공격>>");
+                        TrailRender.SetActive(true);
 
-                        AttackTimer = TickTimer.CreateFromSeconds(Runner, 0.6f);
+                        AttackTimer = TickTimer.CreateFromSeconds(Runner, attackcooldown);
 
                         if (anim)
                             anim.SetBool("Shooting", true);
-                        Invoke(nameof(ShootingBooleanStatus), 0.6f);
+                        Invoke(nameof(ShootingBooleanStatus), attackcooldown);
                     }
                     else
                     {
                         Debug.Log("PlayerMelee AttackTime 적용 중에는 공격제한>>");
                     }
-                }             
+                }            
             }         
         }
         private void ShootingBooleanStatus()
@@ -108,77 +120,63 @@ namespace Projectiles
             if (anim)
                 anim.SetBool("Shooting", false);
 
+            TrailRender.SetActive(false);
+
             AttackTimer = TickTimer.None;
-        }
-        public override void Render()
-        {
-            //_AttackAudioEffects.PlaySound(_AttackSound, EForceBehaviour.ForceAny);
         }
         // MONOBEHAVIOUR
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponentInParent<IHitTarget>() != null && IsAttackTime)
-            {
-                var target_obj = other.GetComponentInParent<IHitTarget>() as MonoBehaviour;
-                //if (target_obj.CompareTag("Player"))
-                //{
-                if (target_obj.transform != motherCharacter.transform)
-                {
-                    Instantiate(ImpactPrefab.transform, other.transform.position, Quaternion.identity);
-                }
-            }
-
             if (HasStateAuthority == false)
                 return;
 
             var target = other.GetComponentInParent<IHitTarget>();
-            if (target != null && IsAttackTime)
+            if (target != null)
             {
-                var target_obj = target as MonoBehaviour;
-                //if (target_obj.CompareTag("Player"))
-                //{
-                if(target_obj.transform != motherCharacter.transform) { 
-                    _targets.Add(target);
-
-                    var targetPosition = (target as MonoBehaviour).transform.position;
-                    float damage = (attackDamage);
-                    Debug.Log("PlayerMelee damageSwing Targets>>" + (target as MonoBehaviour).transform.name + ">damage:" + damage);
-                    //AudioManager.PlayAndFollow("Hit", referMother.transform, AudioManager.MixerTarget.SFX);
-                    //_AttackAudioEffects.PlaySound(_AttackSound, EForceBehaviour.ForceAny);
-
-                    HitData hitData = new HitData();
-                    hitData.Action = EHitAction.Damage;
-                    hitData.Amount = damage;
-                    hitData.Position = targetPosition;
-                    hitData.InstigatorRef = Object.InputAuthority;
-                    hitData.Direction = (targetPosition - transform.position).normalized;
-                    hitData.Normal = Vector3.up;
-                    hitData.Target = target;
-                    hitData.HitType = EHitType.Suicide;
-
-                    HitUtility.ProcessHit(ref hitData);
-
-                }
-                else
-                {
-                    Debug.Log("PlayerMelee damageSwing Targets>>" + (target as MonoBehaviour).transform.name + ">자기자신인경우는 제외" );
-                }
-
+                _targets.Add(target);
             }
+ 
         }
         private void OnTriggerExit(Collider other)
         {
             if (HasStateAuthority == false)
                 return;
 
-            /*  var target = other.GetComponentInParent<IHitTarget>();
+              var target = other.GetComponentInParent<IHitTarget>();
               if (target != null)
               {
                   _targets.Remove(target);
-              }*/
+              }
         }
 
-        // PRIVATE METHODS
+        private void Fire()
+        {
+            //Restart the hit interval
+            _cooldown = TickTimer.CreateFromSeconds(Runner, 1f / _hitsPerSecond);
+
+            //if (IsAttackTime)
+            //{
+                float damage = _damagePerSecond / _hitsPerSecond;
+                foreach (var target in _targets)
+                {
+                    if((target as MonoBehaviour).transform != motherCharacter){
+                        var targetPosition = (target as MonoBehaviour).transform.position;
+
+                        HitData hitData = new HitData();
+                        hitData.Action = EHitAction.Damage;
+                        hitData.Amount = damage;
+                        hitData.Position = targetPosition;
+                        hitData.InstigatorRef = Object.InputAuthority;
+                        hitData.Direction = (targetPosition - transform.position).normalized;
+                        hitData.Normal = Vector3.up;
+                        hitData.Target = target;
+                        hitData.HitType = EHitType.Explosion;
+
+                        HitUtility.ProcessHit(ref hitData);
+                    }   
+                }
+            //}
+        }
     }
 }

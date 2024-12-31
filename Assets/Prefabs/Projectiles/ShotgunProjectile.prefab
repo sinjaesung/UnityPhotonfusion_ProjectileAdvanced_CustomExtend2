@@ -47,7 +47,7 @@ MonoBehaviour:
   _impactEffectPrefab: {fileID: 5908345270883229263, guid: 9d0eab054929ee94ca3eae5cfc299cfa, type: 3}
   _impactEffectReturnTime: 2
   _impactObjectPrefab: {fileID: 0}
-  _damage: 9
+  _damage: 80
   _hitType: 1
   _hitMask:
     serializedVersion: 2

@@ -48,13 +48,13 @@ MonoBehaviour:
   _impactEffectPrefab: {fileID: 1232804221357758, guid: b1ede0eef436590479b9282c69418d53, type: 3}
   _impactEffectReturnTime: 2
   _impactObjectPrefab: {fileID: 0}
-  _startSpeed: 60
+  _startSpeed: 34
   _length: 1
   _maxDistance: 200
   _maxTime: 5
   _interpolationDuration: 0.3
   _interpolationEase: 3
-  _damage: 25
+  _damage: 340
   _hitType: 1
   _hitMask:
     serializedVersion: 2

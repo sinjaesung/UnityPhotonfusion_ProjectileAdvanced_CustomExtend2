@@ -54,7 +54,7 @@ MonoBehaviour:
   _maxTime: 5
   _interpolationDuration: 0.3
   _interpolationEase: 3
-  _damage: 50
+  _damage: 400
   _homingPosition: 3
   _hitType: 1
   _hitMask:

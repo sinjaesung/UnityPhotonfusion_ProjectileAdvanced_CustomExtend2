@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _CurrentHealth: 0
-  _maxHealth: 3200
+  _maxHealth: 9600
   _headPivot: {fileID: 7136782717251966427}
   _bodyPivot: {fileID: 6023693924253656717}
   _groundPivot: {fileID: 4327114067154968929}
