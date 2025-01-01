@@ -78,15 +78,15 @@ namespace Projectiles
             var deathEffect = Runner.InstantiateInRunnerScene(_deathEffectPrefab);
             deathEffect.transform.position = transform.position + Vector3.up;
 
-            var flyingCap = Runner.InstantiateInRunnerScene(_flyingCapPrefab);
+            /*var flyingCap = Runner.InstantiateInRunnerScene(_flyingCapPrefab);
             flyingCap.transform.SetPositionAndRotation(_capTransform.position, _capTransform.rotation);
 
             var direction = (hit.Direction + 2f * Vector3.up).normalized;
-            flyingCap.AddForceAtPosition(direction * _capImpulse, flyingCap.transform.position - hit.Direction * 0.2f, ForceMode.Impulse);
+            flyingCap.AddForceAtPosition(direction * _capImpulse, flyingCap.transform.position - hit.Direction * 0.2f, ForceMode.Impulse);*/
 
             if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
             {
-                Runner.AddVisibilityNodes(flyingCap.gameObject);
+                //Runner.AddVisibilityNodes(flyingCap.gameObject);
                 Runner.AddVisibilityNodes(deathEffect.gameObject);
             }
         }

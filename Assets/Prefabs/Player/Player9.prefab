@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ActiveAgent: {fileID: 0}
-  _agentPrefab: {fileID: 1899758451409255420, guid: f75f56b40daa2f1479055ae81a548cf5, type: 3}
+  _agentPrefab: {fileID: 3816156266202698792, guid: e5f4660d69b661848afb45fbcee5afb1, type: 3}
 --- !u!114 &1966818730484752523
 MonoBehaviour:
   m_ObjectHideFlags: 0

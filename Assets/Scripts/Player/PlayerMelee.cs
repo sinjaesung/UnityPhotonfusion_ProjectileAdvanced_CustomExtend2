@@ -61,17 +61,17 @@ namespace Projectiles
             // Remove invalid targets
             _targets.RemoveWhere(t => t.IsActive == false);
 
+            ProcessInput();
+
             if (_cooldown.ExpiredOrNotRunning(Runner) == true)
             {
                 Fire();
             }
-
-            ProcessInput();
         }
         private void ProcessInput()
         {
-            if (IsProxy == true)
-                return;
+            /*if (IsProxy == true)
+                return;*/
 
             /* if (CurrentWeapon == null)
                  return;*/
@@ -126,7 +126,7 @@ namespace Projectiles
         }
         // MONOBEHAVIOUR
 
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerStay(Collider other)
         {
             if (HasStateAuthority == false)
                 return;
@@ -136,7 +136,7 @@ namespace Projectiles
             {
                 _targets.Add(target);
             }
- 
+            Debug.Log("PlayerMelee targetsCount>>" + _targets.Count);
         }
         private void OnTriggerExit(Collider other)
         {
@@ -155,8 +155,8 @@ namespace Projectiles
             //Restart the hit interval
             _cooldown = TickTimer.CreateFromSeconds(Runner, 1f / _hitsPerSecond);
 
-            //if (IsAttackTime)
-            //{
+            if (IsAttackTime)
+            {
                 float damage = _damagePerSecond / _hitsPerSecond;
                 foreach (var target in _targets)
                 {
@@ -176,7 +176,7 @@ namespace Projectiles
                         HitUtility.ProcessHit(ref hitData);
                     }   
                 }
-            //}
+            }
         }
     }
 }
