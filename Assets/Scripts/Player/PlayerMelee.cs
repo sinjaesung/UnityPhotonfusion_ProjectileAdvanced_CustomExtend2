@@ -63,6 +63,7 @@ namespace Projectiles
             _targets.RemoveWhere(t => t.IsActive == false);
 
             ProcessInput();
+            ShootingBooleanStatus();
 
             if (_cooldown.ExpiredOrNotRunning(Runner) == true)
             {
@@ -107,7 +108,7 @@ namespace Projectiles
 
                         if (anim)
                             anim.SetBool("Shooting", true);
-                        Invoke(nameof(ShootingBooleanStatus), attackcooldown);
+                        //Invoke(nameof(ShootingBooleanStatus), attackcooldown);
                     }
                     else
                     {
@@ -118,12 +119,30 @@ namespace Projectiles
         }
         private void ShootingBooleanStatus()
         {
-            if (anim)
-                anim.SetBool("Shooting", false);
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Shooting")==true)
+            {
+                //원하는 애니메이션이라면 플레이 중인지 체크
+                float animTime = anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+                if (animTime == 0)
+                {
+                    Debug.Log("PlayerMelee ShootingBooleanStatus>>플레이중이아님");
+                }
+                if(animTime >0 && animTime < 1.0f)
+                {
+                    Debug.Log("PlayerMelee ShootingBooleanStatus>>플레이중임");
+                }
+                else if(animTime >= 1.0f)
+                {
+                    Debug.Log("PlayerMelee ShootingBooleanStatus>>애니메이션종료");
 
-            TrailRender.SetActive(false);
+                    if (anim)
+                        anim.SetBool("Shooting", false);
 
-            AttackTimer = TickTimer.None;
+                    TrailRender.SetActive(false);
+
+                    AttackTimer = TickTimer.None;
+                }
+            }     
         }
         // MONOBEHAVIOUR
 
