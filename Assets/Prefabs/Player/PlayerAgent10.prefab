@@ -8946,6 +8946,7 @@ MonoBehaviour:
   TrailRender: {fileID: 3760092605035913828}
   attackcooldown: 0.6
   motherCharacter: {fileID: 6098683004236170738}
+  motherAgent: {fileID: 3029447407670511867}
 --- !u!4 &8741688422710748666 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6881250649753421487, guid: 7d1d8ecd0eb42834f81308028f70d7f7, type: 3}

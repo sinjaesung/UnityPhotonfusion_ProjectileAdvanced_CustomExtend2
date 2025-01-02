@@ -12031,5 +12031,6 @@ MonoBehaviour:
   anim: {fileID: 5406686129269749130}
   _fireButton: 0
   TrailRender: {fileID: 9211915139507680853}
-  attackcooldown: 1
+  attackcooldown: 1.2
   motherCharacter: {fileID: 7601717886700745415}
+  motherAgent: {fileID: 8387748513226068308}

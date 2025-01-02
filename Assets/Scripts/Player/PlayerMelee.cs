@@ -28,7 +28,7 @@ namespace Projectiles
         private EInputButton _fireButton = EInputButton.Fire;
 
         public NetworkButtons Buttons;
-        // public NetworkButtons PressedButtons;
+        public NetworkButtons PressedButtons;
 
         public GameObject TrailRender;
         [Networked] private TickTimer AttackTimer { get; set; }
@@ -36,6 +36,7 @@ namespace Projectiles
         public float attackcooldown = 1f;
 
         public Transform motherCharacter;
+        public PlayerAgent motherAgent;
         /* public bool CanFire()
          {
              if(IsBusy == true)
@@ -91,11 +92,11 @@ namespace Projectiles
             if (GetInput(out GameplayInput input)){
 
                 Buttons = input.Buttons;
-                //PressedButtons = input.Buttons.GetPressed(_agent.Input.PreviousButtons);
+                PressedButtons = input.Buttons.GetPressed(motherAgent.Input.PreviousButtons);
 
                 // _agent.Health.StopImmortality();
 
-                if (Buttons.IsSet(_fireButton))
+                if (/*Buttons.IsSet(_fireButton)*/PressedButtons.IsSet(_fireButton))
                 {
                     if (!IsAttackTime)
                     {

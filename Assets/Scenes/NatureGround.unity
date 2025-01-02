@@ -2093,6 +2093,10 @@ PrefabInstance:
       value: Terrain1
       objectReference: {fileID: 0}
     - target: {fileID: 1442314865947204076, guid: 101d3f2d6f9a8db4eb17538f6fa96471, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442314865947204076, guid: 101d3f2d6f9a8db4eb17538f6fa96471, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
