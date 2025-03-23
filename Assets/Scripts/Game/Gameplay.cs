@@ -32,6 +32,8 @@ namespace Projectiles
 
             var playerRef = player.Object.InputAuthority;
 
+            Debug.Log("GamePlay Join Only HasStateAuthority>>");
+
             if (Players.ContainsKey(playerRef) == true)
             {
                 Debug.LogError($"Player {playerRef} already joined");
@@ -47,6 +49,8 @@ namespace Projectiles
         {
             if (HasStateAuthority == false)
                 return;
+
+            Debug.Log("GamePlay Leave Only HasStateAuthority>>");
 
             if (Players.ContainsKey(player.Object.InputAuthority) == false)
                 return;
@@ -75,9 +79,10 @@ namespace Projectiles
             {
                 var request = _spawnRequests[i];
 
+                Debug.Log(i + "| GamePlay FixedUpdateNetwork spawnRequest" + request.Tick + "/" + currentTick);
                 if (request.Tick > currentTick)
                     continue;
-
+                Debug.Log(i + "| GamePlay FixedUpdateNetwork spawnRequest" + request.Tick + "<=" + currentTick);
                 _spawnRequests.RemoveAt(i);
 
                 if (request.Player == null || request.Player.Object == null)
@@ -86,6 +91,7 @@ namespace Projectiles
                 if (Players.ContainsKey(request.Player.Object.InputAuthority) == false)
                     continue; // Player left gameplay
 
+                Debug.Log(i + "| GamePlay FixedUpdateNetwork SpawnPlayerAgent" + request.Player.transform.name);
                 SpawnPlayerAgent(request.Player);
             }
         }
@@ -100,16 +106,19 @@ namespace Projectiles
 
         protected virtual void OnPlayerJoined(Player player)
         {
+            Debug.Log("GamePlay OnPlayerJoined>>" + player.transform.name);
             SpawnPlayerAgent(player);
         }
 
         protected virtual void OnPlayerLeft(Player player)
         {
+            Debug.Log("GamePlay OnPlayerLeft>>" + player.transform.name);
             DespawnPlayerAgent(player);
         }
 
         protected virtual void OnPlayerDeath(Player player)
         {
+            Debug.Log("GamePlay OnPlayerDeath AddSpawnRequest>>" + player.transform.name);
             AddSpawnRequest(player, 3f);
         }
 
@@ -151,6 +160,7 @@ namespace Projectiles
         {
             int delayTicks = Mathf.RoundToInt(Runner.TickRate * spawnDelay);
 
+            Debug.Log("GamePlay AddSpawnRequest" + player.transform.name + ">delayTicks" + delayTicks);
             _spawnRequests.Add(new SpawnRequest()
             {
                 Player = player,

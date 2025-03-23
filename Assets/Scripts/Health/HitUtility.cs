@@ -100,6 +100,8 @@ namespace Projectiles
             hitData.InstigatorRef = instigatorRef;
             hitData.HitType = hitType;
 
+            Debug.Log("HitUtility ProcessHit>>"+hitType);
+
             return ProcessHit(ref hitData);
         }
 
@@ -150,6 +152,7 @@ namespace Projectiles
         {
             hitData.Target.ProcessHit(ref hitData);
 
+            Debug.Log("HitUtility ProcessHit Direct>>");
             // For local debug targets we show hit feedback immediately
             // if (hitData.Instigator != null && hitData.Target is Health == false)
             // {

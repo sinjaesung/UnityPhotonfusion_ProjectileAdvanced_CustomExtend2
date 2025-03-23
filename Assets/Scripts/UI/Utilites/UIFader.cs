@@ -51,6 +51,7 @@ namespace Projectiles.UI
 
                     _startValue = _targetValue;
                     _targetValue = previousStart;
+                    Debug.Log("UIFader _isFinished pingpong>>" + _startValue + ">" + _targetValue);
                     _time = 0f;
                     _isFinished = false;
                 }
@@ -58,6 +59,7 @@ namespace Projectiles.UI
                 {
                     _time = 0f;
                     _isFinished = false;
+                    Debug.Log("UIFader _Restart time reset>>");
                 }
                 else
                 {
@@ -74,6 +76,8 @@ namespace Projectiles.UI
             }
 
             float progress = _time > 0f ? Ease.Get(_time / Duration) : 0f;
+            Debug.Log("UIFader CanvasGroup alpha" + _startValue + ">>" + _targetValue + ",progress:" + progress);
+            Debug.Log("UIFader CanvasGroup alpha value" + _startValue + ">>" + Mathf.Lerp(_startValue, _targetValue, progress));
             CanvasGroup.alpha = Mathf.Lerp(_startValue, _targetValue, progress);
         }
 

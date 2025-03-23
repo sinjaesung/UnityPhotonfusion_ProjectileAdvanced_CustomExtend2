@@ -71,6 +71,8 @@ namespace Projectiles
             if (HasStateAuthority == true)
                 return;
 
+            Debug.Log("NetworkObjectBuffer Render Not HasStateAuthority>>");
+
             for (int i = 0; i < _bufferSize; i++)
             {
                 var networkInstance = _buffer[i];

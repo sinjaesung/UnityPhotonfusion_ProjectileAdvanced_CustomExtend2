@@ -72,6 +72,8 @@ namespace Projectiles.UI
 
             _isSelected = value;
 
+            Debug.Log("UIListItem SetIsSelected" + value);
+
             _selectedGroup.SetVisibility(value);
             _deselectedGroup.SetVisibility(value == false);
 

@@ -49,6 +49,7 @@ namespace Projectiles
 
             if (HasStateAuthority == true)
             {
+                Debug.Log("Explosion Spawned HasStateAuthority Only Explode>>");
                 Explode();
             }
 
@@ -59,6 +60,7 @@ namespace Projectiles
         {
             if (HasStateAuthority == false)
                 return;
+            Debug.Log("Explosion FixedUpdateNetwork HasStateAuthority Only Execute>>");
             if (_despawnTimer.Expired(Runner) == false)
                 return;
 
@@ -77,9 +79,9 @@ namespace Projectiles
             var hitOptions = HitOptions.IncludePhysX;
             if (_canDamageOwner == false)
             {
-                hitOptions |= HitOptions.IgnoreInputAuthority;
+                hitOptions |= HitOptions.IgnoreInputAuthority;//이 개체의 Owner에게 데미지를 주는지여부
             }
-
+            Debug.Log("Explosion Explode Object.InputAuthority" + Object.InputAuthority.PlayerId);
             int count = Runner.LagCompensation.OverlapSphere(position, _outerRadius, Object.InputAuthority, hits, _targetMask, hitOptions);
 
             bool damageFalloff = _innerRadius < _outerRadius && _innerDamage != _outerDamage;
@@ -101,9 +103,13 @@ namespace Projectiles
                 float distance = direction.magnitude;
                 direction /= distance; // Normalize
 
+                Debug.Log(i + "| Explosion Explode" + hitTarget);
+
                 // Check if direction to the hitbox is not obstructed
                 if (Runner.GetPhysicsScene().Raycast(position, direction, distance, _blockingMask) == true)
+                {
                     continue;
+                }
 
                 if (hitRootID != 0)
                 {
@@ -120,6 +126,7 @@ namespace Projectiles
                 hit.Point = hit.GameObject.transform.position;
                 hit.Normal = -direction;
 
+                Debug.Log(i + "| Explosion Explode Object.InputAuthority, direction,damage, _hitType" + Object.InputAuthority + ","+ direction+","+damage+","+ _hitType);
                 HitUtility.ProcessHit(Object.InputAuthority, direction, hit, damage, _hitType);
             }
 
@@ -131,6 +138,8 @@ namespace Projectiles
         {
             if (Runner.Mode == SimulationModes.Server)
                 return;
+
+            Debug.Log("Explosion ShowEffect RunnerMode>>" + Runner.Mode);
 
             if (_effectRoot != null)
             {

@@ -36,6 +36,7 @@ namespace Projectiles
 
         private void OnHitTaken(HitData hitData)
         {
+            Debug.Log("OnHitTaken>>공격을 받았을떄>>" + transform.name);
             if (_animation != null)
             {
                 var clip = hitData.IsFatal == true ? _fatalHitClip : _hitClip;

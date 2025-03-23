@@ -35,6 +35,8 @@ namespace Projectiles.UI
             {
                 float alpha = Mathf.Lerp(0, 1f, hit.Amount / 20f);
 
+                Debug.Log("UIScreenEfects OnHitTaken>>" + hit.Amount+">>"+alpha);
+
                 ShowHit(_hitGroup, alpha);
                 GameUI.PlaySound(_hitSound, EForceBehaviour.ForceAny);
 

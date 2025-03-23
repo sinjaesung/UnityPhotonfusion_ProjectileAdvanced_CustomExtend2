@@ -113,12 +113,14 @@ namespace Projectiles.UI
 
         private void OnHitPerformed(HitData hitData)
         {
+            Debug.Log("UIGameplayView OnHitPerformed Health.HitPerformed crosshair,hitnumbers hitperformed>>");
             _crosshair.HitPerformed(hitData);
             _hitNumbers.HitPerformed(hitData);
         }
 
         private void OnHitTaken(HitData hitData)
         {
+            Debug.Log("UIGameplayView OnHitTaken screenEffects OnHitTaken>>");
             _screenEffects.OnHitTaken(hitData);
         }
 

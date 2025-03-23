@@ -47,6 +47,7 @@ namespace Projectiles
             DataBuffer.Set(dataIndex, data);
 
             _dataCount++;
+            Debug.Log("NetworkDataBuffer AddData _datacount>>" + _dataCount);
         }
 
         // NetworkBehaviour INTERFACE
@@ -54,6 +55,7 @@ namespace Projectiles
         public override void Spawned()
         {
             _viewCount = _dataCount;
+            Debug.Log("NetworkDataBuffer Spawned>>" + _viewCount);
 
             _dataBufferReader = GetArrayReader<TData>(nameof(DataBuffer));
             _dataCountReader = GetPropertyReader<int>(nameof(_dataCount));
@@ -95,6 +97,7 @@ namespace Projectiles
 
             int bufferLength = DataBuffer.Length;
 
+            Debug.Log("NetworkDataBufferRender If our predicted views were not confirmed by the server, discard them" + fromDataCount + "<" + _viewCount);
             // If our predicted views were not confirmed by the server, discard them
             for (int i = fromDataCount; i < _viewCount; i++)
             {
@@ -105,7 +108,7 @@ namespace Projectiles
                 ReturnEntry(viewEntry, true);
                 _views.Remove(i);
             }
-
+            Debug.Log("NetworkDataBufferRender Let's spawn missing viewsm" + _viewCount + "<" + fromDataCount);
             // Let's spawn missing views
             for (int i = _viewCount; i < fromDataCount; i++)
             {
@@ -148,7 +151,7 @@ namespace Projectiles
                 }
                 else
                 {
-                    Debug.Log("NetworkDataBufferRender pair.Key < minDataKey" + pair.Key + ">=" + bufferLength);
+                    Debug.Log("NetworkDataBufferRender pair.Key < minDataKey" + pair.Key + "<" + minDataKey);
 
                     // Use last data to Render when there are no data available in the buffer
                     view.Render(ref pair.Value.LastData, ref pair.Value.LastData, 0f);

@@ -85,6 +85,7 @@ namespace Projectiles
             var interpolator = new NetworkBehaviourBufferInterpolator(this);
             int hitCount = interpolator.Int(nameof(_hitCount));
 
+            Debug.Log("Health Render UpdateVisibleHits hitCount>>" + hitCount + "," + transform.name);
             UpdateVisibleHits(hitCount);
         }
 
@@ -93,6 +94,7 @@ namespace Projectiles
             InvokeWeavedCode();
             base.CopyBackingFieldsToState(firstTime);
 
+            Debug.Log("Health CopyBackingFieldsToState>>" + firstTime);
             CurrentHealth = _maxHealth;
         }
 
@@ -107,6 +109,7 @@ namespace Projectiles
 
         void IHitTarget.ProcessHit(ref HitData hitData)
         {
+            Debug.Log("Health ProcessHit>>" + hitData);
             ApplyHit(ref hitData);
 
             if (hitData.Amount == 0)
@@ -120,6 +123,7 @@ namespace Projectiles
             if (HasStateAuthority == true)
             {
                 // On state authority we fire events immediately
+                Debug.Log("Health ProcessHit HasStateAuthority==true only>>OnHitTaken()"+transform.name);
                 OnHitTaken(ref hitData);
             }
         }
@@ -130,6 +134,7 @@ namespace Projectiles
         {
             if (hitData.Amount > 0 && hitData.Target != (IHitTarget)this && Runner.IsResimulation == false)
             {
+                Debug.Log("Health HitPerformed>>" + transform.name);
                 HitPerformed?.Invoke(hitData);
             }
         }
@@ -168,6 +173,7 @@ namespace Projectiles
             };
 
             int hitIndex = _hitCount % _hits.Length;
+            Debug.Log("Health ApplyHit" + transform.name+">hitIndex:"+hitIndex);
             _hits.Set(hitIndex, hit);
 
             _hitCount++;
@@ -203,6 +209,8 @@ namespace Projectiles
             int bufferLength = _hits.Length;
             int oldestValidHit = hitCount - bufferLength;
 
+            Debug.Log("UpdateVisibleHits onlyClient bufferLength,hitcount-bufferLength" + bufferLength + "," + hitCount+"-"+bufferLength);
+            Debug.Log("UpdateVisibleHits onlyClient transform.name Mathf.Max(_visibleHitCount, oldestValidHit)" + transform.name+">>"+ Mathf.Max(_visibleHitCount, oldestValidHit));
             for (int i = Mathf.Max(_visibleHitCount, oldestValidHit); i < hitCount; i++)
             {
                 int hitIndex = i % bufferLength;
@@ -220,6 +228,8 @@ namespace Projectiles
                     IsFatal = hit.IsFatal,
                 };
 
+                Debug.Log(i + "UpdateVisibleHits hitData onlyClient OnHitTaken 타깃이 자기자신이고,다른존재에게 맞는경우>>"+hitIndex+",맞는대상:"+transform.name+",때리는대상:"+hit.Instigator.AsIndex);
+
                 OnHitTaken(ref hitData);
             }
 
@@ -232,12 +242,15 @@ namespace Projectiles
             // to be synchronized over network as well (e.g. when spectating other players)
             if (hitData.InstigatorRef == Context.Runner.LocalPlayer)
             {
+                Debug.Log("hitData InstigatorRef == Context.Runner.LocalPlayer(공격자가 지금 플레이어자신인경우:HasStateAuthority>>)"
+                    + hitData.InstigatorRef.AsIndex + "==" + Context.Runner.LocalPlayer.AsIndex);
                 var instigator = hitData.Instigator;
 
                 if (instigator == null)
                 {
                     var playerObject = Runner.GetPlayerObject(hitData.InstigatorRef);
                     var agent = playerObject != null ? playerObject.GetComponent<Player>().ActiveAgent : null;
+                    Debug.Log("HitData 공격자 HasStateAuthority instigator HitPerformed>>" + playerObject.transform.name);
 
                     instigator = agent != null ? agent.Health : null;
                 }
@@ -247,7 +260,7 @@ namespace Projectiles
                     instigator.HitPerformed(hitData);
                 }
             }
-
+            Debug.Log("HitData OnHitTaken(Health소유자가 다른개체에게 맞는경우>>" + transform.name);
             HitTaken?.Invoke(hitData);
 
             if (hitData.IsFatal == true)

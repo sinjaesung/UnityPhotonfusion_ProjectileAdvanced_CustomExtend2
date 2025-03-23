@@ -24,6 +24,7 @@ namespace Projectiles.UI
 
         public void HitPerformed(HitData hitData)
         {
+            Debug.Log("UICrossHair HitPerformed>>");
             PlayEffect(_hitPerformedSound);
 
             DOTween.Kill(_hitPerformedGroup);

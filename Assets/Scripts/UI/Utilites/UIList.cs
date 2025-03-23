@@ -44,14 +44,17 @@ namespace Projectiles.UI
 
             if (_selection >= _dataCount)
             {
+                Debug.Log("UIList Refresh _selection >= _dataCount SetSelection>>" +( _allowDeselection == false && _dataCount > 0 ? 0 : -1));
                 SetSelection(_allowDeselection == false && _dataCount > 0 ? 0 : -1, notifySelection, true);
             }
             else if (_selection < 0 && _allowDeselection == false && _dataCount > 0)
             {
+                Debug.Log("UIList Refresh _selection < 0 => SetSelection(0,notifySelection,true)");
                 SetSelection(0, notifySelection, true);
             }
             else
             {
+                Debug.Log("UIList Refresh normal Selection"+_selection);
                 SetSelection(_selection, false, true);
             }
         }
@@ -88,6 +91,7 @@ namespace Projectiles.UI
         {
             if (_dataCount == 0)
             {
+                Debug.Log("UIList _dataCount==0 Awake");
                 _itemInstance.SetActive(false);
             }
         }
@@ -110,15 +114,18 @@ namespace Projectiles.UI
             }
 
             _selection = selection;
+            Debug.Log("UIList SetSelection>>" + selection);
 
             for (int i = 0; i < _dataCount; i++)
             {
+                Debug.Log(i+"UIList SetSelection update selected");
                 var item = _items[i];
                 item.IsSelected = item.Id == _selection;
             }
 
             if (notify == true)
             {
+                Debug.Log("UIList SetSelection notify true SelectionChanged Invoke>>"+ _selection);
                 SelectionChanged?.Invoke(_selection);
             }
         }
@@ -134,6 +141,7 @@ namespace Projectiles.UI
 
                 newItem.Id = i;
 
+                Debug.Log(i + "UIList UpdateItems _items Add");
                 if (selectable == true)
                 {
                     newItem.Clicked -= OnItemClicked;
@@ -149,11 +157,13 @@ namespace Projectiles.UI
 
                 if (i < _dataCount)
                 {
+                    Debug.Log(i + "| UIList UpdateItems i < _dataCount UpdateContent");
                     UpdateContent?.Invoke(i, item.Content);
                     item.SetActive(true);
                 }
                 else
                 {
+                    Debug.Log(i + "| UIList UpdateItems i >= _dataCount UpdateContent");
                     item.SetActive(false);
                 }
             }

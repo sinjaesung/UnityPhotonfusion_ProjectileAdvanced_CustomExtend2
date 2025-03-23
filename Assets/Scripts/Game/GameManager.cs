@@ -42,7 +42,7 @@ namespace Projectiles
             }
 
             var charIndex = (playerRef.AsIndex-1)%11;
-            Debug.Log("Join CharIndex>>" + charIndex);//0,1,2,3,4,5,6,7,8,9%10 => 0,1,2,3,4,5,6,7,8,9,0,....
+            Debug.Log("GameManager OnPlayerJoined Join CharIndex>>" + charIndex);//0,1,2,3,4,5,6,7,8,9%10 => 0,1,2,3,4,5,6,7,8,9,0,....
 
             var player = Runner.Spawn(_playerPrefabs[charIndex], inputAuthority: playerRef);
             Runner.SetPlayerObject(playerRef, player.Object);
@@ -77,9 +77,11 @@ namespace Projectiles
 
             var objectPool = Runner.GetComponent<NetworkObjectPool>();
             objectPool.Context = context;
+            Debug.Log("GameManager OnSceneLoadDone");
 
             if (runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
             {
+                Debug.Log("GameManager OnSceneLoadDone PeerMode==PeerModes.Multiple");
                 // In case of multipeer mode, fix the scene lighting
                 var renderSettingsUpdated = scene.GetComponent<RenderSettingsUpdater>();
                 renderSettingsUpdated.ApplySettings();

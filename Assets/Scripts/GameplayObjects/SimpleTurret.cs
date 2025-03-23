@@ -26,6 +26,7 @@ namespace Projectiles
             // Fire constantly
             _weaponContext.Buttons.SetDown(EInputButton.Fire);
 
+            Debug.Log("SimpleTurret FixedUpdateNetwork HasStateAuthority Only>>");
             _weapon.ProcessFireInput();
         }
 
@@ -33,6 +34,7 @@ namespace Projectiles
 
         protected void Awake()
         {
+            Debug.Log("SimpleTurret Awake _weaponContext" + _weaponContext);
             _weaponContext.FireTransform = _fireTransform;
 
             _weapon = GetComponentInChildren<Weapon>(true);

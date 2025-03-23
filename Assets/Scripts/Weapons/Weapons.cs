@@ -97,6 +97,7 @@ namespace Projectiles
             {
                 int slot = (fromSlot + i + 1) % weaponsLength;
 
+                Debug.Log("Weapons GetNextWeaponSlot>>" + slot);
                 if (slot == 0 && ignoreZeroWeapon == true)
                     continue;
 
@@ -115,6 +116,7 @@ namespace Projectiles
             {
                 int slot = (weaponsLength + fromSlot - i - 1) % weaponsLength;
 
+                Debug.Log("Weapons GetPreviousWeaponSlot>>" + slot);
                 if (slot == 0 && ignoreZeroWeapon == true)
                     continue;
 
@@ -145,6 +147,7 @@ namespace Projectiles
                 RefreshWeapons();
                 return;
             }
+            Debug.Log("Weapons Spawned HasStateAuthority>>");
 
             int minWeaponSlot = int.MaxValue;
 

@@ -42,6 +42,8 @@ namespace Projectiles
                 {
                     bestPlayingEffect = audioEffect;
                     bestTime = audioEffect.AudioSource.time;
+
+                    UnityEngine.Debug.Log("AudioEffectExtensions PlaySound chooseAudio" + bestPlayingEffect + "," + bestTime);
                 }
             }
 

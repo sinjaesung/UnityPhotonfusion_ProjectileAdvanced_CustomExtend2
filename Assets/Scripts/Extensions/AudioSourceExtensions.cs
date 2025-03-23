@@ -69,6 +69,7 @@ namespace Projectiles
                 source.volume = Mathf.Lerp(startVolume, targetVolume, time / duration);
                 time += Time.deltaTime;
 
+                Debug.Log("AudioSourceExtensions Fade_Coroutine time and volume status" + "time:" + time + "," + "startVolume:" + startVolume + "," + "targetVolume:" + targetVolume + "," + "time/duration" + (time / duration));
                 yield return null;
             }
 

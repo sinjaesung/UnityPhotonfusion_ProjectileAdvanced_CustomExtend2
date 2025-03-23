@@ -47,6 +47,7 @@ namespace Projectiles
             if (HasStateAuthority == false)
                 return;
 
+            Debug.Log("DamageArea ColliderEnter HasStateAuthority Network Only _targets는 오직 HasStateAuthority Computer의 요소에서만 처리>>");
             var target = other.GetComponentInParent<IHitTarget>();
             if (target != null)
             {
@@ -60,6 +61,7 @@ namespace Projectiles
                 return;
 
             var target = other.GetComponentInParent<IHitTarget>();
+            Debug.Log("DamageArea ColliderExit HasStateAuthority Network Only _targets는 오직 HasStateAuthority Computer의 요소에서만 처리>>"+target);
             if (target != null)
             {
                 _targets.Remove(target);
@@ -74,9 +76,13 @@ namespace Projectiles
             _cooldown = TickTimer.CreateFromSeconds(Runner, 1f / _hitsPerSecond);
 
             float damage = _damagePerSecond / _hitsPerSecond;
+            Debug.Log("DamageArea Fire damage execute" + _cooldown + "," + damage);
+            int c = 0;
             foreach (var target in _targets)
             {
                 var targetPosition = (target as MonoBehaviour).transform.position;
+
+                Debug.Log(c+"| DamageArea Fire damage execute" + targetPosition);
 
                 HitData hitData = new HitData();
                 hitData.Action = EHitAction.Damage;
@@ -89,6 +95,8 @@ namespace Projectiles
                 hitData.HitType = EHitType.Suicide;
 
                 HitUtility.ProcessHit(ref hitData);
+
+                c++;
             }
         }
     }
