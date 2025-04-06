@@ -55,6 +55,7 @@ namespace Projectiles
                 Context.ObjectCache.ReturnDeferred(fireParticle, _fireParticleReturnTime);
 
                 // When using multipeer, disable renderers for other clients. Can be omitted otherwise.
+                Debug.Log("Weaponfireefects firerender runner.config.peermode" + Runner.Config.PeerMode);
                 if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
                 {
                     Runner.AddVisibilityNodes(fireParticle.gameObject);
@@ -111,10 +112,11 @@ namespace Projectiles
 
             _positionKickback.UpdateKickback();
             _kickbackTransform.localPosition = _kickbackInitialPosition + new Vector3(0f, 0f, -_positionKickback.Current);
-
+            //Debug.Log("WeaponFreEfects UpdateKickback pos>>" + new Vector3(0f, 0f, -_positionKickback.Current));
             _rotationKickback.UpdateKickback(0.1f);
             _kickbackTransform.localRotation = _kickbackInitialRotation;
             _kickbackTransform.RotateAround(weaponTransform.position, weaponTransform.right, -_rotationKickback.Current);
+           // Debug.Log("WeaponFreEfects UpdateKickback rot>>" + _rotationKickback.Current);
         }
 
         // HELPERS
@@ -153,7 +155,10 @@ namespace Projectiles
                 if (_speed <= 0f)
                     return;
 
+                Debug.Log("HasFred>>" + _fireKickback);
                 _target += _fireKickback;
+                Debug.Log("HasFred _target>>" + _target);
+
             }
 
             public void UpdateKickback(float zeroThreshold = 0.001f)

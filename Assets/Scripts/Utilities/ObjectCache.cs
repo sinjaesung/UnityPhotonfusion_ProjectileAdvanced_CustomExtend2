@@ -27,11 +27,13 @@ namespace Projectiles
 
         public T Get<T>(T prefab, bool activate = true, bool createIfEmpty = true) where T : UnityEngine.Component
         {
+            Debug.Log("ObjectCache Get1" + prefab.transform.name);
             return Get(prefab, null, activate, createIfEmpty);
         }
 
         public GameObject Get(GameObject prefab, bool activate = true, bool createIfEmpty = true)
         {
+            Debug.Log("ObjectCache Get2" + prefab.transform.name);
             return Get(prefab, null, activate, createIfEmpty);
         }
 

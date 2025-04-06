@@ -40,6 +40,7 @@ namespace Projectiles
 
             SpawnImpactVisual(data.ImpactPosition, data.ImpactNormal);
 
+            Debug.Log("InstantiHitscanProjectile Activate SpawnImpactVisual>>");
             if (_trail != null)
             {
                 _trail.SetPosition(0, startPosition);
@@ -99,6 +100,9 @@ namespace Projectiles
             {
                 GradientColorKey key = default;
 
+                Debug.Log(i + "| resultColorKeys" + fromColorKeys[i].color + ">>" + toColorKeys[i].color+",alpha:"+ alpha);
+                Debug.Log(i + "| resultColorTimeKeys" + fromColorKeys[i].time + ">>" + toColorKeys[i].time + ",alpha:" + alpha);
+
                 key.color = Color.Lerp(fromColorKeys[i].color, toColorKeys[i].color, alpha);
                 key.time = Mathf.Lerp(fromColorKeys[i].time, toColorKeys[i].time, alpha);
 
@@ -112,6 +116,9 @@ namespace Projectiles
             for (int i = 0; i < resultAlphaKeys.Length; i++)
             {
                 GradientAlphaKey key = default;
+
+                Debug.Log(i + "| resultAlphaKeys" + fromAlphaKeys[i].alpha + ">>" + toAlphaKeys[i].alpha + ",alpha:" + alpha);
+                Debug.Log(i + "| resultAlphaTimeKeys" + fromAlphaKeys[i].time + ">>" + toAlphaKeys[i].time + ",alpha:" + alpha);
 
                 key.alpha = Mathf.Lerp(fromAlphaKeys[i].alpha, toAlphaKeys[i].alpha, alpha);
                 key.time = Mathf.Lerp(fromAlphaKeys[i].time, toAlphaKeys[i].time, alpha);

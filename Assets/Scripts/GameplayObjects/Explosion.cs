@@ -126,7 +126,7 @@ namespace Projectiles
                 hit.Point = hit.GameObject.transform.position;
                 hit.Normal = -direction;
 
-                Debug.Log(i + "| Explosion Explode Object.InputAuthority, direction,damage, _hitType" + Object.InputAuthority + ","+ direction+","+damage+","+ _hitType);
+                Debug.Log(i + "| Explosion Explode Object.InputAuthority, direction,damage, _hitType" + Object.InputAuthority.PlayerId + ","+ direction+","+damage+","+ _hitType);
                 HitUtility.ProcessHit(Object.InputAuthority, direction, hit, damage, _hitType);
             }
 

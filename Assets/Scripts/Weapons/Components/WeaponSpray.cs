@@ -43,17 +43,20 @@ namespace Projectiles
                 // We use sphere on purpose -> non-uniform distribution (more projectiles in the center)
                 var randomDispersion = Random.insideUnitSphere * _dispersion;
                 projectileDirection = Quaternion.Euler(randomDispersion.x, randomDispersion.y, randomDispersion.z) * projectileDirection;
+                Debug.Log("WeaponSpray fire _dispersion> projectileDirection"+ projectileDirection);
             }
 
             // For spray projectile add some part of movement velocity so that the sprayed projectile moves with the player
             var inheritedVelocity = WeaponContext.MoveVelocity * _moveVelocityMultiplier;
 
             WeaponContext.KinematicProjectiles.AddProjectile(_projectilePrefab, FireTransform.position, projectileDirection, WeaponActionId, inheritedVelocity);
+            Debug.Log("WeaponSpray fire> addprojectile");
         }
 
         public override void FireRender()
         {
             // Fire effects (volume, particle) will fade out during fire cooldown
+            Debug.Log("WeaponSpray fireRender>>");
             _fireEffectsCooldown = 0.25f;
 
             if (HasInputAuthority == true)
@@ -76,6 +79,7 @@ namespace Projectiles
             {
                 if (_fireParticle.isPlaying == false)
                 {
+                    Debug.Log("WeaponSpray _fireParticle.Play()"+ _fireEffectsCooldown);
                     _fireParticle.Play();
                 }
 
@@ -85,6 +89,7 @@ namespace Projectiles
             {
                 if (_sparkParticle.isPlaying == false)
                 {
+                    Debug.Log("WeaponSpray _sparkParticle.Play()" + _fireEffectsCooldown);
                     _sparkParticle.Play();
                 }
 

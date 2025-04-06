@@ -136,7 +136,7 @@ MonoBehaviour:
   _length: 1
   _maxDistance: 200
   _maxTime: 5
-  _interpolationDuration: 0
+  _interpolationDuration: 0.16
   _interpolationEase: 1
   _damage: 10
   _hitType: 1

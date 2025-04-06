@@ -60,6 +60,7 @@ namespace Projectiles
 
             if (IsPlaying == false || force == EShakeForce.Add)
             {
+                Debug.Log("ShakeEffect Play IsPlaying == false || force == EShakeForce.Add AddShake");
                 AddShake(setup);
             }
             else if (force == EShakeForce.ReplaceSame)
@@ -70,11 +71,13 @@ namespace Projectiles
 
                     if (shake.Setup == setup)
                     {
+                        Debug.Log(i+"| ShakeEffect Play shake.Setup==setup setup.Duration - setup.FadeIn,shake.Cooldown"
+                            + (setup.Duration)+"-"+ (setup.FadeIn) + "," + shake.Cooldown);
                         shake.Cooldown = Mathf.Max(setup.Duration - setup.FadeIn, shake.Cooldown);
                         return;
                     }
                 }
-
+                Debug.Log("ShakeEffect Play force == EShakeForce.ReplaceSame AddShake");
                 AddShake(setup);
             }
         }
@@ -149,6 +152,8 @@ namespace Projectiles
                 {
                     rotationOffset += shake.GetOffset(Time.deltaTime);
                 }
+                Debug.Log(i+ "| ShakeEffect Update shake pos,rot offset positionOffset change>>" + positionOffset);
+                Debug.Log(i+ "| ShakeEffect Update shake pos,rot offset rotationOffset change>>" + rotationOffset);
             }
 
             transform.localPosition = _defaultPosition + positionOffset;
@@ -158,6 +163,7 @@ namespace Projectiles
             {
                 if (_activeShakes[i].IsFinished == true)
                 {
+                    //Debug.Log(i + "| ShakeEffect Update _activeShakes IsFinished removeshake>>" + rotationOffset);
                     RemoveShake(i);
                 }
             }
@@ -228,6 +234,7 @@ namespace Projectiles
             {
                 bool isStart = _elapsedTime == 0f;
                 bool wasEnd = Cooldown <= _normalChangeDuration * 0.5f;
+                //Debug.Log("ShakeEffect GetOffset wasEnd" + wasEnd + ",cooldown" + Cooldown + "<=" + _normalChangeDuration * 0.5f);
 
                 _elapsedTime += deltaTime;
 
@@ -235,6 +242,7 @@ namespace Projectiles
                 _changeCooldown -= deltaTime;
 
                 bool isEnd = wasEnd == false && Cooldown <= _normalChangeDuration * 0.5f;
+                //Debug.Log("ShakeEffect GetOffset isEnd _changeCooldown" + isEnd+","+ _changeCooldown);
 
                 if (_changeCooldown <= 0f || isEnd == true)
                 {
@@ -243,11 +251,14 @@ namespace Projectiles
                     if (Setup.FadeIn > 0f && _elapsedTime < Setup.FadeIn)
                     {
                         magnitudeProgress = _elapsedTime / Setup.FadeIn;
+                        //Debug.Log("ShakeEffect GetOffset FadeIn _elapsedTime < Setup.FadeIn" + magnitudeProgress + "," + _elapsedTime + "<" + Setup.FadeIn);
                     }
                     else if (Setup.FadeOut > 0f && Cooldown < Setup.FadeOut)
                     {
                         magnitudeProgress = Cooldown / Setup.FadeOut;
+                        //Debug.Log("ShakeEffect GetOffset FadeOut _elapsedTime < Setup.FadeOut" + magnitudeProgress + "," + Cooldown + "<" + Setup.FadeOut);
                     }
+                   // Debug.Log("ShakeEffect GetOffset isEndmagnitudeProgress" + magnitudeProgress);
 
                     float magnitude = Setup.Magnitude * magnitudeProgress;
 
@@ -261,6 +272,7 @@ namespace Projectiles
 
                         _changeDuration = Cooldown + Time.deltaTime;
                         _changeCooldown = Cooldown;
+                        //Debug.Log("ShakeEffect GetOffset isEnd _changeDuration _changeCooldown" + _startPosition+"->"+ _targetPosition+","+_changeDuration+","+_changeCooldown);
                     }
                     else if (isStart == true)
                     {
@@ -270,6 +282,7 @@ namespace Projectiles
                         // We are covering only half of the shake distance on start
                         _changeDuration = _normalChangeDuration * 0.5f;
                         _changeCooldown += _changeDuration;
+                        //Debug.Log("ShakeEffect GetOffset isStart _changeDuration _changeCooldown" + _startPosition + "->" + _targetPosition + "," + _changeDuration + "," + _changeCooldown);
                     }
                     else
                     {
@@ -277,13 +290,15 @@ namespace Projectiles
 
                         var randomRotation = Quaternion.Euler(Random.Range(-60, 60), Random.Range(-60, 60), Random.Range(-60, 60));
                         _targetPosition = Vector3.Scale(randomRotation * -_targetPosition, Setup.Axis).normalized * magnitude;
-
+                       
                         _changeDuration = _normalChangeDuration;
                         _changeCooldown += _changeDuration;
+                        //Debug.Log("ShakeEffect GetOffset normal _changeDuration _changeCooldown" + _startPosition + "->" + _targetPosition + "," + _changeDuration + "," + _changeCooldown);
                     }
                 }
 
                 float progress = 1 - _changeCooldown / _changeDuration;
+               // Debug.Log("ShakeEffect GetOffset progress" + 1 + "-" + _changeCooldown + "/" + _changeDuration+"=>"+ progress);
                 _lastOffset = Vector3.Lerp(_startPosition, _targetPosition, Setup.Ease.Get(progress));
 
                 return _lastOffset;

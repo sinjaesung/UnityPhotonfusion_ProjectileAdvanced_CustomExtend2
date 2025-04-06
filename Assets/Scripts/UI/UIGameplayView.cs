@@ -54,7 +54,7 @@ namespace Projectiles.UI
             if (_context.Runner == null || _context.Runner.IsRunning == false)
                 return;
 
-            Debug.Log("Context localAgent>>" + _context.LocalAgent);
+            Debug.Log("Context localAgent>>" + _context.LocalAgent.transform.name);
             SetObservedAgent(_context.LocalAgent);
 
             if (_observedAgent == null)

@@ -18,7 +18,7 @@ namespace Projectiles
             {
                 hitOptions |= HitOptions.IgnoreInputAuthority;
             }
-
+            Debug.Log("ProjectileUtility ProjectileCast runner.LagCompensation.Raycast");
             return runner.LagCompensation.Raycast(firePosition, direction, distance, owner, out hit, hitMask, hitOptions);
         }
 
@@ -54,10 +54,14 @@ namespace Projectiles
 
                 if (distanceToTarget > 0f)
                 {
+                    Debug.Log("ProjectileUtility ignoreDistanceMin~ignoreDistanceMax hit.Distance" +hit.Distance+">>"+ ignoreDistanceMin + "~" + ignoreDistanceMax);
                     // For 3rd person cast it is possible that we want to shoot through environment objects a little bit if we already know the destination point
                     // => ray from camera is different than ray from 3rd person character
                     if (hit.Distance >= ignoreDistanceMin && hit.Distance < ignoreDistanceMax && hit.GameObject != null && ObjectLayerMask.Environment.value.IsBitSet(hit.GameObject.layer))
+                    {
+                        Debug.Log("hit.Distance >= ignoreDistanceMin && hit.Distance < ignoreDistanceMax && hit.GameObject != null && ObjectLayerMask.Environment.value.IsBitSet(hit.GameObject.layer)");
                         continue;
+                    }
                 }
 
                 int hitRootID = hit.Hitbox != null ? hit.Hitbox.Root.gameObject.GetInstanceID() : 0;
@@ -98,6 +102,7 @@ namespace Projectiles
                 {
                     float angle = angleStep * (i - 1);
                     var offset = new Vector3(radius * Mathf.Cos(angle), radius * Mathf.Sin(angle), 0f);
+                    Debug.Log("CircleCast offset and rotationMatrix.MultiplyPoint3x4(offset)" + position + "+=" + rotationMatrix.MultiplyPoint3x4(offset) + ",offset:" + offset);
                     position += rotationMatrix.MultiplyPoint3x4(offset);
                 }
 
@@ -105,6 +110,7 @@ namespace Projectiles
                 {
                     if (hit.Type == HitType.None || currentHit.Distance < hit.Distance)
                     {
+                        Debug.Log(i+"| CircleCast ProjectileCast currentHit.Distance < hit.Distance" + currentHit.Distance + "<" + hit.Distance);
                         hit = currentHit;
                     }
                 }

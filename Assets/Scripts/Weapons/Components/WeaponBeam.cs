@@ -147,7 +147,9 @@ namespace Projectiles
                 var beamMaterial = _beam.material;
 
                 beamMaterial.mainTextureScale = new Vector2(visualDistance / _textureScale, 1f);
+                Debug.Log("WeaponBeam UpdateBeamMaterial mainTextureScale>>" + beamMaterial.mainTextureScale);
                 beamMaterial.mainTextureOffset += new Vector2(Time.deltaTime * _textureScrollSpeed, 0f);
+                Debug.Log("WeaponBeam UpdateBeamMaterial mainTextureOffset>>" + beamMaterial.mainTextureOffset);
             }
         }
     }

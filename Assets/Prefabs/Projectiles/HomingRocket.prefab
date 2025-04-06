@@ -68,7 +68,7 @@ MonoBehaviour:
   _distanceWeight: 1
   _angleWeight: 4
   _turnSpeed: 8
-  _recalculateTargetAfterTime: 0
+  _recalculateTargetAfterTime: 0.1
   _predictTargetPosition: 0.8
 --- !u!1001 &7722709429781597672
 PrefabInstance:

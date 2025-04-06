@@ -50,6 +50,7 @@ namespace Projectiles
             data.Velocity = fireDirection; // Homing projectiles use Velocity as direction
             data.Homing.Target = FindTarget(firePosition, fireDirection);
 
+            Debug.Log("HomingProjectile GetFireData>>");
             return data;
         }
 
@@ -74,6 +75,7 @@ namespace Projectiles
                 data.IsFinished = true;
 
                 SpawnImpact(data.ImpactPosition, data.ImpactNormal);
+                Debug.Log("HomingProjectile SpawnImpact>>");
             }
             else
             {
@@ -81,6 +83,7 @@ namespace Projectiles
                 UpdateDirection(ref data);
 
                 data.Position = nextPosition;
+                Debug.Log("HomingProjectile TryRecalculateTarget>>");
             }
 
             base.OnFixedUpdate(ref data);
@@ -116,6 +119,7 @@ namespace Projectiles
                 if (direction.sqrMagnitude > maxSqrDistance)
                     continue;
 
+                Debug.Log("HomingProjectile FindTarget direction.sqrMagnitude,maxSqrDistance>>" + direction.sqrMagnitude + "," + maxSqrDistance);
                 float distance = direction.magnitude;
                 direction /= distance; // Normalize
 
@@ -124,20 +128,26 @@ namespace Projectiles
                 if (dot < minDot)
                     continue;
 
+                Debug.Log("HomingProjectile FindTarget dot,minDot" + dot + "," + minDot);
+
                 if (physicsScene.Raycast(firePosition, direction, distance, _environmentCheckMask) == true)
+                {
+                    Debug.Log("HomingProjectile View to the target is obstructed" + _environmentCheckMask.ToString());
                     continue; // View to the target is obstructed
+                }
 
                 float value = dot * 90f * _angleWeight + distance * -_distanceWeight;
 
                 if (value > bestValue)
                 {
+                    Debug.Log("HomingProjectile FindTarget value>bestValue" + value + ">" + bestValue);
                     bestValue = value;
                     bestTarget = target;
                 }
             }
 
             ListPool.Return(targets);
-
+            Debug.Log("HomingProjectile Execute BestTarget return>>");
             return bestTarget is NetworkBehaviour behaviour ? behaviour.Object.Id : default;
         }
 
@@ -149,8 +159,10 @@ namespace Projectiles
             int recalculateTicks = Mathf.RoundToInt(_recalculateTargetAfterTime * Context.Runner.TickRate);
             int elapsedTicks = Context.Runner.Tick - data.FireTick;
 
+            Debug.Log("HomingProjectile TryRecaslculateTarget elapsedTicks recalculateTicks" + elapsedTicks + "%" + recalculateTicks);
             if (elapsedTicks % recalculateTicks == 0)
             {
+                Debug.Log("HomingProjectile TryRecaslculateTarget elapsedTicks%recalculateTicks==0 FindTarget" + elapsedTicks + "%" + recalculateTicks);
                 data.Homing.Target = FindTarget(position, direction);
             }
         }
@@ -185,6 +197,7 @@ namespace Projectiles
                 // Forget this target
                 data.Homing.Target = default;
                 data.Homing.TargetPosition = default;
+                Debug.Log("HomingProjectile UpdateDirection Vector3.Dot(data.Velocity, newDirection) < minDot");
                 return;
             }
 
@@ -198,7 +211,9 @@ namespace Projectiles
                     var targetVelocity = (targetPosition - previousTargetPosition) * Context.Runner.TickRate;
                     float timeToTarget = distance / _startSpeed;
 
+                    Debug.Log("HomingProjectile PredictTargetPos>>" + targetVelocity + "," + timeToTarget);
                     var predictedTargetPosition = targetPosition + (targetVelocity * timeToTarget * _predictTargetPosition);
+                    Debug.Log("HomingProjectile predictedTargetPosition>>" + predictedTargetPosition);
                     newDirection = (predictedTargetPosition - data.Position).normalized;
                 }
             }

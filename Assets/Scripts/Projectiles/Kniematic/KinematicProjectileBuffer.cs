@@ -87,6 +87,7 @@ namespace Projectiles
             projectilePrefab.Context = null;
 
             data.FireTick = Runner.Tick;
+            Debug.Log("KinematicProjectileBufer AddProjectile FireTick" + Runner.Tick);
             data.PrefabIndex = (byte)prefabIndex;
             data.BarrelIndex = barrelIndex;
 
@@ -119,6 +120,7 @@ namespace Projectiles
 
             // Temporarily assign correct context
             prefab.Context = _context;
+            Debug.Log("KinematicProjectileBufer UpdateData");
             prefab.OnFixedUpdate(ref data);
             prefab.Context = null;
         }
@@ -127,9 +129,11 @@ namespace Projectiles
         {
             var projectile = Context.ObjectCache.Get(_projectilePrefabs[data.PrefabIndex]);
 
+            Debug.Log("KinematicProjectileBufer GetView Context.ObjectCache.Get projectile>>" + projectile);
             Runner.MoveToRunnerScene(projectile);
             if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
             {
+                Debug.Log("KinematicProjectileBufer Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple");
                 Runner.AddVisibilityNodes(projectile.gameObject);
             }
 
@@ -143,8 +147,9 @@ namespace Projectiles
         {
             if (projectile == null)
                 return;
-
+            Debug.Log("KinematicProjectileBufer ReturnView>" + projectile);
             projectile.Deactivate();
+            Debug.Log("KinematicProjectileBufer Context.ObjectCache.Return>" + projectile);
 
             Context.ObjectCache.Return(projectile);
         }
@@ -156,6 +161,7 @@ namespace Projectiles
             _context.Runner = Runner;
             _context.Cache = Context.ObjectCache;
             _context.Owner = Object.InputAuthority;
+            Debug.Log("KinematicProjectileBufer Spawned context assign>>" + Runner + "," + Object.InputAuthority.PlayerId);
         }
 
         // MONOBEHAVIOUR

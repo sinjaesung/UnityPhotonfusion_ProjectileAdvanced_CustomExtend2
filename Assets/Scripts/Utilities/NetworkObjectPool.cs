@@ -57,6 +57,7 @@ namespace Projectiles
                 AssignContext(instance.NestedObjects[i]);
             }
 
+            Debug.Log("NetworkObjectPool AcquirePrefabInstance");
             result = instance;
             return NetworkObjectAcquireResult.Success;
         }
@@ -94,6 +95,7 @@ namespace Projectiles
             {
                 Destroy(instance.gameObject);
             }
+            Debug.Log("NetworkObjectPool ReleaseInstance");
         }
 
         private void AssignContext(NetworkObject instance)

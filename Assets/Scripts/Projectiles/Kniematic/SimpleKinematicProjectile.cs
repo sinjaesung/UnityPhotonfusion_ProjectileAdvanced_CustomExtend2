@@ -39,6 +39,7 @@ namespace Projectiles
                 float elapsedDistanceSqr = (previousPosition - data.Position).sqrMagnitude;
                 float projectileLength = elapsedDistanceSqr > _length * _length ? _length : Mathf.Sqrt(elapsedDistanceSqr);
 
+                Debug.Log("SimpleKinematicProjectile OnFxedUpdate "+elapsedDistanceSqr + ">" + _length * _length+"==>"+ projectileLength);
                 previousPosition -= direction * projectileLength;
                 distance += projectileLength;
             }
@@ -62,6 +63,7 @@ namespace Projectiles
             var runner = Context.Runner;
 
             float renderTime = Context.Owner == runner.LocalPlayer ? runner.LocalRenderTime : runner.RemoteRenderTime;
+            Debug.Log("SimpleKinematicProjectile GetRenderPosition runner.LocalPlayer>>" + runner.LocalPlayer +" rendertime:"+renderTime);
             return GetMovePosition(Context.Runner, ref data, renderTime / runner.DeltaTime);
         }
 

@@ -51,6 +51,7 @@ namespace Projectiles
         // PROTECTED METHODS
         protected void SpawnImpact(Vector3 position, Vector3 normal)
         {
+            Debug.Log("ProjectileBaase SpawnImpact Context.Runner.Stage>>" + Context.Runner.Stage);
             if (Context.Runner.Stage == default)
             {
                 Debug.LogError("Call SpawnImpact only from simulation(Spawned, FUN) methods!");
@@ -62,12 +63,14 @@ namespace Projectiles
 
             if (_impactObjectPrefab != null && Context.Runner.IsServer == true)
             {
+                Debug.Log("ProjectileBase SpawnImpact Context.Runner.IsServer Context.Runner.Spawn" + Context.Runner.Stage);
                 Context.Runner.Spawn(_impactObjectPrefab, position, Quaternion.LookRotation(normal), Context.Owner);
             }
         }
 
         protected void SpawnImpactVisual(Vector3 position, Vector3 normal)
         {
+            Debug.Log("ProjectileBase SpawnImpactVisual Context.Runner.Stage>>" + Context.Runner.Stage);
             if (Context.Runner.Stage != default)
             {
                 Debug.LogError("Call SpawnImpactVisual only from Render-related methods!");
@@ -80,6 +83,7 @@ namespace Projectiles
             if (_impactEffectPrefab != null)
             {
                 var impact = Context.Cache.Get(_impactEffectPrefab);
+                Debug.Log("ProjectileBase SpawnImpactVisual Context.Cache.Get MoveToRunnerScene" + Context.Runner.Stage);
 
                 impact.transform.SetPositionAndRotation(position, Quaternion.LookRotation(normal));
                 Context.Runner.MoveToRunnerScene(impact);

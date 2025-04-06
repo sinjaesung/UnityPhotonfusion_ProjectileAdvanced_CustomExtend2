@@ -52,6 +52,7 @@ namespace Projectiles
         {
             if (Context.Gameplay != null)
             {
+                Debug.Log("Player Spawned>> gameplay join");
                 Context.Gameplay.Join(this);
             }
         }
@@ -77,6 +78,8 @@ namespace Projectiles
 
             if (HasStateAuthority == true && ActiveAgent != null)
             {
+                Debug.Log("Player Despawned>>");
+
                 Runner.Despawn(ActiveAgent.Object);
             }
 

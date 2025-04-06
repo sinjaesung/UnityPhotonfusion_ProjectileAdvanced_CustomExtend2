@@ -135,6 +135,7 @@ namespace Projectiles.UI
             bool selectable = _itemInstance.IsSelectable;
             var parent = _itemInstance.transform.parent;
 
+            Debug.Log("UIList UpdateItems _items.Count,_dataCount" + _items.Count + "," + _dataCount);
             for (int i = _items.Count; i < _dataCount; i++)
             {
                 var newItem = i == 0 ? _itemInstance : Instantiate(_itemInstance, parent);

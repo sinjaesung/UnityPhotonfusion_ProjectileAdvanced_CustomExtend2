@@ -254,7 +254,7 @@ MonoBehaviour:
     Target: 2
   _kickbackTransform: {fileID: 5726535245768448916}
   _positionKickback:
-    _fireKickback: 0.06
+    _fireKickback: 6
     _speed: 60
     _returnSpeed: 20
   _rotationKickback:

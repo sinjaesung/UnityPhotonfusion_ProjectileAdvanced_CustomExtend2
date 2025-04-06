@@ -52,7 +52,7 @@ namespace Projectiles
             FillBuffer();
 
             _bufferHead = (_bufferHead + 1) % _bufferSize;
-
+            Debug.Log("NetworkObjectBuffer Get>>" + instance + ">bufferHead:" + _bufferHead);
             return instance;
         }
 
@@ -71,13 +71,14 @@ namespace Projectiles
             if (HasStateAuthority == true)
                 return;
 
-            Debug.Log("NetworkObjectBuffer Render Not HasStateAuthority>>");
+            //Debug.Log("NetworkObjectBuffer Render Not HasStateAuthority>>");
 
             for (int i = 0; i < _bufferSize; i++)
             {
                 var networkInstance = _buffer[i];
                 var localInstance = _localBuffer[i];
 
+                //Debug.Log(i + "| NetworkObjectBuffer Render networkInstance,localInstance>>" + networkInstance.transform.name + "," + localInstance.transform.name);
                 if (localInstance == networkInstance)
                     continue;
 
@@ -120,9 +121,9 @@ namespace Projectiles
 
             for (int i = 0; i < _bufferSize; i++)
             {
-               // Debug.Log(i + ">>NetworkObgjectBuffer BufferStatus" + _buffer[i].transform.name);
                 if (_buffer[i] == null)
                 {
+                    Debug.Log(i + "| NetworkObjectBufer FillBufer>>");
                     _buffer.Set(i, PrepareInstance());
                 }
             }
@@ -140,6 +141,7 @@ namespace Projectiles
             {
                 if (_buffer[i] != null)
                 {
+                    Debug.Log(i + ">>NetworkObgjectBuffer ClearBuffer HasStateAuthority" + _buffer[i].transform.name);
                     Runner.Despawn(_buffer[i]);
                 }
             }

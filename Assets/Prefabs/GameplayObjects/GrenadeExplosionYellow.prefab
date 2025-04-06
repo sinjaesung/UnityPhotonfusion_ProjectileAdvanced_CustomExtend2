@@ -282,9 +282,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7226549127541441085}
     m_Modifications:
+    - target: {fileID: 1224972023401364, guid: 9aa670fab9a0c664e85bcf9d96b4c506, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1430355002379456, guid: 9aa670fab9a0c664e85bcf9d96b4c506, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442642155641332, guid: 9aa670fab9a0c664e85bcf9d96b4c506, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1537630090354322, guid: 9aa670fab9a0c664e85bcf9d96b4c506, type: 3}
       propertyPath: m_Name
       value: GrenadeExplosionYellow
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916929950237352, guid: 9aa670fab9a0c664e85bcf9d96b4c506, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4516092548160706, guid: 9aa670fab9a0c664e85bcf9d96b4c506, type: 3}
       propertyPath: m_RootOrder

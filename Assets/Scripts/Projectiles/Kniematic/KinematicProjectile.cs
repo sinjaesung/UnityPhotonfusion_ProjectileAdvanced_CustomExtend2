@@ -44,7 +44,7 @@ namespace Projectiles
             {
                 int maxDistanceTicks = Mathf.RoundToInt((_maxDistance / _startSpeed) * Context.Runner.TickRate);
                 int maxTimeTicks = Mathf.RoundToInt(_maxTime * Context.Runner.TickRate);
-              
+                
                 Debug.Log("KinematicProjectile maxDistanceTicks maxTimeTicks>>" + maxDistanceTicks + "," + maxTimeTicks);
 
                 // GetFireData is called on prefab directly, but it is safe to save
@@ -67,7 +67,7 @@ namespace Projectiles
         {
             if (Context.Runner.Tick >= data.FireTick + _lifetimeTicks)
             {
-                Debug.Log("KinematicProjectile Context.Runner.Tick data.FireTick + _lifetimeTicks >>" + Context.Runner.Tick+","+data.FireTick + "," + _lifetimeTicks);
+                Debug.Log("KinematicProjectile OnFixedUpdate Context.Runner.Tick data.FireTick + _lifetimeTicks >>" + Context.Runner.Tick+">="+data.FireTick + "+" + _lifetimeTicks);
                 data.IsFinished = true;
             }
         }
@@ -75,6 +75,7 @@ namespace Projectiles
         public virtual void Activate(ref KinematicData data)
         {
             var startPosition = Context.BarrelTransforms[data.BarrelIndex].position;
+            Debug.Log("KinematicProjectile Activate");
 
             // Kinematic projectile visual starts at the barrel position and is slowly
             // interpolated to its actual path that starts directly from camera.

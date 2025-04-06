@@ -47,7 +47,7 @@ namespace Projectiles
             DataBuffer.Set(dataIndex, data);
 
             _dataCount++;
-            Debug.Log("NetworkDataBuffer AddData _datacount>>" + _dataCount);
+            Debug.Log("NetworkDataBuffer AddData _datacount>>" + dataIndex+">>"+_dataCount);
         }
 
         // NetworkBehaviour INTERFACE
@@ -75,7 +75,8 @@ namespace Projectiles
         {
             for (int i = 0; i < DataBuffer.Length; i++)
             {
-                TData bufferData = DataBuffer[i];
+                TData bufferData = DataBuffer[i]; 
+                //Debug.Log(i + "| NetworkDataBuffer FxedUpdateNetwork DataBuffer" + bufferData);
                 UpdateData(ref bufferData);
                 DataBuffer.Set(i, bufferData);
             }
@@ -97,25 +98,25 @@ namespace Projectiles
 
             int bufferLength = DataBuffer.Length;
 
-            Debug.Log("NetworkDataBufferRender If our predicted views were not confirmed by the server, discard them" + fromDataCount + "<" + _viewCount);
+            //Debug.Log("NetworkDataBufferRender If our predicted views were not confirmed by the server, discard them" + fromDataCount + "<" + _viewCount);
             // If our predicted views were not confirmed by the server, discard them
             for (int i = fromDataCount; i < _viewCount; i++)
             {
                 if (_views.TryGetValue(i, out var viewEntry) == false)
                     continue;
 
-                Debug.Log(i + "| NetworkDataBufferRender fromDataCount/_viewCount" + fromDataCount+"/"+ _viewCount);
+                Debug.Log(i + "| NetworkDataBufferRender fromDataCount/_viewCount ReturnEntry" + fromDataCount+"/"+ _viewCount);
                 ReturnEntry(viewEntry, true);
                 _views.Remove(i);
             }
-            Debug.Log("NetworkDataBufferRender Let's spawn missing viewsm" + _viewCount + "<" + fromDataCount);
+            //Debug.Log("NetworkDataBufferRender Let's spawn missing views" + _viewCount + "<" + fromDataCount);
             // Let's spawn missing views
             for (int i = _viewCount; i < fromDataCount; i++)
             {
                 int bufferIndex = i % bufferLength;
                 var data = fromDataBuffer[bufferIndex];
 
-                Debug.Log(i + "| NetworkDataBufferRender _viewCount < fromDataCount" + _viewCount + "<" + fromDataCount);
+                Debug.Log(i + "| bufferIndex:"+ bufferIndex+"| NetworkDataBufferRender _viewCount < fromDataCount GetView" + _viewCount + "<" + fromDataCount);
 
                 var view = GetView(data);
                 if (view == null)
@@ -131,7 +132,7 @@ namespace Projectiles
             // by new data (new buffer cycle) so we need to calculate
             // last valid data key in the buffer.
             int minDataKey = toDataCount - bufferLength;
-            Debug.Log("NetworkDataBufferRender minDataKey" + toDataCount + "-" + bufferLength+"="+ minDataKey);
+            //Debug.Log("NetworkDataBufferRender minDataKey" + toDataCount + "-" + bufferLength+"="+ minDataKey);
 
             // Update all visible views
             foreach (var pair in _views)
@@ -146,6 +147,7 @@ namespace Projectiles
                     var data = toDataBuffer[bufferIndex];
                     var fromData = fromDataBuffer[bufferIndex];
 
+                    Debug.Log("NetworkDataBufferRender fromdata,data,view Render" + fromData + "~" + data+"bufferalpha:"+ bufferAlpha);
                     view.Render(ref data, ref fromData, bufferAlpha);
                     pair.Value.LastData = data;
                 }
@@ -159,7 +161,7 @@ namespace Projectiles
 
                 if (view.IsFinished == true)
                 {
-                    Debug.Log("NetworkDataBufferRender view Completed");
+                    Debug.Log("NetworkDataBufferRender view Completed ReturnEntry");
 
                     ReturnEntry(pair.Value, false);
                     _finishedViews.Add(pair.Key);

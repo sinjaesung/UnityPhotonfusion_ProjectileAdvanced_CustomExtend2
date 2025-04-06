@@ -67,6 +67,7 @@ namespace Projectiles
             var direction = nextPosition - previousPosition;
             float distance = direction.magnitude;
 
+            Debug.Log("AdvancedKinmatic OnFxedUpdate direction,distance>>" + direction + ">>" + distance);
             if (distance <= 0f)
                 return;
 
@@ -76,7 +77,10 @@ namespace Projectiles
             if (_length > 0f)
             {
                 float elapsedDistanceSqr = (previousPosition - data.Position).sqrMagnitude;
+                Debug.Log("AdvancedKinematicProjectile OnFxedUpdate elapsedDistanceSqr > _length*_length" + elapsedDistanceSqr + ">" + _length * _length);
                 float projectileLength = elapsedDistanceSqr > _length * _length ? _length : Mathf.Sqrt(elapsedDistanceSqr);
+
+                Debug.Log("previousPosition update>>" + previousPosition + "-" + direction +"*"+ projectileLength);
 
                 previousPosition -= direction * projectileLength;
                 distance += projectileLength;
@@ -97,6 +101,7 @@ namespace Projectiles
                     int hitLayer = hit.GameObject.layer;
                     doBounce = ((1 << hitLayer) & _bounceMask) != 0;
                 }
+                Debug.Log("AdvancedKinematicProjectile doBounce check>>" + doBounce);
 
                 if (doBounce == true)
                 {
@@ -131,6 +136,7 @@ namespace Projectiles
             {
                 OnBounceRender(ref data);
                 _visibleBounceCount = data.Advanced.BounceCount;
+                Debug.Log("AdvancedKinematicProjectile Render _visibleBounceCount" + _visibleBounceCount);
             }
         }
 
@@ -140,7 +146,7 @@ namespace Projectiles
 
             float renderTime = Context.Owner == runner.LocalPlayer ? runner.LocalRenderTime : runner.RemoteRenderTime;
             float floatTick = renderTime / runner.DeltaTime;
-
+            Debug.Log("AdvancedKinematicProjectile GetRenderPosition runner.LocalPlayer:" + runner.LocalPlayer+",>>"+ renderTime + "/" + runner.DeltaTime + "=>" + floatTick);
             // If projectile has stopped return finished position but not until we are at the stop time (StartTick acts as stop tick here)
             if (data.HasStopped == true && data.Advanced.MoveStartTick <= floatTick)
                 return data.ImpactPosition;
@@ -177,6 +183,7 @@ namespace Projectiles
             var runner = Context.Runner;
             var reflectedDirection = Vector3.Reflect(direction, hit.Normal);
 
+            Debug.Log("ProcessBounce distance,_stopSpeed * runner.DeltaTime" + distance + "," + _stopSpeed * runner.DeltaTime);
             // Stop bouncing when the velocity is small enough
             if (distance < _stopSpeed * runner.DeltaTime)
             {
@@ -185,6 +192,8 @@ namespace Projectiles
                 data.Advanced.MoveStartTick = runner.Tick;
 
                 data.ImpactPosition = hit.Point + Vector3.Project(hit.Normal * _bounceObjectRadius, reflectedDirection);
+                Debug.Log("AdvancedKinematicProjectile ProcessBounce Vector3.Project(hit.Normal * _bounceObjectRadius, reflectedDirection)" +
+                    hit.Normal * _bounceObjectRadius + "," + reflectedDirection);
                 return;
             }
 
@@ -193,14 +202,16 @@ namespace Projectiles
             if (_bounceVelocityMultiplierStart != _bounceVelocityMultiplierEnd)
             {
                 bounceMultiplier = Mathf.Lerp(_bounceVelocityMultiplierStart, _bounceVelocityMultiplierEnd, data.Advanced.BounceCount / (float)_bounceVelocityScale);
+                Debug.Log("AdvancedKinematicProjectile ProcessBounce bounceMultiplier" + _bounceVelocityMultiplierStart+"~"+bounceMultiplier+"~"+ _bounceVelocityMultiplierEnd);
             }
 
             float distanceToHit = Vector3.Distance(hit.Point, transform.position);
+            Debug.Log("AdvancedKinematicProjectile distanceToHit" + hit.Point + "," + transform.position);
             float progressToHit = distanceToHit / distance;
 
             data.Position = hit.Point + reflectedDirection * _bounceObjectRadius;
             data.Velocity = reflectedDirection * ((Vector3)data.Velocity).magnitude * bounceMultiplier;
-
+            Debug.Log("AdvancedKinematicProjectile Velocity>>" + data.Velocity.X+","+ data.Velocity.Y+","+ data.Velocity.Z);
             // Simple trick to better align position with ticks. More precise solution would be to remember
             // alpha between ticks (when the bounce happened) but it is good enough here.
             data.Advanced.MoveStartTick = progressToHit > 0.5f ? runner.Tick : runner.Tick - 1;

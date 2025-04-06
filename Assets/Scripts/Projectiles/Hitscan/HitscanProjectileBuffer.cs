@@ -61,7 +61,9 @@ namespace Projectiles
         {
             var projectile = Context.ObjectCache.Get(_projectilePrefabs[data.PrefabIndex]);
 
+            Debug.Log("HitscanProjectile GetView Context.ObjectCache.Get>>" + projectile);
             Runner.MoveToRunnerScene(projectile);
+            Debug.Log("HitscanProjectile GetView Runner.Config.PeerMode" + Runner.Config.PeerMode);
             if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
             {
                 Runner.AddVisibilityNodes(projectile.gameObject);
@@ -80,6 +82,7 @@ namespace Projectiles
 
             projectile.Deactivate();
 
+            Debug.Log("HitscanProjectile ReturnView>>");
             Context.ObjectCache.Return(projectile);
         }
 
@@ -89,6 +92,7 @@ namespace Projectiles
 
             _context.Runner = Runner;
             _context.Cache = Context.ObjectCache;
+            Debug.Log("HitscanProjectileBuffer Spawned context.owner" + Object.InputAuthority.PlayerId);
             _context.Owner = Object.InputAuthority;
         }
 

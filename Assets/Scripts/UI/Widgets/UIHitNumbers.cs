@@ -31,7 +31,7 @@ namespace Projectiles.UI
                     pending.Amount += hitData.Amount;
                     pending.IsFatal |= hitData.IsFatal;
 
-                    Debug.Log(i + "| UIHitNumbers HitPerformed pendingHits update hitdamage>>"+pending.Amount);
+                    Debug.Log(i + "| UIHitNumbers HitPerformed pendingHits update hitdamage>>"+pending.Amount+">added:"+ hitData.Amount);
                     _pendingHits[i] = pending;
                     return;
                 }

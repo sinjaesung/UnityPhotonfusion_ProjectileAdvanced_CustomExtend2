@@ -43,6 +43,8 @@ namespace Projectiles
 
             _data = data;
 
+            Debug.Log("StandaloneProjectile Fire>>" + data.FireTick+ ",Object.InputAuthority:"+ Object.InputAuthority);
+
             // Save spawned position as barrel position
             _barrelPosition = transform.position;
         }
@@ -68,6 +70,7 @@ namespace Projectiles
             if (IsProxy == false)
             {
                 // Saved the spawned position as barrel position
+                Debug.Log(">>StandAloneProjectile Spawned IsProxy>>" + IsProxy);
                 _barrelPosition = transform.position;
             }
         }
@@ -81,6 +84,8 @@ namespace Projectiles
             {
                 if (_despawnCooldown.ExpiredOrNotRunning(Runner) == true)
                 {
+                    Debug.Log("ProjectileVisual 조종체 _data.종료시에 standalone이 개체 제거>>");
+
                     Runner.Despawn(Object);
                 }
                 return;
@@ -89,6 +94,7 @@ namespace Projectiles
             var data = _data;
             _projectileVisual.OnFixedUpdate(ref data);
             _data = data;
+            Debug.Log("StandaloneProjectile FxedUpdateNetworked _data" + _data);
 
             if (data.IsFinished == true && _despawnTime > 0f)
             {
@@ -159,6 +165,7 @@ namespace Projectiles
             _projectileContext.Runner = Runner;
             _projectileContext.Cache = Context.ObjectCache;
             _projectileContext.Owner = Object.InputAuthority;
+            Debug.Log("StandaloneProjectile PrepareContext owner>>" + Object.InputAuthority);
 
             if (_projectileContext.BarrelTransforms == null)
             {
