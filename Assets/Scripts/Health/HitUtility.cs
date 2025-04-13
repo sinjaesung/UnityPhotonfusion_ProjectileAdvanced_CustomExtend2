@@ -81,6 +81,7 @@ namespace Projectiles
                 targets.AddRange(healths);
             }
 
+            Debug.Log("HitUtility GetAllTargets targetCount:" + healths.Count);
             ListPool.Return(healths);
         }
         public static HitData ProcessHit(PlayerRef instigatorRef, Vector3 direction, LagCompensatedHit hit, float baseDamage, EHitType hitType)

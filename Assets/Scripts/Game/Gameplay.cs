@@ -25,6 +25,18 @@ namespace Projectiles
 
         // PUBLIC METHODS
 
+        //public WorldDefinition definition;
+
+        private void Awake()
+        {
+           // Debug.Log("GamePlayWorld Awake>> " + definition.worldName);
+            RoomGameManager.SetWorld(this);
+        }
+        private void OnDestroy()
+        {
+            RoomGameManager.SetWorld(null);
+        }
+
         public void Join(Player player)
         {
             if (HasStateAuthority == false)
@@ -44,6 +56,32 @@ namespace Projectiles
 
             OnPlayerJoined(player);
         }
+        public void SpawnPlayer(NetworkRunner runner, RoomPlayer player)
+        {
+            var index = RoomPlayer.Players.IndexOf(player);
+            var charId = player.CharId;
+
+            Debug.Log($"World(GamePlay) SpawnPlayer>>{player.Object.InputAuthority} => charId:" + charId);
+            var prefab = ResourceManager.Instance.characterDefinitions[charId].prefab;
+
+            // Spawn player
+            var entity = runner.Spawn(
+                prefab,
+                Vector3.zero,
+                Quaternion.identity,
+                player.Object.InputAuthority
+            );
+
+            entity.RoomUser = player;
+            player.GameState = RoomPlayer.EGameState.GameReady;
+            player.player = entity;
+
+            entity.SetCharacterIndex(charId);
+            Debug.Log($"Spawning Character for [{player.Username}] as {entity.name}");
+            entity.transform.name = $"Character ([{player.Username}]) {charId}";
+            Debug.Log("GamePlay(WorldMap) SpawnPlayer roomplayer InputAuthority(PlayerRef)" + player.Object.InputAuthority);
+            Runner.SetPlayerObject(player.Object.InputAuthority, entity.Object);
+        }
 
         public void Leave(Player player)
         {
@@ -62,10 +100,35 @@ namespace Projectiles
 
         // NetworkBehaviour INTERFACE
 
-        public override void Spawned()
-        {
+       public override void Spawned()
+       {
             // Register to context
             Context.Gameplay = this;
+
+            // Prepare context
+            var scene = Runner.SimulationUnityScene.GetComponent<Scene>(true);
+
+            var context = scene.Context;
+            context.Runner = Runner;
+
+            // Assign context
+            var contextBehaviours = Runner.SimulationUnityScene.GetComponents<IContextBehaviour>(true);
+            foreach (var behaviour in contextBehaviours)
+            {
+                behaviour.Context = context;
+            }
+
+            var objectPool = Runner.GetComponent<NetworkObjectPool>();
+            objectPool.Context = context;
+            Debug.Log("GamePlay(World Spawned) OnSceneLoadDone");
+
+            if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
+            {
+                Debug.Log("GamePlay OnSceneLoadDone Spawned PeerMode==PeerModes.Multiple");
+                // In case of multipeer mode, fix the scene lighting
+                var renderSettingsUpdated = scene.GetComponent<RenderSettingsUpdater>();
+                renderSettingsUpdated.ApplySettings();
+            }
         }
 
         public override void FixedUpdateNetwork()

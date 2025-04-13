@@ -14,7 +14,6 @@ namespace Projectiles
     [RequireComponent(typeof(NetworkRunner))]
     [RequireComponent(typeof(NetworkEvents))]
     [DefaultExecutionOrder(-100)]
-
     public sealed class GameManager : SimulationBehaviour, INetworkRunnerCallbacks
     {
         // PRIVATE MEMBERS
@@ -103,5 +102,6 @@ namespace Projectiles
         void INetworkRunnerCallbacks.OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
         void INetworkRunnerCallbacks.OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
         void INetworkRunnerCallbacks.OnSceneLoadStart(NetworkRunner runner) { }
+
     }
 }

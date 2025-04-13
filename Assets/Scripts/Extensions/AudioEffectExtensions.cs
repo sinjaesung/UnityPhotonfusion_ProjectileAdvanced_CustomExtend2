@@ -19,6 +19,8 @@ namespace Projectiles
 
                 if (audioEffect.IsPlaying == false)
                 {
+                    UnityEngine.Debug.Log(i+"| AudioEffectExtensions PlaySound direct");
+
                     audioEffect.Play(setup);
                     return true;
                 }
@@ -43,7 +45,7 @@ namespace Projectiles
                     bestPlayingEffect = audioEffect;
                     bestTime = audioEffect.AudioSource.time;
 
-                    UnityEngine.Debug.Log("AudioEffectExtensions PlaySound chooseAudio" + bestPlayingEffect + "," + bestTime);
+                    UnityEngine.Debug.Log(i+"| AudioEffectExtensions PlaySound chooseAudio" + bestPlayingEffect + "," + bestTime);
                 }
             }
 

@@ -99,6 +99,7 @@ namespace Projectiles
                 if (anim)
                     anim.SetBool("IsGround", false);
             }
+           //Debug.Log("PlayerAgent FxedUpdateNetwork>>");
         }
 
         // MONOBEHAVIOUR
@@ -129,8 +130,10 @@ namespace Projectiles
                 var cameraTransform = Context.Camera.transform;
 
                 // Setting base camera transform based on handle
-                cameraTransform.position = _cameraHandle.position+new Vector3(0,0.5f,0f);
+                cameraTransform.position = _cameraHandle.position+new Vector3(0,0.2f,0f);
                 cameraTransform.rotation = _cameraHandle.rotation;
+
+                Debug.Log("PlayerAgent LateUpdate CameraControll>>" + Runner.LocalPlayer.PlayerId);
             }
         }
 
@@ -167,6 +170,8 @@ namespace Projectiles
                 if (anim)
                     anim.SetBool("IsRunning", true);
             }
+
+            //Debug.Log("PlayerAgent ProcessMovementInput>>");
 
             _moveVelocity = Vector3.Lerp(_moveVelocity, desiredMoveVelocity, acceleration * Runner.DeltaTime);
 

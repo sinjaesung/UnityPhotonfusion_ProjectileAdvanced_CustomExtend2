@@ -23,7 +23,10 @@ namespace Projectiles
 
         private PlayerAgent _assignedAgent;
         private int _lastWeaponSlot;
+        [Networked] public RoomPlayer RoomUser { get; set; }
 
+        [Networked]
+        public int CharacterIndex { get; set; } = -1;
         // PUBLIC METHODS
 
         public void AssignAgent(PlayerAgent agent)
@@ -56,7 +59,10 @@ namespace Projectiles
                 Context.Gameplay.Join(this);
             }
         }
-
+        public void SetCharacterIndex(int _index)
+        {
+            CharacterIndex = _index;
+        }
         public override void FixedUpdateNetwork()
         {
             bool agentValid = ActiveAgent != null && ActiveAgent.Object != null;
@@ -68,6 +74,8 @@ namespace Projectiles
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
+            Debug.Log("Player Despawned>>");
+
             if (hasState == false)
                 return;
 
@@ -78,7 +86,7 @@ namespace Projectiles
 
             if (HasStateAuthority == true && ActiveAgent != null)
             {
-                Debug.Log("Player Despawned>>");
+                Debug.Log("Player Despawned HasStateAuthority Runner.Despawn(ActiveAgent.Object)>>");
 
                 Runner.Despawn(ActiveAgent.Object);
             }

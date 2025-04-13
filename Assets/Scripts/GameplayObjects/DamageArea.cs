@@ -14,7 +14,6 @@ namespace Projectiles
         // PRIVATE MEMBERS
 
         [SerializeField]
-
         private float _damagePerSecond = 20f;
         [SerializeField]
         private int _hitsPerSecond = 4;
@@ -76,7 +75,7 @@ namespace Projectiles
             _cooldown = TickTimer.CreateFromSeconds(Runner, 1f / _hitsPerSecond);
 
             float damage = _damagePerSecond / _hitsPerSecond;
-            Debug.Log("DamageArea Fire damage execute" + _cooldown + "," + damage);
+            //Debug.Log("DamageArea Fire damage execute" + _cooldown + "," + damage);
             int c = 0;
             foreach (var target in _targets)
             {

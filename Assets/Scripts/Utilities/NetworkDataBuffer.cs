@@ -76,10 +76,10 @@ namespace Projectiles
             for (int i = 0; i < DataBuffer.Length; i++)
             {
                 TData bufferData = DataBuffer[i]; 
-                //Debug.Log(i + "| NetworkDataBuffer FxedUpdateNetwork DataBuffer" + bufferData);
                 UpdateData(ref bufferData);
                 DataBuffer.Set(i, bufferData);
             }
+            //Debug.Log("NetworkDataBuffer FxedUpdateNetwork");
         }
 
         public override void Render()

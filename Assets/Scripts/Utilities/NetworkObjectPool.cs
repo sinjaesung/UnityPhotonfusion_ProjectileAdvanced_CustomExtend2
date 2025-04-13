@@ -16,12 +16,14 @@ namespace Projectiles
             if (_cached.TryGetValue(context.PrefabId, out var objects) == false)
             {
                 objects = _cached[context.PrefabId] = new Stack<NetworkObject>();
+                Debug.Log("NetworkObjectPool AcquirePrefabInstance>>" + context.PrefabId);
             }
 
             if (objects.Count > 0)
             {
                 var oldInstance = objects.Pop();
                 _borrowed[oldInstance] = context.PrefabId;
+                Debug.Log("NetworkObjectPool AcquirePrefabInstance borrowed>>" + oldInstance.transform.name + "=>" + context.PrefabId);
 
 #if UNITY_EDITOR
                 var originalPrefab = runner.Config.PrefabTable.Load(context.PrefabId, true);
@@ -42,6 +44,7 @@ namespace Projectiles
             }
 
             var instance = Instantiate(original);
+            Debug.Log("NetworkObjectPool AcquirePrefabInstance  Instantiate GetObjects" + instance.transform.name);
             runner.MoveToRunnerScene(instance.gameObject);
 
 #if UNITY_EDITOR
@@ -49,11 +52,13 @@ namespace Projectiles
 #endif
 
             _borrowed[instance] = context.PrefabId;
+            Debug.Log("NetworkObjectPool AcquirePrefabInstance New Instantiate borrowed>>" + instance.transform.name + "=>" + context.PrefabId);
 
             AssignContext(instance);
 
             for (int i = 0; i < instance.NestedObjects.Length; i++)
             {
+                Debug.Log(i + "|NetworkObjectPool AcquirePrefabInstance instance.NestedObjects"+ instance.NestedObjects[i].transform.name);
                 AssignContext(instance.NestedObjects[i]);
             }
 
@@ -65,7 +70,10 @@ namespace Projectiles
         void INetworkObjectProvider.ReleaseInstance(NetworkRunner runner, in NetworkObjectReleaseContext context)
         {
             if (context.IsNestedObject == true)
+            {
+                Debug.Log("NetworkObjectPool ReleaseInstance context.IsNestedObject true>>");
                 return;
+            }
 
             NetworkObject instance = context.Object;
             if (instance == null)
@@ -78,6 +86,7 @@ namespace Projectiles
                     _borrowed.Remove(instance);
                     _cached[prefabID].Push(instance);
 
+                    Debug.Log("NetworkObjectPool ReleaseInstance instance name cached>>" + instance.transform.name + ">" + prefabID);
                     instance.SetActive(false);
                     instance.transform.parent = null;
                     instance.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -89,11 +98,13 @@ namespace Projectiles
                 else
                 {
                     Destroy(instance.gameObject);
+                    Debug.Log("NetworkObjectPool ReleaseInstance instance name>>" + instance.transform.name);
                 }
             }
             else
             {
                 Destroy(instance.gameObject);
+                Debug.Log("NetworkObjectPool ReleaseInstance instance name>>" + instance.transform.name);
             }
             Debug.Log("NetworkObjectPool ReleaseInstance");
         }

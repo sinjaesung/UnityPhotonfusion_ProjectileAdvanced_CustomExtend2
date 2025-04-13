@@ -95,6 +95,8 @@ namespace Projectiles
             if (setup.Clips == null || setup.Clips.Length == 0)
                 return;
 
+            Debug.Log("AudioEfect Play>>");
+
             StartPlay(setup);
         }
         public void Stop(bool forceImmediateStop = false)
@@ -135,6 +137,8 @@ namespace Projectiles
 
             if (_playOnAwake == true)
             {
+                Debug.Log("AudioEfect OnEnable _playOnAwake>>");
+
                 Play();
             }
         }
@@ -143,6 +147,7 @@ namespace Projectiles
         {
             StopDelayedPlay();
             _audioSource.enabled = false;
+            Debug.Log("AudioEfect OnDisable StopDelayedPlay>>");
         }
 
 
@@ -168,6 +173,7 @@ namespace Projectiles
             if (_currentSetup.Delay < 0.01f && waitForFadeOut == false)
             {
                 PlayClip(LastPlayedClipIndex);
+                Debug.Log("AudioEfect StartPlay PlayClip>>" + LastPlayedClipIndex);
             }
             else
             {
@@ -177,9 +183,11 @@ namespace Projectiles
                 {
                     delay += previousSetup.FadeOut;
                     _audioSource.FadeOut(this, previousSetup.FadeOut);
+                    Debug.Log("AudioEfect StartPlay _audioSource.FadeOut>>" + previousSetup.FadeOut+">>"+delay);
                 }
 
-                _delayedPlayRoutine = StartCoroutine(PlayDelayed_Coroutine(delay, LastPlayedClipIndex));
+                _delayedPlayRoutine = StartCoroutine(PlayDelayed_Coroutine(delay, LastPlayedClipIndex)); 
+                Debug.Log("AudioEfect StartPlay _delayedPlayRoutine StartCoroutine(PlayDelayed_Coroutine>>" + LastPlayedClipIndex);
             }
         }
 
@@ -205,9 +213,10 @@ namespace Projectiles
             }
 
             _playCount++;
-
+            Debug.Log(">>AudioEfect PlayCliP clipIndex >> _playCount" + clipIndex + ">>" + _playCount);
             if (_currentSetup.Repeat == true && _playCount < _currentSetup.RepeatPlayCount)
             {
+                Debug.Log("AudioEfect _currentSetup.Repeat == true && _playCount < _currentSetup.RepeatPlayCount" + _playCount+"<"+ _currentSetup.RepeatPlayCount);
                 _delayedPlayRoutine = StartCoroutine(PlayDelayed_Coroutine(_audioSource.clip.length + _currentSetup.RepeatDelay, clipIndex));
             }
         }
@@ -220,7 +229,7 @@ namespace Projectiles
             }
 
             _delayedPlayRoutine = null;
-
+            Debug.Log(">>AudioEfect PlayDelayed_Coroutine" + delay + ">>" + clipIndex);
             PlayClip(clipIndex);
         }
 
@@ -248,6 +257,7 @@ namespace Projectiles
                 clipIndex = (clipIndex + 1) % setup.Clips.Length;
             }
 
+            Debug.Log(">>AudioEfect NextClipIndex" + clipIndex);
             return clipIndex;
         }
     }

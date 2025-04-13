@@ -209,7 +209,7 @@ namespace Projectiles
             int bufferLength = _hits.Length;
             int oldestValidHit = hitCount - bufferLength;
 
-            Debug.Log("UpdateVisibleHits onlyClient bufferLength,hitcount-bufferLength" + bufferLength + "," + hitCount+"-"+bufferLength);
+            Debug.Log("UpdateVisibleHits onlyClient bufferLength,hitcount-bufferLength" + oldestValidHit + "," + hitCount+"-"+bufferLength);
             Debug.Log("UpdateVisibleHits onlyClient transform.name Mathf.Max(_visibleHitCount, oldestValidHit)" + transform.name+">>"+ Mathf.Max(_visibleHitCount, oldestValidHit));
             for (int i = Mathf.Max(_visibleHitCount, oldestValidHit); i < hitCount; i++)
             {
@@ -228,7 +228,7 @@ namespace Projectiles
                     IsFatal = hit.IsFatal,
                 };
 
-                Debug.Log(i + "UpdateVisibleHits hitData onlyClient OnHitTaken 타깃이 자기자신이고,다른존재에게 맞는경우>>"+hitIndex+",맞는대상:"+transform.name+",때리는대상:"+hit.Instigator.AsIndex);
+                Debug.Log(i + "UpdateVisibleHits hitData onlyClient OnHitTaken 타깃이 이 요소 이고,다른존재에게 맞는경우>>"+hitIndex+",맞는대상:"+transform.name+",때리는대상:"+hit.Instigator.AsIndex);
 
                 OnHitTaken(ref hitData);
             }
@@ -242,7 +242,7 @@ namespace Projectiles
             // to be synchronized over network as well (e.g. when spectating other players)
             if (hitData.InstigatorRef == Context.Runner.LocalPlayer)
             {
-                Debug.Log("hitData InstigatorRef == Context.Runner.LocalPlayer(공격자가 지금 플레이어자신인경우:HasStateAuthority>>)"
+                Debug.Log("hitData InstigatorRef == Context.Runner.LocalPlayer(공격자가 지금 플레이어자신인경우)>>)"
                     + hitData.InstigatorRef.AsIndex + "==" + Context.Runner.LocalPlayer.AsIndex);
                 var instigator = hitData.Instigator;
 
@@ -250,7 +250,7 @@ namespace Projectiles
                 {
                     var playerObject = Runner.GetPlayerObject(hitData.InstigatorRef);
                     var agent = playerObject != null ? playerObject.GetComponent<Player>().ActiveAgent : null;
-                    Debug.Log("HitData 공격자 HasStateAuthority instigator HitPerformed>>" + playerObject.transform.name);
+                    Debug.Log("HitData 공격자 instigator HitPerformed>>" + playerObject.transform.name);
 
                     instigator = agent != null ? agent.Health : null;
                 }

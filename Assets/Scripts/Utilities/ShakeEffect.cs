@@ -163,7 +163,7 @@ namespace Projectiles
             {
                 if (_activeShakes[i].IsFinished == true)
                 {
-                    //Debug.Log(i + "| ShakeEffect Update _activeShakes IsFinished removeshake>>" + rotationOffset);
+                    Debug.Log(i + "| ShakeEffect Update _activeShakes IsFinished removeshake>>" + rotationOffset);
                     RemoveShake(i);
                 }
             }
