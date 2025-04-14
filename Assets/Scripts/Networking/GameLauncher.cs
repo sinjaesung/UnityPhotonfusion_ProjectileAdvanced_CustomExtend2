@@ -31,7 +31,6 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 	//private FusionObjectPoolRoot _pool;
 	private LevelManager _levelManager;
 
-
 	private void Start()
 	{
 		//Physics.autoSimulation = false;
@@ -166,6 +165,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 			if (_gameMode == GameMode.Host)
 			{
 				runner.Spawn(_roomgameManagerPrefab, Vector3.zero, Quaternion.identity);
+				//runner.Spawn(gameManagerPrefab, Vector3.zero, Quaternion.identity);
 			}
 			var roomPlayer = runner.Spawn(_roomPlayerPrefab, Vector3.zero, Quaternion.identity, player);
 			roomPlayer.GameState = RoomPlayer.EGameState.Lobby;

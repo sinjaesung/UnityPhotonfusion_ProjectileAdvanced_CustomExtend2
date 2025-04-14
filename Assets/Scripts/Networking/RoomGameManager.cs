@@ -16,7 +16,7 @@ public class RoomGameManager : NetworkBehaviour
 	//public new Camera camera;
 	//private ICameraController cameraController;
 
-	public static Gameplay CurrentWorld { get; private set; }
+	public static World CurrentWorld { get; private set; }
 	public static bool IsPlaying => CurrentWorld != null;
 
 	public static RoomGameManager Instance { get; private set; }
@@ -27,7 +27,6 @@ public class RoomGameManager : NetworkBehaviour
 	[Networked] public int worldId { get; set; }
 	[Networked] public int MaxUsers { get; set; }
 
-	[SerializeField] private Gameplay _gameplayPrefab;
 
 	private static void OnLobbyDetailsChangedCallback(RoomGameManager changed)
 	{
@@ -60,8 +59,6 @@ public class RoomGameManager : NetworkBehaviour
 			worldId = ServerInfo.WorldId;
 			MaxUsers = ServerInfo.MaxUsers;
 			Debug.Log("RoomGameManager Spawned HasStateAuthority Networked LobbyName,TrackId,GameTypeId,MaxUsers"+ LobbyName+",worldId:"+worldId+",MaxUsers:"+MaxUsers);
-
-			Runner.Spawn(_gameplayPrefab);
 		}
 	}
 
@@ -105,7 +102,7 @@ public class RoomGameManager : NetworkBehaviour
 
 	public static bool IsCameraControlled => Instance.cameraController != null;*/
 
-	public static void SetWorld(Gameplay world)
+	public static void SetWorld(World world)
 	{
 		CurrentWorld = world;
 	}

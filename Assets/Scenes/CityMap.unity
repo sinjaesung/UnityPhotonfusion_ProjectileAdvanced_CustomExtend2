@@ -5451,6 +5451,8 @@ GameObject:
   - component: {fileID: 1477071073}
   - component: {fileID: 1477071074}
   - component: {fileID: 2374678929887564224}
+  - component: {fileID: 2374678929887564226}
+  - component: {fileID: 2374678929887564225}
   m_Layer: 0
   m_Name: Scene
   m_TagString: Untagged
@@ -10128,6 +10130,37 @@ MonoBehaviour:
   HaloStrength: 0.5
   FlareStrength: 1
   FlareFadeSpeed: 3
+--- !u!114 &2374678929887564225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477071071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 181825801
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 2374678929887564226}
+--- !u!114 &2374678929887564226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477071071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baba9e0bad8bcc240b3e1a6981798ab3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  definition: {fileID: 11400000, guid: 8b123832401aecb429beb95bdd021f38, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

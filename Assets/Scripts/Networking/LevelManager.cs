@@ -41,6 +41,12 @@ public class LevelManager : NetworkSceneManagerDefault
 		// Now we can safely spawn characters
 		if (RoomGameManager.CurrentWorld != null && sceneRef.AsIndex > LOBBY_SCENE)
 		{
+			FindObjectOfType<World>().SceneLoadDone(Runner);
+
+			yield return new WaitForSeconds(0.1f);
+			FindObjectOfType<World>().GamePlaySpawn();
+			yield return new WaitForSeconds(0.2f);
+
 			Debug.Log("LevelManager LoadSceneCoroutine>> Runner.GameMode>> RoomGameManager.CurrentWorld" + Runner.GameMode);
 			if (Runner.GameMode == GameMode.Host)
 			{

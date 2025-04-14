@@ -11,7 +11,7 @@ namespace Projectiles
     /// <summary>
     /// Handles player connections (spawning of Player instances) and prepares SceneContext when a gameplay scene load is done.
     /// </summary>
-    [RequireComponent(typeof(NetworkRunner))]
+    //[RequireComponent(typeof(NetworkRunner))]
     [RequireComponent(typeof(NetworkEvents))]
     [DefaultExecutionOrder(-100)]
     public sealed class GameManager : SimulationBehaviour, INetworkRunnerCallbacks
@@ -25,9 +25,7 @@ namespace Projectiles
 
         private bool _gameplaySpawned;
 
-        [SerializeField]
-        private Player[] _playerPrefabs;
-
+        
         // INetworkRunnerCallbacks INTERFACE
         void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
         {
@@ -40,23 +38,11 @@ namespace Projectiles
                 _gameplaySpawned = true;
             }
 
-            var charIndex = (playerRef.AsIndex-1)%11;
-            Debug.Log("GameManager OnPlayerJoined Join CharIndex>>" + charIndex);//0,1,2,3,4,5,6,7,8,9%10 => 0,1,2,3,4,5,6,7,8,9,0,....
-
-            var player = Runner.Spawn(_playerPrefabs[charIndex], inputAuthority: playerRef);
-            Runner.SetPlayerObject(playerRef, player.Object);
+            Debug.Log("GameManager OnPlayerJoined Join CharIndex>>" );
         }
 
         void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
         {
-            if (Runner.IsServer == false)
-                return;
-
-            var player = Runner.GetPlayerObject(playerRef);
-            if (player != null)
-            {
-                Runner.Despawn(player);
-            }
         }
 
         void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)

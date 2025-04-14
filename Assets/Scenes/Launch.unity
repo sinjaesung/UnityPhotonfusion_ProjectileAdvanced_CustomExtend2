@@ -3262,7 +3262,6 @@ MonoBehaviour:
   lobbyNameText: {fileID: 1699117204}
   worldNameDropdown: {fileID: 1668240187}
   worldIconImage: {fileID: 845657189}
-  _gameplayPrefab: {fileID: 8680925408037953290, guid: 859aeeb79adf70d40a11da0cccdd1b07, type: 3}
 --- !u!114 &303195156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22868,6 +22867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roomgameManagerPrefab: {fileID: 5685965183826724389, guid: 47b1d3d51be08c24c9782a876042e1bc, type: 3}
+  gameManagerPrefab: {fileID: 8632118826471121907, guid: 97dbb2f8cbf682d438d75b520e651995, type: 3}
   _roomPlayerPrefab: {fileID: 5707343695237098041, guid: 9131ab46523908b4e9ccd6af94d6bb9f, type: 3}
   _disconnectUI: {fileID: 1981393692}
 --- !u!114 &9013901323078319371
