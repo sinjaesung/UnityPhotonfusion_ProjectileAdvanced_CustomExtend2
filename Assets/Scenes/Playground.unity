@@ -4982,7 +4982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1060139213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7023,7 +7023,6 @@ GameObject:
   - component: {fileID: 1768122596}
   - component: {fileID: 1768122595}
   - component: {fileID: 1768122599}
-  - component: {fileID: 1768122598}
   - component: {fileID: 1768122597}
   m_Layer: 0
   m_Name: Scene
@@ -7138,8 +7137,7 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1768122596}
+  NetworkedBehaviours: []
 --- !u!114 &1768122596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7169,18 +7167,6 @@ MonoBehaviour:
   BVHDepth: 0
   BVHNodes: 0
   TotalHitboxes: 0
---- !u!114 &1768122598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1768122591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 088832dd2e6be3f458b69faf779eca59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1768122599
 MonoBehaviour:
   m_ObjectHideFlags: 0

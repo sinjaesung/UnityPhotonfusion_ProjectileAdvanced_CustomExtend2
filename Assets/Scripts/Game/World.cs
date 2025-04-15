@@ -1,8 +1,11 @@
 using Fusion;
 using UnityEngine;
 using Projectiles;
+using System;
+using System.Collections.Generic;
+using Fusion.Sockets;
 
-public class World : NetworkBehaviour
+public class World : SimulationBehaviour
 {
 	public static World Current { get; private set; }
 
@@ -12,18 +15,18 @@ public class World : NetworkBehaviour
 
 	[SerializeField]
 	private Gameplay _gameplayPrefab;
-	private void Awake()
+	private void Start()
 	{
 		Current = this;
 
 		RoomGameManager.SetWorld(this);
 	}
 
-	public override void Spawned()
+	/*public override void Spawned()
 	{
 		base.Spawned();
 	}
-
+*/
 	private void OnDestroy()
 	{
 		RoomGameManager.SetWorld(null);
@@ -53,14 +56,20 @@ public class World : NetworkBehaviour
 		Debug.Log($"Spawning Character for [{player.Username}] as {entity.name}");
 		entity.transform.name = $"Character ([{player.Username}]) {charId}";
 		Debug.Log("GamePlay(WorldMap) SpawnPlayer roomplayer InputAuthority(PlayerRef)" + player.Object.InputAuthority);
-		Runner.SetPlayerObject(player.Object.InputAuthority, entity.Object);
+		runner.SetPlayerObject(runner.LocalPlayer, entity.Object);
+
+		Debug.Log("ValidateContext>>" + runner.LocalPlayer);
+		var SceneContext = FindObjectOfType<Scene>().Context;
+		var localPlayer = /*SceneContext.Runner*/runner.GetPlayerObject(runner.LocalPlayer);
+		Debug.Log("Spawning Character localPlayer" + localPlayer.transform.name);
+		SceneContext.LocalAgent = localPlayer != null ? localPlayer.GetComponent<Player>().ActiveAgent : null;
 	}
 
-	public void GamePlaySpawn()
+	public void GamePlaySpawn(NetworkRunner runner)
     {
-		Runner.Spawn(_gameplayPrefab);
+		runner.Spawn(_gameplayPrefab);
 	}
-	public void SceneLoadDone(NetworkRunner runner_)
+	/*public void SceneLoadDone(NetworkRunner runner_)
     {
 		// Prepare context
 		var scene = runner_.SimulationUnityScene.GetComponent<Scene>(true);
@@ -70,8 +79,10 @@ public class World : NetworkBehaviour
 
 		// Assign context
 		var contextBehaviours = runner_.SimulationUnityScene.GetComponents<IContextBehaviour>(true);
+		int b = 0;
 		foreach (var behaviour in contextBehaviours)
 		{
+			Debug.Log(b+"| World SceneLoadDone contextBehaviours behaviour" + behaviour);
 			behaviour.Context = context;
 		}
 
@@ -86,5 +97,7 @@ public class World : NetworkBehaviour
 			var renderSettingsUpdated = scene.GetComponent<RenderSettingsUpdater>();
 			renderSettingsUpdated.ApplySettings();
 		}
-	}
+
+		FindObjectOfType<Gameplay>().Context_GamePlayAssign();
+	}*/
 }

@@ -47,14 +47,24 @@ namespace Projectiles.UI
             _screenEffects = GetComponentInChildren<UIScreenEffects>(true);
 
             _aliveGroup.alpha = 0f;
+
+            Invoke(nameof(ContextSetup), 0.2f);
+        }
+        private void ContextSetup()
+        {
+            _context = GameUI.Context;
         }
 
         protected void Update()
         {
+            if (!_context) return;
+
             if (_context.Runner == null || _context.Runner.IsRunning == false)
                 return;
 
             //Debug.Log("Context localAgent>>" + _context.LocalAgent.transform.name);
+            if (!_context.LocalAgent) return;
+
             SetObservedAgent(_context.LocalAgent);
 
             if (_observedAgent == null)

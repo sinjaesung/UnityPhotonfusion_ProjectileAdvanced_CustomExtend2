@@ -64,9 +64,12 @@ namespace Projectiles
        public override void Spawned()
        {
             // Register to context
+            //Context.Gameplay = this;
+        }
+        public void Context_GamePlayAssign()
+        {
             Context.Gameplay = this;
         }
-
         public override void FixedUpdateNetwork()
         {
             if (HasStateAuthority == false)

@@ -27,7 +27,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 	public static ConnectionStatus ConnectionStatus = ConnectionStatus.Disconnected;
 
 	private GameMode _gameMode;
-	private NetworkRunner _runner;
+	[SerializeField] private GameObject _runner;
+	public NetworkRunner goobj;
 	//private FusionObjectPoolRoot _pool;
 	private LevelManager _levelManager;
 
@@ -56,19 +57,20 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 		if (_runner != null)
 			LeaveSession();
 
-		GameObject go = new GameObject("Session");
-		DontDestroyOnLoad(go);
-
-		_runner = go.AddComponent<NetworkRunner>();
-		//var sim3D = go.AddComponent<RunnerSimulatePhysics3D>();
-		//sim3D.ClientPhysicsSimulation = ClientPhysicsSimulation.SimulateAlways;
+		//GameObject go = new GameObject("Session");
+		//DontDestroyOnLoad(go);
+		GameObject go=Instantiate(_runner);
+		/*_runner = go.AddComponent<NetworkRunner>();
+		var sim3D = go.AddComponent<RunnerSimulatePhysics3D>();
+		sim3D.ClientPhysicsSimulation = ClientPhysicsSimulation.SimulateAlways;
 
 		_runner.ProvideInput = _gameMode != GameMode.Server;
-		_runner.AddCallbacks(this);
-
+		_runner.AddCallbacks(this);*/
+		go.AddComponent<NetworkRunner>();
+		goobj = go.GetComponent<NetworkRunner>();
 		//_pool = go.AddComponent<FusionObjectPoolRoot>();
 
-		Debug.Log($"Created gameobject {go.name} - starting game");
+		Debug.Log($"Assigned gameobject {_runner.name} - starting game");
 		if (_gameMode == GameMode.Host)
 		{
 			Debug.Log("GameMode.Host LobbyName>>" + ServerInfo.LobbyName);
@@ -77,7 +79,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 		{
 			Debug.Log("GameMode.Client LobbyName>>" + ClientInfo.LobbyName);
 		}
-		_runner.StartGame(new StartGameArgs
+		goobj.StartGame(new StartGameArgs
 		{
 			GameMode = _gameMode,
 			SessionName = _gameMode == GameMode.Host ? ServerInfo.LobbyName : ClientInfo.LobbyName,
@@ -108,8 +110,8 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
 	public void LeaveSession()
 	{
-		if (_runner != null)
-			_runner.Shutdown();
+		if (goobj != null)
+			goobj.Shutdown();
 		else
 			SetConnectionStatus(ConnectionStatus.Disconnected);
 

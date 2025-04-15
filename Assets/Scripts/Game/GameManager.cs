@@ -18,18 +18,22 @@ namespace Projectiles
     {
         // PRIVATE MEMBERS
 
-        [SerializeField]
+      /*  [SerializeField]
         private Gameplay _gameplayPrefab;
         [SerializeField]
-        private Player _playerPrefab;
+        private Player _playerPrefab;*/
 
         private bool _gameplaySpawned;
 
-        
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         // INetworkRunnerCallbacks INTERFACE
         void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
         {
-            if (Runner.IsServer == false)
+           /* if (Runner.IsServer == false)
                 return;
 
             if (_gameplaySpawned == false)
@@ -38,7 +42,7 @@ namespace Projectiles
                 _gameplaySpawned = true;
             }
 
-            Debug.Log("GameManager OnPlayerJoined Join CharIndex>>" );
+            Debug.Log("GameManager OnPlayerJoined Join CharIndex>>" );*/
         }
 
         void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)

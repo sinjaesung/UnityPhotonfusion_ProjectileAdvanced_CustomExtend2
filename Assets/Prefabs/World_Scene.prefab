@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   definition: {fileID: 0}
+  _gameplayPrefab: {fileID: 0}
 --- !u!114 &4480398733040145383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,5 +63,4 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 6952832472215441531}
+  NetworkedBehaviours: []

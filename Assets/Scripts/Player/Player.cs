@@ -2,6 +2,7 @@ using Fusion;
 using UnityEngine;
 using static Fusion.NetworkEvents;
 using static Unity.Collections.Unicode;
+using System.Collections;
 
 namespace Projectiles
 {
@@ -29,6 +30,8 @@ namespace Projectiles
         public int CharacterIndex { get; set; } = -1;
         // PUBLIC METHODS
 
+        private bool Isgameplayjoin = false;
+
         public void AssignAgent(PlayerAgent agent)
         {
             ActiveAgent = agent;
@@ -53,11 +56,28 @@ namespace Projectiles
 
         public override void Spawned()
         {
-            if (Context.Gameplay != null)
+            if (Context && Context.Gameplay != null)
             {
                 Debug.Log("Player Spawned>> gameplay join");
                 Context.Gameplay.Join(this);
             }
+            StartCoroutine(ContextGamePlayJoin());
+        }
+        private IEnumerator ContextGamePlayJoin()
+        {
+            while (true)
+            {
+                //Debug.Log("ContextGamePlayJoin whiles" + (Context ? Context.transform.name:""));
+                if (Context && Context.Gameplay!=null)
+                {
+                    break;
+                }
+
+                yield return new WaitForSeconds(2f);
+                StartCoroutine(ContextGamePlayJoin());
+            }
+            //Debug.Log("Player ContextGamePlayJoin>>");
+            Context.Gameplay.Join(this);
         }
         public void SetCharacterIndex(int _index)
         {

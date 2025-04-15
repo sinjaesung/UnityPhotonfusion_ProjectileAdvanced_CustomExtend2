@@ -32,9 +32,10 @@ namespace Projectiles
                 Context.LocalAgent = null;
                 return;
             }
-
-            var localPlayer = Context.Runner.GetPlayerObject(runner.LocalPlayer);
-            Context.LocalAgent = localPlayer != null ? localPlayer.GetComponent<Player>().ActiveAgent : null;
+            //Debug.Log("ValidateContext>>" + runner.LocalPlayer);
+            //var localPlayer = Context.Runner.GetPlayerObject(runner.LocalPlayer);
+            //Debug.Log("Scene ValidateContext localPlayer" + localPlayer.transform.name);
+            //Context.LocalAgent = localPlayer != null ? localPlayer.GetComponent<Player>().ActiveAgent : null;
         }
     }
 }
