@@ -1,5 +1,6 @@
 using System;
 using Fusion.Sockets;
+using System.Collections;
 
 namespace Projectiles
 {
@@ -18,11 +19,11 @@ namespace Projectiles
     {
         // PRIVATE MEMBERS
 
-      /*  [SerializeField]
-        private Gameplay _gameplayPrefab;
-        [SerializeField]
-        private Player _playerPrefab;*/
-
+        /* [SerializeField]
+          private Gameplay _gameplayPrefab;
+          [SerializeField]
+          private Player _playerPrefab;*/
+        [SerializeField] private Gameplay assigngameplay;
         private bool _gameplaySpawned;
 
         private void Awake()
@@ -33,6 +34,7 @@ namespace Projectiles
         // INetworkRunnerCallbacks INTERFACE
         void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
         {
+            Debug.Log("GameManager OnPlayerJoined>>"+runner.transform.name+">>"+ playerRef.PlayerId);
            /* if (Runner.IsServer == false)
                 return;
 
@@ -66,7 +68,7 @@ namespace Projectiles
 
             var objectPool = Runner.GetComponent<NetworkObjectPool>();
             objectPool.Context = context;
-            Debug.Log("GameManager OnSceneLoadDone");
+            Debug.Log("GameManager OnSceneLoadDone"+ objectPool.transform.name);
 
             if (runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
             {
@@ -74,6 +76,22 @@ namespace Projectiles
                 // In case of multipeer mode, fix the scene lighting
                 var renderSettingsUpdated = scene.GetComponent<RenderSettingsUpdater>();
                 renderSettingsUpdated.ApplySettings();
+            }
+            StartCoroutine(AssignGameplay());
+        }
+        private IEnumerator AssignGameplay()
+        {
+            while (!FindObjectOfType<Gameplay>())
+            {
+                Debug.Log("GameManager AssignGameplay pending");
+                yield return new WaitForSeconds(0.06f);
+            }
+            yield return new WaitForSeconds(1f);
+            if (FindObjectOfType<Gameplay>())
+            {
+                Debug.Log("GameManager AssignGameplay Context_GamePlayAssign");
+                assigngameplay = FindObjectOfType<Gameplay>();
+                assigngameplay.Context_GamePlayAssign();
             }
         }
         void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

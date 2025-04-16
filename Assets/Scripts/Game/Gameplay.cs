@@ -65,9 +65,11 @@ namespace Projectiles
        {
             // Register to context
             //Context.Gameplay = this;
+            Debug.Log("GameEPlay Spawned>>");
         }
         public void Context_GamePlayAssign()
         {
+            Debug.Log("SceneContext Context transform name and GamePlay Assign>>" + Context.transform.name);
             Context.Gameplay = this;
         }
         public override void FixedUpdateNetwork()
@@ -139,7 +141,7 @@ namespace Projectiles
 
             var agent = SpawnAgent(player.Object.InputAuthority, player.AgentPrefab) as PlayerAgent;
             player.AssignAgent(agent);
-
+            Debug.Log("GamePlay SpawnPlayerAgent"+ player.Object.InputAuthority+","+player.RoomUser.Object.InputAuthority);
             agent.Health.FatalHitTaken += OnFatalHitTaken;
 
             OnPlayerAgentSpawned(agent);
@@ -153,7 +155,7 @@ namespace Projectiles
             player.ActiveAgent.Health.FatalHitTaken -= OnFatalHitTaken;
 
             OnPlayerAgentDespawned(player.ActiveAgent);
-
+            Debug.Log("GamePlay DespawnPlayerAgent" + player.Object.InputAuthority + "," + player.RoomUser.Object.InputAuthority);
             DespawnAgent(player.ActiveAgent);
             player.ClearAgent();
         }
@@ -196,6 +198,7 @@ namespace Projectiles
             var spawnPoint = _spawnPoints[_lastSpawnPoint].transform;
 
             var agent = Runner.Spawn(agentPrefab, spawnPoint.position, spawnPoint.rotation, inputAuthority);
+            Debug.Log("GamePlay SpawnAgent>>" + agent.transform.name);
             return agent;
         }
 

@@ -27,7 +27,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 	public static ConnectionStatus ConnectionStatus = ConnectionStatus.Disconnected;
 
 	private GameMode _gameMode;
-	[SerializeField] private GameObject _runner;
+	[SerializeField] private NetworkRunner _runner;
 	public NetworkRunner goobj;
 	//private FusionObjectPoolRoot _pool;
 	private LevelManager _levelManager;
@@ -54,36 +54,37 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		SetConnectionStatus(ConnectionStatus.Connecting);
 
-		if (_runner != null)
+		if (goobj != null)
 			LeaveSession();
 
 		//GameObject go = new GameObject("Session");
 		//DontDestroyOnLoad(go);
-		GameObject go=Instantiate(_runner);
+		NetworkRunner go=Instantiate(_runner);//gameManager»ý¼º
 		/*_runner = go.AddComponent<NetworkRunner>();
 		var sim3D = go.AddComponent<RunnerSimulatePhysics3D>();
 		sim3D.ClientPhysicsSimulation = ClientPhysicsSimulation.SimulateAlways;
 
 		_runner.ProvideInput = _gameMode != GameMode.Server;
 		_runner.AddCallbacks(this);*/
-		go.AddComponent<NetworkRunner>();
-		goobj = go.GetComponent<NetworkRunner>();
+		goobj = go;
 		//_pool = go.AddComponent<FusionObjectPoolRoot>();
+		goobj.ProvideInput = _gameMode != GameMode.Server;
+		goobj.AddCallbacks(this);
 
-		Debug.Log($"Assigned gameobject {_runner.name} - starting game");
+		Debug.Log($"GameLauncher Assigned gameobject {_runner.name} - starting game");
 		if (_gameMode == GameMode.Host)
 		{
-			Debug.Log("GameMode.Host LobbyName>>" + ServerInfo.LobbyName);
+			Debug.Log("GameLauncher GameMode.Host LobbyName>>" + ServerInfo.LobbyName);
 		}
 		else
 		{
-			Debug.Log("GameMode.Client LobbyName>>" + ClientInfo.LobbyName);
+			Debug.Log("GameLauncher GameMode.Client LobbyName>>" + ClientInfo.LobbyName);
 		}
 		goobj.StartGame(new StartGameArgs
 		{
 			GameMode = _gameMode,
 			SessionName = _gameMode == GameMode.Host ? ServerInfo.LobbyName : ClientInfo.LobbyName,
-			//ObjectProvider = _pool,
+			ObjectProvider = goobj.GetComponent<NetworkObjectPool>(),
 			SceneManager = _levelManager,
 			PlayerCount = ServerInfo.MaxUsers,
 			EnableClientSessionCreation = false
@@ -120,13 +121,13 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
 	public void OnConnectedToServer(NetworkRunner runner)
 	{
-		Debug.Log("Connected to server");
+		Debug.Log("GameLauncher Connected to server");
 		SetConnectionStatus(ConnectionStatus.Connected);
 	}
 
 	public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
 	{
-		Debug.Log("Disconnected from server");
+		Debug.Log("GameLauncher Disconnected from server");
 		LeaveSession();
 		SetConnectionStatus(ConnectionStatus.Disconnected);
 	}
@@ -147,7 +148,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 	}
 	public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
 	{
-		Debug.Log($"Connect failed {reason}");
+		Debug.Log($"GameLauncher Connect failed {reason}");
 		LeaveSession();
 		SetConnectionStatus(ConnectionStatus.Failed);
 		(string status, string message) = ConnectFailedReasonToHuman(reason);
@@ -160,7 +161,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 
 	public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
 	{
-		Debug.Log($"GameLauncher Player {player} Joined!");
+		Debug.Log($"GameLauncher Player {player} Joined! "+runner.transform.name);
 		if (runner.IsServer)
 		{
 			Debug.Log("GameLauncher OnPlayerJoined IsServer>>");

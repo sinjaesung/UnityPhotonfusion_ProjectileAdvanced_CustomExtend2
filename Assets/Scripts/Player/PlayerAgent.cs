@@ -130,7 +130,7 @@ namespace Projectiles
                 var cameraTransform = Context.Camera.transform;
 
                 // Setting base camera transform based on handle
-                cameraTransform.position = _cameraHandle.position+new Vector3(0,0.2f,0f);
+                cameraTransform.position = _cameraHandle.position+new Vector3(0,0.3f,0f);
                 cameraTransform.rotation = _cameraHandle.rotation;
 
                 Debug.Log("PlayerAgent LateUpdate CameraControll>>" + Runner.LocalPlayer.PlayerId);

@@ -15,6 +15,7 @@ public class World : SimulationBehaviour
 
 	[SerializeField]
 	private Gameplay _gameplayPrefab;
+	private NetworkRunner runners; 
 	private void Start()
 	{
 		Current = this;
@@ -58,15 +59,30 @@ public class World : SimulationBehaviour
 		Debug.Log("GamePlay(WorldMap) SpawnPlayer roomplayer InputAuthority(PlayerRef)" + player.Object.InputAuthority);
 		runner.SetPlayerObject(runner.LocalPlayer, entity.Object);
 
-		Debug.Log("ValidateContext>>" + runner.LocalPlayer);
-		var SceneContext = FindObjectOfType<Scene>().Context;
-		var localPlayer = /*SceneContext.Runner*/runner.GetPlayerObject(runner.LocalPlayer);
-		Debug.Log("Spawning Character localPlayer" + localPlayer.transform.name);
-		SceneContext.LocalAgent = localPlayer != null ? localPlayer.GetComponent<Player>().ActiveAgent : null;
+		runners = runner;
 	}
 
-	public void GamePlaySpawn(NetworkRunner runner)
+    private void Update()
     {
+		if (!runners) return;
+
+		//Debug.Log("ValidateContext>>" + runners.LocalPlayer);
+		if (!FindObjectOfType<Scene>()) return;
+
+		var SceneContext = FindObjectOfType<Scene>().Context;
+
+		if ((runners.LocalPlayer)==null) return;
+		var localPlayer = /*SceneContext.Runner*/runners.GetPlayerObject(runners.LocalPlayer);
+		if (!localPlayer) return;
+		Debug.Log("World Update  localPlayer" + localPlayer.transform.name);
+		if (localPlayer.GetComponent<Player>().ActiveAgent == null) return;
+		SceneContext.LocalAgent = localPlayer != null ? localPlayer.GetComponent<Player>().ActiveAgent : null;
+		Debug.Log("World Update SceneContext.LocalAgent " + SceneContext.LocalAgent.transform.name);
+	}
+
+    public void GamePlaySpawn(NetworkRunner runner)
+    {
+		Debug.Log("World GamePlaySpawn>>" + _gameplayPrefab.transform.name);
 		runner.Spawn(_gameplayPrefab);
 	}
 	/*public void SceneLoadDone(NetworkRunner runner_)

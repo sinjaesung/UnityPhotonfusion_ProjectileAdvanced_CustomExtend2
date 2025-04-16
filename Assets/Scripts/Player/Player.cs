@@ -37,9 +37,11 @@ namespace Projectiles
             ActiveAgent = agent;
             ActiveAgent.Owner = this;
 
+            Debug.Log("Player AssignAgent>>" + agent.transform.name);
             if (HasStateAuthority == true && _lastWeaponSlot != 0)
             {
                 agent.Weapons.SwitchWeapon(_lastWeaponSlot, true);
+                Debug.Log("Player AssignAgent HasStateAuthority SwitchWeapon>>");
             }
         }
 
@@ -58,9 +60,9 @@ namespace Projectiles
         {
             if (Context && Context.Gameplay != null)
             {
-                Debug.Log("Player Spawned>> gameplay join");
                 Context.Gameplay.Join(this);
             }
+            Debug.Log("Player Spawned>> gameplay join");
             StartCoroutine(ContextGamePlayJoin());
         }
         private IEnumerator ContextGamePlayJoin()
@@ -72,12 +74,15 @@ namespace Projectiles
                 {
                     break;
                 }
-
-                yield return new WaitForSeconds(2f);
-                StartCoroutine(ContextGamePlayJoin());
+                Debug.Log("Player ContextGamePlayJoin pending>>");
+                yield return new WaitForSeconds(0.1f);
             }
-            //Debug.Log("Player ContextGamePlayJoin>>");
-            Context.Gameplay.Join(this);
+
+            if (Context && Context.Gameplay != null)
+            {
+                Debug.Log("Player ContextGamePlayJoin>>");
+                Context.Gameplay.Join(this);
+            }
         }
         public void SetCharacterIndex(int _index)
         {
@@ -89,6 +94,7 @@ namespace Projectiles
             if (agentValid == true && HasStateAuthority == true)
             {
                 _lastWeaponSlot = ActiveAgent.Weapons.CurrentWeaponSlot;
+                Debug.Log("Player agentValid == true  _lastWeaponSlot:>>" + _lastWeaponSlot);
             }
         }
 

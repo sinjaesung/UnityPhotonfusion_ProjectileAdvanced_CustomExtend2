@@ -11883,6 +11883,7 @@ MonoBehaviour:
   characterDefinitions:
   - {fileID: 11400000, guid: b402f59b2807df34eb2fb10353f01325, type: 2}
   - {fileID: 11400000, guid: 9e89dda18247af04a8d8cd29b5a08975, type: 2}
+  - {fileID: 11400000, guid: 7dcad98cb6743d647a96e6c2694356f4, type: 2}
   worlds:
   - {fileID: 11400000, guid: 9d8ad1c44102f574a8803645fd727c31, type: 2}
   - {fileID: 11400000, guid: 8b123832401aecb429beb95bdd021f38, type: 2}
@@ -22869,7 +22870,7 @@ MonoBehaviour:
   _roomgameManagerPrefab: {fileID: 5685965183826724389, guid: 47b1d3d51be08c24c9782a876042e1bc, type: 3}
   _roomPlayerPrefab: {fileID: 5707343695237098041, guid: 9131ab46523908b4e9ccd6af94d6bb9f, type: 3}
   _disconnectUI: {fileID: 1981393692}
-  _runner: {fileID: 7588630613990174924, guid: 97dbb2f8cbf682d438d75b520e651995, type: 3}
+  _runner: {fileID: 7202344679776883015, guid: 97dbb2f8cbf682d438d75b520e651995, type: 3}
   goobj: {fileID: 0}
 --- !u!114 &9013901323078319371
 MonoBehaviour:
