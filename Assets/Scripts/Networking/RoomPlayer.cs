@@ -106,7 +106,7 @@ public class RoomPlayer : NetworkBehaviour
 			if (roomPlayer.player != null)
 				runner.Despawn(roomPlayer.player.Object);
 
-			Debug.Log("RoomPlayer RemovePlayer>>"+roomPlayer.transform.name+","+roomPlayer.player.transform.name);
+			//Debug.Log("RoomPlayer RemovePlayer>>"+roomPlayer.transform.name+","+roomPlayer.player.transform.name);
 			Players.Remove(roomPlayer);
 			runner.Despawn(roomPlayer.Object);
 		}

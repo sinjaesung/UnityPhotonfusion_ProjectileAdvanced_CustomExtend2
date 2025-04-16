@@ -52,7 +52,7 @@ public class RoomGameManager : NetworkBehaviour
 		base.Spawned();
 
 		_changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
-
+		Debug.Log("RoomGameManager Spawned>>");
 		if (Object.HasStateAuthority)
 		{
 			LobbyName = ServerInfo.LobbyName;
@@ -66,6 +66,7 @@ public class RoomGameManager : NetworkBehaviour
 	{
 		foreach (var change in _changeDetector.DetectChanges(this))
 		{
+			Debug.Log("RoomGameManager access LobbyName,worldId" + LobbyName + "," + worldId);
 			switch (change)
 			{
 				case nameof(LobbyName):

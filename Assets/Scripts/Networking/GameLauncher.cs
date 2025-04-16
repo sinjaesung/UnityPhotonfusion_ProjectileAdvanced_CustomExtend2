@@ -164,7 +164,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 		Debug.Log($"GameLauncher Player {player} Joined! "+runner.transform.name);
 		if (runner.IsServer)
 		{
-			Debug.Log("GameLauncher OnPlayerJoined IsServer>>");
+			Debug.Log("GameLauncher OnPlayerJoined IsServer>>"+ _gameMode);
 			if (_gameMode == GameMode.Host)
 			{
 				runner.Spawn(_roomgameManagerPrefab, Vector3.zero, Quaternion.identity);
