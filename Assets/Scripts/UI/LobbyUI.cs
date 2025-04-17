@@ -54,7 +54,7 @@ public class LobbyUI : MonoBehaviour, IDisabledUI
 		worldNameDropdown.AddOptions(trackOptions);
 		worldNameDropdown.value = RoomGameManager.Instance.IsSpawned?RoomGameManager.Instance.worldId:0;
 
-		worldIconImage.sprite = ResourceManager.Instance.worlds[RoomGameManager.Instance.worldId].worldIcon;
+		worldIconImage.sprite = ResourceManager.Instance.worlds[RoomGameManager.Instance.IsSpawned? RoomGameManager.Instance.worldId:0].worldIcon;
 		
 	}
 
@@ -140,7 +140,7 @@ public class LobbyUI : MonoBehaviour, IDisabledUI
 
 		if (IsAllReady())
 		{
-			int scene = ResourceManager.Instance.worlds[RoomGameManager.Instance.worldId].buildIndex;
+			int scene = ResourceManager.Instance.worlds[RoomGameManager.Instance.IsSpawned?RoomGameManager.Instance.worldId:0].buildIndex;
 
 			Debug.Log("LobbyUI IsAllReady()>> LevelManager.LoadTrack:" + scene);
 			LevelManager.LoadTrack(scene);

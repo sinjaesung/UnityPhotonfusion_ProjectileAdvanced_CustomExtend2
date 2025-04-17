@@ -110,5 +110,6 @@ public class RoomGameManager : NetworkBehaviour
 	public static void SetWorld(World world)
 	{
 		CurrentWorld = world;
+		Debug.Log("RoomGameManager SetWorld>>" + world.transform.name);
 	}
 }

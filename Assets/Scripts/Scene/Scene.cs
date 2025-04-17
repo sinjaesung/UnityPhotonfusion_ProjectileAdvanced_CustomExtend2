@@ -27,6 +27,8 @@ namespace Projectiles
         private void ValidateContext()
         {
             var runner = Context.Runner;
+            //Debug.Log("Scene ValidateContext>>" + runner.transform.name);
+
             if (runner == null || runner.IsRunning == false)
             {
                 Context.LocalAgent = null;

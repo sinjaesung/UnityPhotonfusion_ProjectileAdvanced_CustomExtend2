@@ -84,7 +84,7 @@ public class GameLauncher : MonoBehaviour, INetworkRunnerCallbacks
 		{
 			GameMode = _gameMode,
 			SessionName = _gameMode == GameMode.Host ? ServerInfo.LobbyName : ClientInfo.LobbyName,
-			ObjectProvider = goobj.GetComponent<NetworkObjectPool>(),
+			//ObjectProvider = goobj.GetComponent<NetworkObjectPool>(),
 			SceneManager = _levelManager,
 			PlayerCount = ServerInfo.MaxUsers,
 			EnableClientSessionCreation = false

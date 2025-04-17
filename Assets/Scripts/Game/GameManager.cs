@@ -55,6 +55,7 @@ namespace Projectiles
         {
             // Prepare context
             var scene = runner.SimulationUnityScene.GetComponent<Scene>(true);
+            FindObjectOfType<World>().GamePlaySpawn(Runner);
 
             var context = scene.Context;
             context.Runner = Runner;
