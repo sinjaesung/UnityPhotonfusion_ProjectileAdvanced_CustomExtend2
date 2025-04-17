@@ -25,7 +25,7 @@ public class LobbyUI : MonoBehaviour, IDisabledUI
 		worldNameDropdown.onValueChanged.AddListener(x =>
 		{
 			var gm = RoomGameManager.Instance;
-			if (gm != null) gm.worldId = x;
+			if (gm != null && gm.IsSpawned) gm.worldId = x;
 			Debug.Log("LobbyUI worldName worldId value changed>>" + x);
 		});
 
@@ -42,8 +42,9 @@ public class LobbyUI : MonoBehaviour, IDisabledUI
 
 	void UpdateDetails(RoomGameManager manager)
 	{
+        
 		Debug.Log("LobbyUI UpdateDetails>>");
-		lobbyNameText.text = "Room Code: " + manager.LobbyName;
+		lobbyNameText.text = "Room Code: " + (manager.IsSpawned ? manager.LobbyName : "");
 		//worldNameText.text = manager.worldName;
 
 		var worlds = ResourceManager.Instance.worlds;
@@ -51,9 +52,10 @@ public class LobbyUI : MonoBehaviour, IDisabledUI
 
 		worldNameDropdown.ClearOptions();
 		worldNameDropdown.AddOptions(trackOptions);
-		worldNameDropdown.value = RoomGameManager.Instance.worldId;
+		worldNameDropdown.value = RoomGameManager.Instance.IsSpawned?RoomGameManager.Instance.worldId:0;
 
 		worldIconImage.sprite = ResourceManager.Instance.worlds[RoomGameManager.Instance.worldId].worldIcon;
+		
 	}
 
 	public void Setup()

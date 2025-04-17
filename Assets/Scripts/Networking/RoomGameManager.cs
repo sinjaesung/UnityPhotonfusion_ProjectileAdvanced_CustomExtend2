@@ -26,7 +26,7 @@ public class RoomGameManager : NetworkBehaviour
 	[Networked] public NetworkString<_32> LobbyName { get; set; }
 	[Networked] public int worldId { get; set; }
 	[Networked] public int MaxUsers { get; set; }
-
+	public bool IsSpawned;
 
 	private static void OnLobbyDetailsChangedCallback(RoomGameManager changed)
 	{
@@ -49,6 +49,7 @@ public class RoomGameManager : NetworkBehaviour
 
 	public override void Spawned()
 	{
+		IsSpawned = true;
 		base.Spawned();
 
 		_changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
@@ -64,16 +65,19 @@ public class RoomGameManager : NetworkBehaviour
 
 	public override void Render()
 	{
-		foreach (var change in _changeDetector.DetectChanges(this))
-		{
-			Debug.Log("RoomGameManager access LobbyName,worldId" + LobbyName + "," + worldId);
-			switch (change)
+        if (IsSpawned)
+        {
+			foreach (var change in _changeDetector.DetectChanges(this))
 			{
-				case nameof(LobbyName):
-				case nameof(worldId):
-				case nameof(MaxUsers):
-					OnLobbyDetailsChangedCallback(this);
-					break;
+				Debug.Log("RoomGameManager access LobbyName,worldId" + LobbyName + "," + worldId);
+				switch (change)
+				{
+					case nameof(LobbyName):
+					case nameof(worldId):
+					case nameof(MaxUsers):
+						OnLobbyDetailsChangedCallback(this);
+						break;
+				}
 			}
 		}
 	}
