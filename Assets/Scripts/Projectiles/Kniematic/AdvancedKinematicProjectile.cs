@@ -109,6 +109,7 @@ namespace Projectiles
                 }
                 else
                 {
+                    Debug.Log("AdvancedKinematicProjectile Context Owner>>" + Context.Owner);
                     HitUtility.ProcessHit(Context.Owner, direction, hit, _damage, _hitType);
 
                     data.ImpactPosition = hit.Point;

@@ -28,40 +28,67 @@ namespace Projectiles
 
         [SerializeField]
         private Player[] _playerPrefabs;
+        [SerializeField]
+        private TestRoomPlayer roomplayerprefab;
 
         // INetworkRunnerCallbacks INTERFACE
         void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
         {
+            Debug.Log("GameManager OnPlayerJoined Runner.IsServer" + Runner.IsServer);
+
             if (Runner.IsServer == false)
                 return;
 
+            Runner.Spawn(roomplayerprefab,inputAuthority:playerRef);
             if (_gameplaySpawned == false)
             {
                 Runner.Spawn(_gameplayPrefab);
                 _gameplaySpawned = true;
             }
-
-            var charIndex = (playerRef.AsIndex-1)%11;
-            Debug.Log("GameManager OnPlayerJoined Join CharIndex>>" + charIndex);//0,1,2,3,4,5,6,7,8,9%10 => 0,1,2,3,4,5,6,7,8,9,0,....
-
-            var player = Runner.Spawn(_playerPrefabs[charIndex], inputAuthority: playerRef);
-            Runner.SetPlayerObject(playerRef, player.Object);
+            int e = 0;
+            foreach (var rplayer in TestRoomPlayer.Players)
+            {
+                Debug.Log(e+"| GameManager OnPlayerJoined TestRoomPlayer List SelectedCharId>>playerRef:" 
+                    + playerRef+",playerobjectinputauthority:"+ rplayer.Object.InputAuthority+",charid:"+ rplayer.CharId);
+                e++;
+            }
         }
 
+        public void SpawnPlayer(PlayerRef playerref,int charIndex)
+        {
+           // var charIndex = (playerRef.AsIndex - 1) % 11;
+            Debug.Log("GameManager SpawnPlayer "+ playerref + ">>charIndex:"+ charIndex);//0,1,2,3,4,5,6,7,8,9%10 => 0,1,2,3,4,5,6,7,8,9,0,....
+
+            var player = Runner.Spawn(_playerPrefabs[charIndex], inputAuthority: playerref);
+            Runner.SetPlayerObject(playerref, player.Object);
+        }
+        public void LeaveGame()
+        {
+            if (Runner != null)
+                Runner.Shutdown();
+        }
         void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
         {
+            Debug.Log("GameManager OnPlayerLeft Runner.IsServer" + Runner.IsServer);
+
             if (Runner.IsServer == false)
                 return;
 
             var player = Runner.GetPlayerObject(playerRef);
+            Debug.Log($"GameManager OnPlayerLeft {playerRef}");
             if (player != null)
             {
-                Runner.Despawn(player);
+                Debug.Log("GameManager OnPlayerLeft Player Despawn");
+               Runner.Despawn(player);
             }
+           TestRoomPlayer.RemovePlayer(runner, playerRef);
         }
 
         void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)
         {
+            Debug.Log("GameManager OnSceneLoadDone Runner.Spawn runner.LocalPlayer>>" + runner.LocalPlayer);
+            //roomPlayer.RPC_SetCharId(ClientInfo.CharId);
+
             // Prepare context
             var scene = runner.SimulationUnityScene.GetComponent<Scene>(true);
 
@@ -91,7 +118,14 @@ namespace Projectiles
         void INetworkRunnerCallbacks.OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
         void INetworkRunnerCallbacks.OnInput(NetworkRunner runner, NetworkInput input) { }
         void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-        void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) { }
+        void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) {
+            Debug.Log($"OnShutdown {shutdownReason}");
+
+           /* if (runner)
+                Destroy(runner.gameObject);
+
+            TestRoomPlayer.Players.Clear();*/
+        }
         void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner) { }
         void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }
         void INetworkRunnerCallbacks.OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }

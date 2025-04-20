@@ -32,7 +32,7 @@ namespace Projectiles
 
             var playerRef = player.Object.InputAuthority;
 
-            Debug.Log("GamePlay Join Only HasStateAuthority>>");
+            Debug.Log("GamePlay Join Only HasStateAuthority>>"+ playerRef);
 
             if (Players.ContainsKey(playerRef) == true)
             {
@@ -50,7 +50,7 @@ namespace Projectiles
             if (HasStateAuthority == false)
                 return;
 
-            Debug.Log("GamePlay Leave Only HasStateAuthority>>");
+            Debug.Log("GamePlay Leave Only HasStateAuthority>>"+ player.Object.InputAuthority);
 
             if (Players.ContainsKey(player.Object.InputAuthority) == false)
                 return;
@@ -65,6 +65,7 @@ namespace Projectiles
         public override void Spawned()
         {
             // Register to context
+            Debug.Log("GamePlay Spawned>>"+ Context);
             Context.Gameplay = this;
         }
 
@@ -202,6 +203,7 @@ namespace Projectiles
             if (agent == null)
                 return;
 
+            Debug.Log("GamePlay DespawnAgent>>" + agent.name);
             Runner.Despawn(agent.Object);
         }
 

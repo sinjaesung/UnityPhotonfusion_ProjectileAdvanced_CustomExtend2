@@ -22,6 +22,7 @@ namespace Projectiles
             {
                 var oldInstance = objects.Pop();
                 _borrowed[oldInstance] = context.PrefabId;
+                Debug.Log("NetworkObjectgPool AcquirePrefabInstance objects.Count _borrowed[oldInstance] = context.PrefabId > 0 >>" + oldInstance.name);
 
 #if UNITY_EDITOR
                 var originalPrefab = runner.Config.PrefabTable.Load(context.PrefabId, true);
@@ -43,12 +44,14 @@ namespace Projectiles
 
             var instance = Instantiate(original);
             runner.MoveToRunnerScene(instance.gameObject);
+            Debug.Log("NetworkObjectgPool AcquirePrefabInstance objects.Count==0 Instantiate instance>>" + instance.name);
 
 #if UNITY_EDITOR
             instance.name = original.name;
 #endif
 
             _borrowed[instance] = context.PrefabId;
+            Debug.Log("NetworkObjectgPool AcquirePrefabInstance objects.Count==0  _borrowed[instance] = context.PrefabId >>" + instance.name);
 
             AssignContext(instance);
 
@@ -71,12 +74,16 @@ namespace Projectiles
             if (instance == null)
                 return;
 
+            Debug.Log("NetworkObjectgPool ReleaseInstance context.Object name" + instance.name);
+
             if (instance.NetworkTypeId.IsSceneObject == false && runner.IsShutdown == false)
             {
                 if (_borrowed.TryGetValue(instance, out var prefabID) == true)
                 {
                     _borrowed.Remove(instance);
+                    Debug.Log("NetworkObjectgPool ReleaseInstance _borrowed.Remove(instance);" + instance.name);
                     _cached[prefabID].Push(instance);
+                    Debug.Log($"NetworkObjectgPool ReleaseInstance _cached[{prefabID}].Push(instance);" + instance.name);
 
                     instance.SetActive(false);
                     instance.transform.parent = null;
@@ -88,14 +95,15 @@ namespace Projectiles
                 }
                 else
                 {
+                    Debug.Log("NetworkObjectgPool ReleaseInstance Not _borrowed Destroy" + instance.name);
                     Destroy(instance.gameObject);
                 }
             }
             else
             {
+                Debug.Log("NetworkObjectgPool ReleaseInstance runner.IsShutdown Destroy" + instance.name);
                 Destroy(instance.gameObject);
             }
-            Debug.Log("NetworkObjectPool ReleaseInstance");
         }
 
         private void AssignContext(NetworkObject instance)
@@ -104,6 +112,7 @@ namespace Projectiles
             {
                 if (instance.NetworkedBehaviours[i] is IContextBehaviour cachedBehaviour)
                 {
+                    Debug.Log(i+"| NetworkObjectPool 생성오브젝트 AssignContext>>" + Context);
                     cachedBehaviour.Context = Context;
                 }
             }

@@ -96,7 +96,7 @@ namespace Projectiles.UI
 
         private void UpdatePosition(float floatTick)
         {
-            Debug.Log("SimpleMove UpdatePosition>>" + floatTick);
+            //Debug.Log("SimpleMove UpdatePosition>>" + floatTick);
             float elapsedTime = (floatTick - _startTick) * Runner.DeltaTime;
             float totalDistance = _speed * elapsedTime;
 

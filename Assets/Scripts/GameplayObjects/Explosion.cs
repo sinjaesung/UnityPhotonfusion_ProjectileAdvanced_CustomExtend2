@@ -103,7 +103,7 @@ namespace Projectiles
                 float distance = direction.magnitude;
                 direction /= distance; // Normalize
 
-                Debug.Log(i + "| Explosion Explode" + hitTarget);
+                Debug.Log(i + "| Explosion Explode hitTarget" + hitTarget);
 
                 // Check if direction to the hitbox is not obstructed
                 if (Runner.GetPhysicsScene().Raycast(position, direction, distance, _blockingMask) == true)

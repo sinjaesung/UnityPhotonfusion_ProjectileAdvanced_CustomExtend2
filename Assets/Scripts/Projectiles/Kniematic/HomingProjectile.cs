@@ -119,7 +119,7 @@ namespace Projectiles
                 if (direction.sqrMagnitude > maxSqrDistance)
                     continue;
 
-                Debug.Log("HomingProjectile FindTarget direction.sqrMagnitude,maxSqrDistance>>" + direction.sqrMagnitude + "," + maxSqrDistance);
+                Debug.Log(i+"| HomingProjectile FindTarget direction.sqrMagnitude,maxSqrDistance>>" + direction.sqrMagnitude + "," + maxSqrDistance);
                 float distance = direction.magnitude;
                 direction /= distance; // Normalize
 
@@ -128,11 +128,11 @@ namespace Projectiles
                 if (dot < minDot)
                     continue;
 
-                Debug.Log("HomingProjectile FindTarget dot,minDot" + dot + "," + minDot);
+                Debug.Log(i+"| HomingProjectile FindTarget dot,minDot" + dot + "," + minDot);
 
                 if (physicsScene.Raycast(firePosition, direction, distance, _environmentCheckMask) == true)
                 {
-                    Debug.Log("HomingProjectile View to the target is obstructed" + _environmentCheckMask.ToString());
+                    Debug.Log(i+"| HomingProjectile View to the target is obstructed" + _environmentCheckMask.ToString());
                     continue; // View to the target is obstructed
                 }
 
@@ -140,7 +140,7 @@ namespace Projectiles
 
                 if (value > bestValue)
                 {
-                    Debug.Log("HomingProjectile FindTarget value>bestValue" + value + ">" + bestValue);
+                    Debug.Log(i+"| HomingProjectile FindTarget value>bestValue" + value + ">" + bestValue);
                     bestValue = value;
                     bestTarget = target;
                 }

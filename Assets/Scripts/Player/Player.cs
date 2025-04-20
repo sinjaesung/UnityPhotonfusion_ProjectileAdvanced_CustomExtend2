@@ -24,7 +24,9 @@ namespace Projectiles
         private PlayerAgent _assignedAgent;
         private int _lastWeaponSlot;
 
+        [Networked]
         // PUBLIC METHODS
+        public bool ContextGameplayJoin { get; private set; }
 
         public void AssignAgent(PlayerAgent agent)
         {
@@ -50,10 +52,15 @@ namespace Projectiles
 
         public override void Spawned()
         {
+            Debug.Log("Player Spawned>>"+Context);
             if (Context.Gameplay != null)
             {
-                Debug.Log("Player Spawned>> gameplay join");
-                Context.Gameplay.Join(this);
+                if (!ContextGameplayJoin)
+                {
+                    Debug.Log("Player Spawned>> gameplay join");
+                    Context.Gameplay.Join(this);
+                    ContextGameplayJoin = true;
+                } 
             }
         }
 
@@ -64,12 +71,25 @@ namespace Projectiles
             {
                 _lastWeaponSlot = ActiveAgent.Weapons.CurrentWeaponSlot;
             }
+
+            if (Context.Gameplay != null)
+            {
+                if (!ContextGameplayJoin)
+                {
+                    Debug.Log("Player FixedUpdateNetwork gameplay join");
+                    Context.Gameplay.Join(this);
+
+                    ContextGameplayJoin = true;
+                }
+            }
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
             if (hasState == false)
                 return;
+
+            Debug.Log("Player Despawned>>");
 
             if (Context.Gameplay != null)
             {
@@ -78,7 +98,7 @@ namespace Projectiles
 
             if (HasStateAuthority == true && ActiveAgent != null)
             {
-                Debug.Log("Player Despawned>>");
+                Debug.Log("Player Despawned Runner.Despawn(ActiveAgent.Object)>>");
 
                 Runner.Despawn(ActiveAgent.Object);
             }

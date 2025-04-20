@@ -116,7 +116,10 @@ namespace Projectiles
                 if (keyboard.sKey.isPressed) { moveDirection += Vector2.down; }
                 if (keyboard.aKey.isPressed) { moveDirection += Vector2.left; }
                 if (keyboard.dKey.isPressed) { moveDirection += Vector2.right; }
-
+                if(keyboard.qKey.isPressed) {
+                    Debug.Log("게임나가기");
+                    FindObjectOfType<GameManager>().LeaveGame();
+                }
                 _accumulatedInput.MoveDirection = moveDirection.normalized;
 
                 _accumulatedInput.Buttons.Set(EInputButton.Jump, keyboard.spaceKey.isPressed);

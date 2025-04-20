@@ -142,12 +142,12 @@ namespace Projectiles
                 if (pair.Key >= minDataKey)
                 {
                     int bufferIndex = pair.Key % bufferLength;
-                    Debug.Log("NetworkDataBufferRender pair.Key>=minDataKey" + pair.Key + ">=" + bufferLength + "=" + bufferIndex);
+                    Debug.Log("NetworkDataBufferRender pair.Key>=minDataKey" + pair.Key + ">=" + toDataCount+"-"+bufferLength + "=" + bufferIndex);
 
                     var data = toDataBuffer[bufferIndex];
                     var fromData = fromDataBuffer[bufferIndex];
 
-                    Debug.Log("NetworkDataBufferRender fromdata,data,view Render" + fromData + "~" + data+"bufferalpha:"+ bufferAlpha);
+                    Debug.Log("NetworkDataBufferRender fromdata,data,view Render" + fromData + "~" + data+" bufferalpha:"+ bufferAlpha);
                     view.Render(ref data, ref fromData, bufferAlpha);
                     pair.Value.LastData = data;
                 }

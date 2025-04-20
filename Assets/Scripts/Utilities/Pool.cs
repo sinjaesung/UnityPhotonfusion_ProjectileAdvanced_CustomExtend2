@@ -2,6 +2,7 @@ namespace Projectiles
 {
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using UnityEngine;
 
     public partial class Pool<T> where T : new()
     {
@@ -32,7 +33,7 @@ namespace Projectiles
                 {
                     found = true;
                     item = _pool[index];
-
+                    Debug.Log("Pool Get() _pool.RemoveBySwap(index)>>" + item);
                     _pool.RemoveBySwap(index);
                 }
             }
@@ -54,6 +55,7 @@ namespace Projectiles
             lock (_pool)
             {
                 _pool.Add(item);
+                Debug.Log("Pool Return() _pool.Add>>" + item);
             }
         }
     }

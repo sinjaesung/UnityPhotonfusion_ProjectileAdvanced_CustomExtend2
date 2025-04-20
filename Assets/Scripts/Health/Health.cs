@@ -85,7 +85,7 @@ namespace Projectiles
             var interpolator = new NetworkBehaviourBufferInterpolator(this);
             int hitCount = interpolator.Int(nameof(_hitCount));
 
-            Debug.Log("Health Render UpdateVisibleHits hitCount>>" + hitCount + "," + transform.name);
+           //Debug.Log("Health Render UpdateVisibleHits hitCount>>" + hitCount + "," + transform.name);
             UpdateVisibleHits(hitCount);
         }
 
@@ -209,8 +209,8 @@ namespace Projectiles
             int bufferLength = _hits.Length;
             int oldestValidHit = hitCount - bufferLength;
 
-            Debug.Log("UpdateVisibleHits onlyClient bufferLength,hitcount-bufferLength" + bufferLength + "," + hitCount+"-"+bufferLength);
-            Debug.Log("UpdateVisibleHits onlyClient transform.name Mathf.Max(_visibleHitCount, oldestValidHit)" + transform.name+">>"+ Mathf.Max(_visibleHitCount, oldestValidHit));
+            //Debug.Log("UpdateVisibleHits onlyClient bufferLength,hitcount-bufferLength" + bufferLength + "," + hitCount+"-"+bufferLength);
+            //Debug.Log("UpdateVisibleHits onlyClient transform.name Mathf.Max(_visibleHitCount, oldestValidHit)" + transform.name+">>"+ Mathf.Max(_visibleHitCount, oldestValidHit));
             for (int i = Mathf.Max(_visibleHitCount, oldestValidHit); i < hitCount; i++)
             {
                 int hitIndex = i % bufferLength;
@@ -242,7 +242,7 @@ namespace Projectiles
             // to be synchronized over network as well (e.g. when spectating other players)
             if (hitData.InstigatorRef == Context.Runner.LocalPlayer)
             {
-                Debug.Log("hitData InstigatorRef == Context.Runner.LocalPlayer(공격자가 지금 플레이어자신인경우:HasStateAuthority>>)"
+                Debug.Log("hitData InstigatorRef == Context.Runner.LocalPlayer(공격자가 지금 플레이어자신인경우>>)"
                     + hitData.InstigatorRef.AsIndex + "==" + Context.Runner.LocalPlayer.AsIndex);
                 var instigator = hitData.Instigator;
 

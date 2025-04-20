@@ -100,7 +100,7 @@ namespace Projectiles
             hitData.InstigatorRef = instigatorRef;
             hitData.HitType = hitType;
 
-            Debug.Log("HitUtility ProcessHit>>"+hitType);
+            Debug.Log("HitUtility ProcessHit>>"+ instigatorRef+","+ target +">>"+hitType);
 
             return ProcessHit(ref hitData);
         }

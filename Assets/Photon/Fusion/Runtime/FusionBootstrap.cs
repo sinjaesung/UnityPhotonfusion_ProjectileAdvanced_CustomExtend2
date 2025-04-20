@@ -308,6 +308,7 @@ namespace Fusion {
     public virtual void StartAutoClient() {
       if (TryGetSceneRef(out var sceneRef)) {
         StartCoroutine(StartWithClients(GameMode.AutoHostOrClient, sceneRef, 1));
+         Debug.Log("FusionBootStreap StartAutoClient>>");
       }
     }
 
@@ -503,6 +504,7 @@ namespace Fusion {
         yield return StartClients(clientCount, serverMode, sceneRef);
 
       } else {
+        Debug.Log("FusionBootStrap StartClients>>");
         yield return StartClients(clientCount, serverMode, sceneRef);
       }
     }
@@ -528,7 +530,7 @@ namespace Fusion {
       DontDestroyOnLoad(client);
 
       client.name = $"Client {(Char)(65 + LastCreatedClientIndex++)}";
-
+        Debug.Log("FusionBootStreap AddClient" + client);
       // if server mode is Shared or AutoHostOrClient, then game client mode is the same as the server, otherwise it is client
       var mode = GameMode.Client;
       switch (serverMode) {
@@ -590,6 +592,7 @@ namespace Fusion {
 
       var sceneInfo = new NetworkSceneInfo();
       if (scene.IsValid) {
+         Debug.Log($"FusionBootStreap InitializeNetworkRunner {scene},{runner.transform.name}");
         sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
       }
 

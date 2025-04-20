@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Projectiles.UI
 {
@@ -32,6 +33,7 @@ namespace Projectiles.UI
 
         private bool _aliveGroupVisible;
 
+        public Button leavebutton;
         // MONOBEHAVIOUR
 
         protected void Awake()
@@ -48,13 +50,20 @@ namespace Projectiles.UI
 
             _aliveGroup.alpha = 0f;
         }
+        public void AssignLeaveButtonEvent()
+        {
+            Debug.Log("하하하 버튼클릭");
 
+            FindObjectOfType<GameManager>().LeaveGame();   
+        }
         protected void Update()
         {
             if (_context.Runner == null || _context.Runner.IsRunning == false)
                 return;
 
-            Debug.Log("Context localAgent>>" + _context.LocalAgent.transform.name);
+            //Debug.Log("Context localAgent>>" + _context.LocalAgent.transform.name);
+            if (!_context.LocalAgent) return;
+
             SetObservedAgent(_context.LocalAgent);
 
             if (_observedAgent == null)
