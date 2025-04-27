@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
 namespace Projectiles
 {
@@ -17,11 +18,11 @@ namespace Projectiles
         [SerializeField]
         private List<CacheObject> _precacheObjects;
 
-        private readonly Dictionary<GameObject, Stack<GameObject>> _cached = new();
-        private readonly Dictionary<GameObject, GameObject> _borrowed = new();
-        private readonly List<DeferredReturn> _deferred = new();
-        private readonly Stack<DeferredReturn> _pool = new();
-        private readonly List<GameObject> _all = new();
+         private readonly Dictionary<GameObject, Stack<GameObject>> _cached = new();
+         private readonly Dictionary<GameObject, GameObject> _borrowed = new();
+         private readonly List<DeferredReturn> _deferred = new();
+         private readonly Stack<DeferredReturn> _pool = new();
+         private readonly List<GameObject> _all = new();
 
         // PUBLIC METHODS
 
@@ -65,38 +66,43 @@ namespace Projectiles
                 }
             }
 
+            Debug.Log("StackCountÂüÁ¶>>" + stack.Count);
             GameObject instance = stack.Pop();
 
-            _borrowed[instance] = prefab;
-            Debug.Log("ObjectCache Get _borrowed[instance] = prefab >>"+instance.name);
-
-            Transform instanceTransform = instance.transform;
-
-            if (parent != null)
+            if (instance)
             {
-                instanceTransform.SetParent(parent, false);
-            }
+                _borrowed[instance] = prefab;
+                //Debug.Log("ObjectCache Get _borrowed[instance] = prefab >>"+instance.name);
 
-            instanceTransform.localPosition = Vector3.zero;
-            instanceTransform.localRotation = Quaternion.identity;
-            instanceTransform.localScale = Vector3.one;
+                Transform instanceTransform = instance.transform;
 
-            if (activate == true)
-            {
-                instance.SetActive(true);
-            }
+                if (parent != null)
+                {
+                    instanceTransform.SetParent(parent, false);
+                }
+
+                instanceTransform.localPosition = Vector3.zero;
+                instanceTransform.localRotation = Quaternion.identity;
+                instanceTransform.localScale = Vector3.one;
+
+                if (activate == true)
+                {
+                    instance.SetActive(true);
+                }
 
 #if UNITY_EDITOR
-            if (_hideCachedObjectsInHierarchy == true)
-            {
-                instance.hideFlags &= ~HideFlags.HideInHierarchy;
-            }
-            else
-            {
-                instance.name = prefab.name;
-            }
+                if (_hideCachedObjectsInHierarchy == true)
+                {
+                    instance.hideFlags &= ~HideFlags.HideInHierarchy;
+                }
+                else
+                {
+                    instance.name = prefab.name;
+                }
 #endif
-            return instance;
+                return instance;
+            }
+            return null;
         }
         public void Return(UnityEngine.Component component, bool deactivate = true)
         {
@@ -206,6 +212,16 @@ namespace Projectiles
 
             _all.Clear();
         }
+        public void ClearExecute()
+        {
+            Debug.Log(">> ObjectCache ClearExecute>>");
+
+           _deferred.Clear();
+            _borrowed.Clear();
+            _cached.Clear();
+            _pool.Clear();
+            _all.Clear();
+        }
         private void Update()
         {
             for (int i = _deferred.Count; i-- > 0;)
@@ -217,10 +233,13 @@ namespace Projectiles
                     continue;
 
                 _deferred.RemoveBySwap(i);
-                Return(deferred.GameObject, true);
+                if (deferred.GameObject)
+                {
+                    Return(deferred.GameObject, true);
 
-                deferred.Reset();
-                _pool.Push(deferred);
+                    deferred.Reset();
+                    _pool.Push(deferred);
+                }
             }
         }   
         

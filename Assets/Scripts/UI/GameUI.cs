@@ -25,8 +25,12 @@ namespace Projectiles.UI
         [SerializeField]
         private UIGameplayView _gameplayView;
 
-        // PUBLIC METHODS
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
+        // PUBLIC METHODS
         public bool PlaySound(AudioSetup effectSetup, EForceBehaviour force = EForceBehaviour.None)
         {
             return _audioEffects.PlaySound(effectSetup, force);

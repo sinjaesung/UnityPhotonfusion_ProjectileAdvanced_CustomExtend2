@@ -46,6 +46,7 @@ namespace Projectiles
         private int _visibleHitCount;
 
         // PUBLIC METHODS
+        public bool IsSpawned { get; set; }
 
         public void SetImmortality(float duration)
         {
@@ -67,6 +68,8 @@ namespace Projectiles
         public override void Spawned()
         {
             _visibleHitCount = _hitCount;
+            Debug.Log("Health Spawned>>"+transform.name);
+            IsSpawned = true;
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)

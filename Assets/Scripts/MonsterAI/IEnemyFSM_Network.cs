@@ -228,6 +228,7 @@ namespace Projectiles
         {
             _collider.enabled = _useLagCompensation == false;
             _hitboxRoot.HitboxRootActive = _useLagCompensation;
+            Debug.Log("IEnemyFSM_Network Spawned>>");
         }
 
         public override void FixedUpdateNetwork()
@@ -253,8 +254,8 @@ namespace Projectiles
                     _reviveCooldown = TickTimer.CreateFromSeconds(Runner, _reviveTime);
                 }
             }*/
-
-            if (!_health.IsAlive)
+            Debug.Log("IEnemyFSM_Network FxedUpdateNetwork>>");
+            if (_health.IsSpawned && !_health.IsAlive)
             {
                 return;
             }
@@ -451,7 +452,10 @@ namespace Projectiles
 
             if (playerInshootingRadius)
             {
-                UpdateAttackPlayer();
+                if (_health.IsSpawned)
+                {
+                    UpdateAttackPlayer();
+                }
             }
 
             yield return new WaitForSeconds(6f);//6초마다실행.

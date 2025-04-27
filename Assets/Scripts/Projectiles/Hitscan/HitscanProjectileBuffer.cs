@@ -61,18 +61,23 @@ namespace Projectiles
         {
             var projectile = Context.ObjectCache.Get(_projectilePrefabs[data.PrefabIndex]);
 
-            Debug.Log("HitscanProjectile GetView Context.ObjectCache.Get>>" + projectile);
-            Runner.MoveToRunnerScene(projectile);
-            Debug.Log("HitscanProjectile GetView Runner.Config.PeerMode" + Runner.Config.PeerMode);
-            if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
+            if (projectile)
             {
-                Runner.AddVisibilityNodes(projectile.gameObject);
+                Debug.Log("HitscanProjectile GetView Context.ObjectCache.Get>>" + projectile);
+
+                Runner.MoveToRunnerScene(projectile);
+                Debug.Log("HitscanProjectile GetView Runner.Config.PeerMode" + Runner.Config.PeerMode);
+                if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
+                {
+                    Runner.AddVisibilityNodes(projectile.gameObject);
+                }
+
+                projectile.Context = _context;
+                projectile.Activate(ref data);
+
+                return projectile;
             }
-
-            projectile.Context = _context;
-            projectile.Activate(ref data);
-
-            return projectile;
+            return null;
         }
 
         protected override void ReturnView(HitscanProjectile projectile, bool misprediction)

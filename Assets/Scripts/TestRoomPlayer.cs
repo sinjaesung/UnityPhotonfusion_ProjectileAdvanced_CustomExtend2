@@ -16,6 +16,7 @@ public class TestRoomPlayer : NetworkBehaviour
     void Start()
     {
         Debug.Log("TestRoomPlayer Start??");
+        DontDestroyOnLoad(gameObject);
     }
 
     public override void Spawned()
@@ -43,6 +44,15 @@ public class TestRoomPlayer : NetworkBehaviour
         CharId = id;
 
         gamemanger.SpawnPlayer(playerref, id);
+    }
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+    public void RPC_RequestSceneChange(string targetSceneName, PlayerRef playerref)
+    {
+        if (gamemanger != null)
+        {
+            Debug.Log($"{playerref} >> TestRoomPlayer RPC_RequestSceneChange>>" + targetSceneName);
+            gamemanger.RequestSceneChange(targetSceneName);
+        }
     }
 
     private void OnDisable()

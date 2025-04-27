@@ -31,6 +31,10 @@ namespace Projectiles
         [SerializeField]
         private TestRoomPlayer roomplayerprefab;
 
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
         // INetworkRunnerCallbacks INTERFACE
         void INetworkRunnerCallbacks.OnPlayerJoined(NetworkRunner runner, PlayerRef playerRef)
         {
@@ -67,6 +71,26 @@ namespace Projectiles
             if (Runner != null)
                 Runner.Shutdown();
         }
+
+        public void RequestSceneChange(string sceneName)
+        {
+            var context = FindObjectOfType<Scene>().Context;
+            if (context.ObjectCache && GetComponent<NetworkObjectPool>())
+            {
+                Debug.Log($"RequestSceneChange Changing scene ÇÒ¶§ ObjectCache¶û NetworkObjectPool ½Ï´Ù ºñ¿ì±â");
+
+                context.ObjectCache.ClearExecute();
+
+                GetComponent<NetworkObjectPool>().ClearExecute();
+            }
+
+            if (Runner.IsServer)
+            {
+                Debug.Log($"RequestSceneChange IsServer Changing scene to {sceneName}");
+           
+                Runner.LoadScene(sceneName);
+            }
+        }
         void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
         {
             Debug.Log("GameManager OnPlayerLeft Runner.IsServer" + Runner.IsServer);
@@ -90,15 +114,19 @@ namespace Projectiles
             //roomPlayer.RPC_SetCharId(ClientInfo.CharId);
 
             // Prepare context
-            var scene = runner.SimulationUnityScene.GetComponent<Scene>(true);
+            //var scene = runner.SimulationUnityScene.GetComponent<Scene>(true);
+            var scene = FindObjectOfType<Scene>();
+            Debug.Log("GameManager scene>>" + scene.transform.name);
 
             var context = scene.Context;
             context.Runner = Runner;
 
             // Assign context
             var contextBehaviours = runner.SimulationUnityScene.GetComponents<IContextBehaviour>(true);
+            int b = 0;
             foreach (var behaviour in contextBehaviours)
             {
+                Debug.Log(b + $"|GameManager OnSceneLoadDone contextBehaviours {behaviour}.Context={context}");
                 behaviour.Context = context;
             }
 
@@ -112,6 +140,11 @@ namespace Projectiles
                 // In case of multipeer mode, fix the scene lighting
                 var renderSettingsUpdated = scene.GetComponent<RenderSettingsUpdater>();
                 renderSettingsUpdated.ApplySettings();
+            }
+
+            if (FindObjectOfType<Gameplay>())
+            {
+                FindObjectOfType<Gameplay>().SceneLoadedCharacterMoves();
             }
         }
         void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

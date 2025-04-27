@@ -20,5 +20,10 @@ namespace Projectiles
         public NetworkRunner Runner;
         [HideInInspector]
         public PlayerAgent LocalAgent;
+
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
     }
 }

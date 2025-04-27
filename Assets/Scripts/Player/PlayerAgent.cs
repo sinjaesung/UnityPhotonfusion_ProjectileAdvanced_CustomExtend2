@@ -61,6 +61,11 @@ namespace Projectiles
 
         // NetworkBehaviour INTERFACE
         public Animator anim;
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         public override void Spawned()
         {
             name = Object.InputAuthority.ToString();

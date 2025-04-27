@@ -15,7 +15,13 @@ namespace Projectiles
         private SceneContext _context;
 
         // MONOBEHAVIOUR
+        private void Start()
+        {
+            _context = FindObjectOfType<SceneContext>();
+            Debug.Log("SceneObject load start _context Ã£±â>>" + _context.transform.name);
 
+            DontDestroyOnLoad(gameObject);
+        }
         protected void Update()
         {
             // Validate network related objects before non-network services will try to access it

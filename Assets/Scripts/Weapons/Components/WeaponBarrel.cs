@@ -58,6 +58,7 @@ namespace Projectiles
                 else if (_standaloneProjectileBuffer != null)
                 {
                     // If buffer is available try to fire the projectile with buffer
+                    Debug.Log("whagt weaponbfrlal standalone>>");
                     var projectile = _standaloneProjectileBuffer.Get<StandaloneProjectile>(BarrelTransform.position, BarrelTransform.rotation, Object.InputAuthority);
                     if (projectile != null)
                     {

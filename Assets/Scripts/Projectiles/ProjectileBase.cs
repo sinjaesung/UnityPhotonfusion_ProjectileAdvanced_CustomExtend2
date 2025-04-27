@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using System;
 
 namespace Projectiles
 {
@@ -30,6 +31,8 @@ namespace Projectiles
         private float _impactEffectReturnTime = 2f;
         [SerializeField, Tooltip("Standalone effect that will be spawned through NetworkRunner")]
         private NetworkObject _impactObjectPrefab;
+        [SerializeField]
+        private NetworkPrefabRef _impactObjectPrefab_Refer;
 
         private TrailRenderer[] _trails;
 
@@ -46,8 +49,7 @@ namespace Projectiles
             {
                 _trails[i].Clear();
             }
-        }
-
+        }    
         // PROTECTED METHODS
         protected void SpawnImpact(Vector3 position, Vector3 normal)
         {
@@ -63,11 +65,20 @@ namespace Projectiles
 
             if (_impactObjectPrefab != null && Context.Runner.IsServer == true)
             {
-                Debug.Log("ProjectileBase SpawnImpact Context.Runner.IsServer Context.Runner.Spawn" + Context.Runner.Stage);
-                Context.Runner.Spawn(_impactObjectPrefab, position, Quaternion.LookRotation(normal), Context.Owner);
+                Debug.Log("ProjectileBase SpawnImpact Context.Runner.IsServer Context.Runner.Spawn" + Context.Runner.Stage+">"+ Context.Owner);
+
+                try
+                {
+                    Debug.Log($"ProjectileBase Runner.Spawn:{_impactObjectPrefab} 가능한상태>>");
+                    Context.Runner.Spawn(_impactObjectPrefab, position, Quaternion.LookRotation(normal), Context.Owner);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("runner spawn error" + e.Message);
+                }             
             }
         }
-
+      
         protected void SpawnImpactVisual(Vector3 position, Vector3 normal)
         {
             Debug.Log("ProjectileBase SpawnImpactVisual Context.Runner.Stage>>" + Context.Runner.Stage);
@@ -83,12 +94,15 @@ namespace Projectiles
             if (_impactEffectPrefab != null)
             {
                 var impact = Context.Cache.Get(_impactEffectPrefab);
-                Debug.Log("ProjectileBase SpawnImpactVisual Context.Cache.Get MoveToRunnerScene" + Context.Runner.Stage);
+                if (impact)
+                {
+                    Debug.Log("ProjectileBase SpawnImpactVisual Context.Cache.Get MoveToRunnerScene" + Context.Runner.Stage);
 
-                impact.transform.SetPositionAndRotation(position, Quaternion.LookRotation(normal));
-                Context.Runner.MoveToRunnerScene(impact);
+                    impact.transform.SetPositionAndRotation(position, Quaternion.LookRotation(normal));
+                    Context.Runner.MoveToRunnerScene(impact);
 
-                Context.Cache.ReturnDeferred(impact, _impactEffectReturnTime);
+                    Context.Cache.ReturnDeferred(impact, _impactEffectReturnTime);
+                }
             }
         }
     }

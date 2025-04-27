@@ -24,7 +24,7 @@ public class IEnemySpawner_Network : NetworkBehaviour
         //On start just show all chickens 네트워크 스폰시킨다>>
         for (int i = 0; i < Count; i++)
         {
-            Debug.Log(i + "| NetworkSpawner Enemy");
+            Debug.Log(i + "| NetworkSpawner HasStateAuthority Enemy");
             var enemyObj = Runner.Spawn(monster, transform.position, Quaternion.identity);
             enemyObj.GetComponent<IEnemyFSM_Network>().SetSpawnPoint(transform);
             _enemies.Add(enemyObj);

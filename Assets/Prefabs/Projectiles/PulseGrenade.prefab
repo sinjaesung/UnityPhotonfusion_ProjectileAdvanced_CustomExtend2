@@ -48,6 +48,8 @@ MonoBehaviour:
   _impactEffectPrefab: {fileID: 0}
   _impactEffectReturnTime: 2
   _impactObjectPrefab: {fileID: 2971405447164247505, guid: f9d6d0a37b9b9614b909d46a595b5a28, type: 3}
+  _impactObjectPrefab_Refer:
+    RawGuidValue: f9d6d0a37b9b9614b909d46a595b5a28
   _startSpeed: 30
   _length: 1
   _maxDistance: 200

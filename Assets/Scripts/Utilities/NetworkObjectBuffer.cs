@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using System;
 
 namespace Projectiles
 {
@@ -37,9 +38,13 @@ namespace Projectiles
         public NetworkObject Get(Vector3 position, Quaternion rotation, PlayerRef inputAuthority)
         {
             var instance = _buffer[_bufferHead];
-
+            Debug.Log("NetworkObjectBufer Get buferhead:" + _bufferHead+","+ instance);
             if (instance == null)
+            {
+                _buffer.Set(_bufferHead, null);
+                FillBuffer();
                 return null;
+            }
 
             Runner.SetIsSimulated(instance, true);
             instance.AssignInputAuthority(inputAuthority);
@@ -150,13 +155,21 @@ namespace Projectiles
         }
 
         private NetworkObject PrepareInstance()
-        {
-            var instance = Runner.Spawn(_prefab, new Vector3(0f, -1000f, 0f));
+        {      
+            try
+            {
+                Debug.Log($"NetworkobjectBufer Runner.Spawn:{_prefab} 가능한상태>>");
+                var instance = Runner.Spawn(_prefab, new Vector3(0f, -1000f, 0f));
 
-            Runner.SetIsSimulated(instance, false);
-            instance.gameObject.SetActive(false);
+                Runner.SetIsSimulated(instance, false);
+                instance.gameObject.SetActive(false);
 
-            return instance;
+                return instance;
+            }catch(Exception e)
+            {
+                Debug.Log("NetworkobjectBufer PrepareInstance Runner spawn error:" + e.Message);
+            }
+            return null;
         }
     }
 }

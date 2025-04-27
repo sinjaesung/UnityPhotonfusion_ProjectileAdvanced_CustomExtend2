@@ -33,6 +33,11 @@ namespace Projectiles
         private WeaponAction[] _weaponActions;
         private WeaponContext _context;
 
+        private void Start()
+        {
+            //DontDestroyOnLoad(gameObject);
+        }
+
         // PUBLIC METHODS
 
         public void ArmWeapon()

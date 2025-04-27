@@ -25,6 +25,11 @@ namespace Projectiles
 
         // PUBLIC METHODS
 
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         public void Join(Player player)
         {
             if (HasStateAuthority == false)
@@ -96,7 +101,27 @@ namespace Projectiles
                 SpawnPlayerAgent(request.Player);
             }
         }
+        public void SceneLoadedCharacterMoves()
+        {
+            int e = 0;
+            int tempSpawnPoint = -1;
 
+            _spawnPoints = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<SpawnPoint>(false);
+
+            foreach (var player in Players)
+            {
+                Debug.Log(e + $"|Gameplay SceneLoadedCharacterMoves  접속 플레이어:{player.Key},{player.Value.transform.name}");
+
+                tempSpawnPoint = (tempSpawnPoint + 1) % _spawnPoints.Length;
+                var spawnPoint = _spawnPoints[tempSpawnPoint].transform;
+
+                Debug.Log(e + $"|Gameplay SceneLoadedCharacterMoves  접속 플레이어 agent:{player.Value.ActiveAgent.transform.name},set position:{spawnPoint.position}");
+
+                player.Value.ActiveAgent.transform.position = spawnPoint.position;
+
+                e++;
+            }
+        }
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
             // Clear from context
@@ -157,6 +182,11 @@ namespace Projectiles
             player.ClearAgent();
         }
 
+        public void SpawnPointsAssign()
+        {      
+            _spawnPoints = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<SpawnPoint>(false);
+        }
+
         protected void AddSpawnRequest(Player player, float spawnDelay)
         {
             int delayTicks = Mathf.RoundToInt(Runner.TickRate * spawnDelay);
@@ -190,6 +220,7 @@ namespace Projectiles
             {
                 _spawnPoints = Runner.SimulationUnityScene.FindObjectsOfTypeInOrder<SpawnPoint>(false);
             }
+            SpawnPointsAssign();
 
             _lastSpawnPoint = (_lastSpawnPoint + 1) % _spawnPoints.Length;
             var spawnPoint = _spawnPoints[_lastSpawnPoint].transform;

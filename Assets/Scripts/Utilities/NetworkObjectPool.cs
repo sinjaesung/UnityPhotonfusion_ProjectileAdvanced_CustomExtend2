@@ -8,19 +8,28 @@ namespace Projectiles
     {
         public SceneContext Context { get; set; }
 
-        private Dictionary<NetworkPrefabId, Stack<NetworkObject>> _cached = new(32);
-        private Dictionary<NetworkObject, NetworkPrefabId> _borrowed = new();
+        [SerializeField] private Dictionary<NetworkPrefabId, Stack<NetworkObject>> _cached = new(32);
+        [SerializeField] private Dictionary<NetworkObject, NetworkPrefabId> _borrowed = new();
 
         NetworkObjectAcquireResult INetworkObjectProvider.AcquirePrefabInstance(NetworkRunner runner, in NetworkPrefabAcquireContext context, out NetworkObject result)
         {
             if (_cached.TryGetValue(context.PrefabId, out var objects) == false)
             {
                 objects = _cached[context.PrefabId] = new Stack<NetworkObject>();
+                Debug.Log("NetworkObjectPool AcquirePrefabInstance 坷宏璃飘 货肺 积己 夸没Stack:" + objects.Count);
             }
 
             if (objects.Count > 0)
             {
                 var oldInstance = objects.Pop();
+                Debug.Log("NetworkObjectPool AcquirePrefabInstance objects.Pop()" + oldInstance + "~" + !oldInstance);
+                if (!oldInstance)
+                {
+                    result = default;
+                    return NetworkObjectAcquireResult.Ignore;
+                }
+
+                Debug.Log("NetworkObjectgPool AcquirePrefabInstance get oldInstance pop" + oldInstance.transform.name);
                 _borrowed[oldInstance] = context.PrefabId;
                 Debug.Log("NetworkObjectgPool AcquirePrefabInstance objects.Count _borrowed[oldInstance] = context.PrefabId > 0 >>" + oldInstance.name);
 
@@ -32,10 +41,11 @@ namespace Projectiles
                 oldInstance.SetActive(true);
 
                 result = oldInstance;
-                return NetworkObjectAcquireResult.Success;
+                return NetworkObjectAcquireResult.Success;        
             }
 
             var original = runner.Config.PrefabTable.Load(context.PrefabId, true);
+            Debug.Log("NetworkObjectPool AcquirePrefabInstance 货肺积己 object>>" + original);
             if (original == null)
             {
                 result = default;
@@ -43,6 +53,12 @@ namespace Projectiles
             }
 
             var instance = Instantiate(original);
+            if (!instance)
+            {
+                result = default;
+                return NetworkObjectAcquireResult.Ignore;
+            }
+            
             runner.MoveToRunnerScene(instance.gameObject);
             Debug.Log("NetworkObjectgPool AcquirePrefabInstance objects.Count==0 Instantiate instance>>" + instance.name);
 
@@ -64,7 +80,12 @@ namespace Projectiles
             result = instance;
             return NetworkObjectAcquireResult.Success;
         }
-
+        public void ClearExecute()
+        {
+            Debug.Log(">> NetworkObjectPool ClearExecute>>");
+            _cached.Clear();
+            _borrowed.Clear();
+        }  
         void INetworkObjectProvider.ReleaseInstance(NetworkRunner runner, in NetworkObjectReleaseContext context)
         {
             if (context.IsNestedObject == true)

@@ -28,6 +28,11 @@ namespace Projectiles
         // PUBLIC METHODS
         public bool ContextGameplayJoin { get; private set; }
 
+        private void Start()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         public void AssignAgent(PlayerAgent agent)
         {
             ActiveAgent = agent;

@@ -129,18 +129,22 @@ namespace Projectiles
         {
             var projectile = Context.ObjectCache.Get(_projectilePrefabs[data.PrefabIndex]);
 
-            Debug.Log("KinematicProjectileBufer GetView Context.ObjectCache.Get projectile>>" + projectile);
-            Runner.MoveToRunnerScene(projectile);
-            if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
+            if (projectile)
             {
-                Debug.Log("KinematicProjectileBufer Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple");
-                Runner.AddVisibilityNodes(projectile.gameObject);
+                Debug.Log("KinematicProjectileBufer GetView Context.ObjectCache.Get projectile>>" + projectile);
+                Runner.MoveToRunnerScene(projectile);
+                if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
+                {
+                    Debug.Log("KinematicProjectileBufer Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple");
+                    Runner.AddVisibilityNodes(projectile.gameObject);
+                }
+
+                projectile.Context = _context;
+                projectile.Activate(ref data);
+
+                return projectile;
             }
-
-            projectile.Context = _context;
-            projectile.Activate(ref data);
-
-            return projectile;
+            return null;
         }
 
         protected override void ReturnView(KinematicProjectile projectile, bool misprediction)
