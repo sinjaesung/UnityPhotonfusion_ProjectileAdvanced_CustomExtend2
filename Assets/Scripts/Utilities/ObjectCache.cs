@@ -49,7 +49,7 @@ namespace Projectiles
             {
                 stack = new Stack<GameObject>();
                 _cached[prefab] = stack;
-                Debug.Log("ObjectCache Get _cached new Stack>>");
+                Debug.Log($"ObjectCache Get _cached new Stack _cached[{prefab}]={stack}>>");
             }
 
             if (stack.Count == 0)
@@ -66,13 +66,13 @@ namespace Projectiles
                 }
             }
 
-            Debug.Log("StackCount참조>>" + stack.Count);
+            Debug.Log("ObjectCache StackCount참조>>" + stack.Count);
             GameObject instance = stack.Pop();
 
             if (instance)
             {
                 _borrowed[instance] = prefab;
-                //Debug.Log("ObjectCache Get _borrowed[instance] = prefab >>"+instance.name);
+                Debug.Log("ObjectCache Get _borrowed[instance] = prefab >>"+instance.name);
 
                 Transform instanceTransform = instance.transform;
 
@@ -119,9 +119,9 @@ namespace Projectiles
             instance.transform.SetParent(null, false);
 
             _cached[_borrowed[instance]].Push(instance);
-            Debug.Log("ObjectCache Return _cached[_borrowed[instance]].Push(instance) >>" + _borrowed[instance].name);
+            Debug.Log($"ObjectCache Return _cached[_borrowed[{instance}]].Push(instance) >>" + _borrowed[instance].name);
             _borrowed.Remove(instance);
-            Debug.Log("ObjectCache Return _borrowed.Remove(instance) >>");
+            Debug.Log($"ObjectCache Return _borrowed.Remove(instance) {instance}>>");
 
 #if UNITY_EDITOR
             if (_hideCachedObjectsInHierarchy == true)

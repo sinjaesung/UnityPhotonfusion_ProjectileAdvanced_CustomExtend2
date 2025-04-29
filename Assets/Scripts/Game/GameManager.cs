@@ -48,14 +48,7 @@ namespace Projectiles
             {
                 Runner.Spawn(_gameplayPrefab);
                 _gameplaySpawned = true;
-            }
-            int e = 0;
-            foreach (var rplayer in TestRoomPlayer.Players)
-            {
-                Debug.Log(e+"| GameManager OnPlayerJoined TestRoomPlayer List SelectedCharId>>playerRef:" 
-                    + playerRef+",playerobjectinputauthority:"+ rplayer.Object.InputAuthority+",charid:"+ rplayer.CharId);
-                e++;
-            }
+            }        
         }
 
         public void SpawnPlayer(PlayerRef playerref,int charIndex)
@@ -153,11 +146,6 @@ namespace Projectiles
         void INetworkRunnerCallbacks.OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
         void INetworkRunnerCallbacks.OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) {
             Debug.Log($"OnShutdown {shutdownReason}");
-
-           /* if (runner)
-                Destroy(runner.gameObject);
-
-            TestRoomPlayer.Players.Clear();*/
         }
         void INetworkRunnerCallbacks.OnConnectedToServer(NetworkRunner runner) { }
         void INetworkRunnerCallbacks.OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason) { }

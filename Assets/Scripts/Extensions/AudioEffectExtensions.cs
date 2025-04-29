@@ -19,11 +19,15 @@ namespace Projectiles
 
                 if (audioEffect.IsPlaying == false)
                 {
+                    UnityEngine.Debug.Log(i + $"| AudioEfectExtensions PlaySound {audioEffect} audioEffect.IsPlaying == false 바로 플레이>>");
+
                     audioEffect.Play(setup);
                     return true;
                 }
 
                 bool chooseAudioEffect = false;
+
+                UnityEngine.Debug.Log(i + $"| AudioEfectExtensions PlaySound {audioEffect},audioEffect.AudioSource.time:{audioEffect.AudioSource.time} > bestTime:{bestTime}");
 
                 switch (force)
                 {
@@ -53,6 +57,8 @@ namespace Projectiles
             if (bestPlayingEffect != null)
             {
                 bestPlayingEffect.Play(setup, force);
+                UnityEngine.Debug.Log("AudioEffectExtensions 최종 PlaySound" + bestPlayingEffect);
+
                 return true;
             }
 
