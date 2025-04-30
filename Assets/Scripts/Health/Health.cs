@@ -77,8 +77,12 @@ namespace Projectiles
             HitTaken = null;
             HitPerformed = null;
             FatalHitTaken = null;
+            Debug.Log("Health Despawned>>" + transform.name);
         }
-
+        void OnDestroy()
+        {
+            Debug.Log("Health OnDestroy>>" + transform.name);
+        }
         public override void Render()
         {
             // Interpolated value is used to show visible hits.

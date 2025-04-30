@@ -29,7 +29,8 @@ namespace Projectiles
 
                 if (poolCount == 0)
                 {
-                    UnityEngine.Debug.Log("ListPool Get poolCount==0 new List return");
+
+                    UnityEngine.Debug.Log($"ListPool _pool Count==0 new List 생성>>");
                     return new List<T>(capacity > 0 ? capacity : LIST_CAPACITY);
                 }
 
@@ -37,10 +38,11 @@ namespace Projectiles
                 for (int i = 0; i < poolCount; ++i)
                 {
                     List<T> list = _pool[i];
-                    UnityEngine.Debug.Log(i+$"| ListPool list item {list.Capacity} < {capacity}");
+
+                    UnityEngine.Debug.Log(i+$"| ListPool list item:{list},list.Capacity{list.Capacity}<{capacity}");
                     if (list.Capacity < capacity)
                         continue;
-
+                    UnityEngine.Debug.Log(i + $"| target list item RemoveBySwap({i}) return {list}");
                     _pool.RemoveBySwap(i);
                     UnityEngine.Debug.Log(i + $"| 해당 {i} list item _pool.RemoveBySwap{i}=>{list}");
                     return list;
@@ -49,6 +51,7 @@ namespace Projectiles
                 int lastListIndex = poolCount - 1;
 
                 List<T> lastList = _pool[lastListIndex];
+                UnityEngine.Debug.Log($"ListPool lastList item return {lastListIndex} => {lastList}");
                 lastList.Capacity = capacity;
 
                 UnityEngine.Debug.Log($"Listpool lastListIndex[{lastListIndex}] lastList return>>");
@@ -68,7 +71,8 @@ namespace Projectiles
 
             lock (_pool)
             {
-                UnityEngine.Debug.Log($"Listpool Return _pool Add Item {list}");
+                UnityEngine.Debug.Log($"ListPool Return list >> _pool.Add({list})");
+
                 _pool.Add(list);
             }
         }

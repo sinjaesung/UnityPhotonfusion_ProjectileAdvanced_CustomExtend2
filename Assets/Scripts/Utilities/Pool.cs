@@ -33,7 +33,7 @@ namespace Projectiles
                 {
                     found = true;
                     item = _pool[index];
-                    Debug.Log("Pool Get() _pool.RemoveBySwap(index)>>" + item);
+                    Debug.Log($"Pool Get() _pool.RemoveBySwap({index})>>" + item);
                     _pool.RemoveBySwap(index);
                 }
             }

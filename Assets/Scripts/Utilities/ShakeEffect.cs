@@ -77,7 +77,7 @@ namespace Projectiles
                         return;
                     }
                 }
-                Debug.Log("ShakeEffect Play force == EShakeForce.ReplaceSame AddShake");
+                Debug.Log($"ShakeEffect Play force == EShakeForce.ReplaceSame AddShake {setup}");
                 AddShake(setup);
             }
         }
@@ -163,7 +163,7 @@ namespace Projectiles
             {
                 if (_activeShakes[i].IsFinished == true)
                 {
-                    //Debug.Log(i + "| ShakeEffect Update _activeShakes IsFinished removeshake>>" + rotationOffset);
+                    Debug.Log(i + "| ShakeEffect Update _activeShakes IsFinished removeshake>>");
                     RemoveShake(i);
                 }
             }
@@ -183,7 +183,7 @@ namespace Projectiles
         {
             var shakeData = _activeShakes[index];
             _activeShakes.RemoveAt(index);
-
+            Debug.Log($"ShakeEfect RemoveShake {index}");
             Pool.Return(shakeData);
         }
 

@@ -196,6 +196,14 @@ namespace Projectiles
             //var DeathParticleObj=Instantiate(DeathParticle, transform.position, Quaternion.identity);
            // Debug.Log("적군 제거 DeathParticleObj>>" + DeathParticleObj.transform.name);
         }
+        private void OnDestroy()
+        {
+            Debug.Log("IEnemyFSM_Network OnDestroy");
+        }
+        public override void Despawned(NetworkRunner runner, bool hasState)
+        {
+            Debug.Log("IEnemyFSM_Network Despawned>>");
+        }
         /*public void OnDieReset()
         {
             //VisualRoot.SetActive(false);
