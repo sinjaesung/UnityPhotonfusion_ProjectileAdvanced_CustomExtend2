@@ -52,7 +52,7 @@ namespace Projectiles
             instance.transform.SetPositionAndRotation(position, rotation);
             instance.gameObject.SetActive(true);
 
-
+            Debug.Log($"NetworkObjectBufer Get bufferhead:{_bufferHead} object:{instance}");
             _buffer.Set(_bufferHead, null);
             FillBuffer();
 
@@ -128,7 +128,7 @@ namespace Projectiles
             {
                 if (_buffer[i] == null)
                 {
-                    Debug.Log(i + "| NetworkObjectBufer FillBufer>>");
+                    Debug.Log(i + $"| NetworkObjectBufer _buffer[{i}] 씬이동에 의한 파괴 또는 null로 없는경우에 PrepareInstance() FillBufer>>");
                     _buffer.Set(i, PrepareInstance());
                 }
             }

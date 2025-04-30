@@ -29,17 +29,20 @@ namespace Projectiles
 
                 if (poolCount == 0)
                 {
+                    UnityEngine.Debug.Log("ListPool Get poolCount==0 new List return");
                     return new List<T>(capacity > 0 ? capacity : LIST_CAPACITY);
                 }
 
+                UnityEngine.Debug.Log($"ListPool poolCount {poolCount}");
                 for (int i = 0; i < poolCount; ++i)
                 {
                     List<T> list = _pool[i];
-
+                    UnityEngine.Debug.Log(i+$"| ListPool list item {list.Capacity} < {capacity}");
                     if (list.Capacity < capacity)
                         continue;
 
                     _pool.RemoveBySwap(i);
+                    UnityEngine.Debug.Log(i + $"| ÇØ´ç {i} list item _pool.RemoveBySwap{i}=>{list}");
                     return list;
                 }
 
@@ -48,6 +51,7 @@ namespace Projectiles
                 List<T> lastList = _pool[lastListIndex];
                 lastList.Capacity = capacity;
 
+                UnityEngine.Debug.Log($"Listpool lastListIndex[{lastListIndex}] lastList return>>");
                 _pool.RemoveAt(lastListIndex);
 
                 return lastList;
@@ -64,6 +68,7 @@ namespace Projectiles
 
             lock (_pool)
             {
+                UnityEngine.Debug.Log($"Listpool Return _pool Add Item {list}");
                 _pool.Add(list);
             }
         }
