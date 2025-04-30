@@ -69,7 +69,7 @@ namespace Projectiles
             }
 
             _views.Clear();
-        }
+        }      
 
         public override void FixedUpdateNetwork()
         {
@@ -148,6 +148,7 @@ namespace Projectiles
                     var fromData = fromDataBuffer[bufferIndex];
 
                     Debug.Log("NetworkDataBufferRender fromdata,data,view Render" + fromData + "~" + data+" bufferalpha:"+ bufferAlpha);
+                   
                     view.Render(ref data, ref fromData, bufferAlpha);
                     pair.Value.LastData = data;
                 }

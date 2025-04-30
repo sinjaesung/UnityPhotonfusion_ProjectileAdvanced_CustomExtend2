@@ -20,7 +20,7 @@ public class Portal : NetworkBehaviour
 
         if (other.TryGetComponent<NetworkObject>(out var no) && no.HasStateAuthority)
         {
-            Debug.Log("Portal TRGEReNTER" + no.transform.name + "," + no.HasInputAuthority);
+            Debug.Log("Portal TRGEReNTER" + no.transform.name + "," + no.HasStateAuthority);
             roomplayer.RPC_RequestSceneChange(movescene, no.InputAuthority);
         }
     }

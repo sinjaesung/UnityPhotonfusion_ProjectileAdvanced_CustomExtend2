@@ -48,6 +48,9 @@ namespace Projectiles
 
         private PlayerAgent _agent;
 
+        [Networked]
+        public bool CanInput { get; set; }
+
         // NetworkBehaviour INTERFACE
         public override void Spawned()
         {
@@ -56,6 +59,9 @@ namespace Projectiles
             ReplicateToAll(false);
             ReplicateTo(Object.InputAuthority, true);
 
+            CanInput = true;
+
+            Debug.Log("PlayerInput Spawned>>" + CanInput);
             if (HasInputAuthority == false)
                 return;
 
@@ -77,12 +83,25 @@ namespace Projectiles
                 networkEvents.OnInput.RemoveListener(OnInput);
             }
         }
-
+        public void InputReset()
+        {
+            CanInput = false;
+            _accumulatedInput.MoveDirection = Vector2.zero;
+        }
+        public void InputRecover()
+        {
+            CanInput = true;
+        }
         // IBeforeUpdate INTERFACE
         void IBeforeUpdate.BeforeUpdate()
         {
             // This method is called BEFORE ANY FixedUpdateNetwork() and is used to accumulate input from Keyboard/Mouse.
             // Input accumulation is mandatory - this method is called multiple times before new forward FixedUpdateNetwork() - common if rendering speed is faster than Fusion simulation.
+
+            if (!CanInput)
+            {
+                return;
+            }
 
             if (HasInputAuthority == false)
                 return;

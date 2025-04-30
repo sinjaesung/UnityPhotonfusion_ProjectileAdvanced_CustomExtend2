@@ -1,5 +1,6 @@
 using System;
 using Fusion.Sockets;
+using System.Collections;
 
 namespace Projectiles
 {
@@ -64,26 +65,43 @@ namespace Projectiles
             if (Runner != null)
                 Runner.Shutdown();
         }
-
+        
         public void RequestSceneChange(string sceneName)
         {
             var context = FindObjectOfType<Scene>().Context;
             if (context.ObjectCache && GetComponent<NetworkObjectPool>())
             {
-                Debug.Log($"RequestSceneChange Changing scene 할때 ObjectCache랑 NetworkObjectPool 싹다 비우기");
+               /* Debug.Log($"RequestSceneChange Changing scene 할때 ObjectCache랑 NetworkObjectPool 싹다 비우기");
 
                 context.ObjectCache.ClearExecute();
 
-                GetComponent<NetworkObjectPool>().ClearExecute();
-            }
+                GetComponent<NetworkObjectPool>().ClearExecute();*/
 
+                Gameplay gameplayObj=FindObjectOfType<Gameplay>();
+                int t = 0;
+                foreach(var e in gameplayObj.Players)
+                {
+                    Debug.Log(t + $"| RequestSceneChange {e.Key} => {e.Value.transform.name}");
+                    Player playerlocal = Runner.GetPlayerObject(e.Key).GetComponent<Player>();
+                    Debug.Log(t+ $"| RequestSceneChange Changing scene 대기동안 모든 컴퓨터 플레이어{playerlocal.transform.name}{playerlocal.ActiveAgent.transform.name} 별 입력제한");
+                    playerlocal.ActiveAgent.GetComponent<PlayerInput>().InputReset();
+                    t++;
+                }
+
+                StartCoroutine(MoveSceneExecute(sceneName));
+            } 
+        }
+        private IEnumerator MoveSceneExecute(string sceneName)
+        {
             if (Runner.IsServer)
             {
-                Debug.Log($"RequestSceneChange IsServer Changing scene to {sceneName}");
-           
+                yield return new WaitForSeconds(6f);
+
+                Debug.Log("GameManager MoveSceneExecute 코루틴 scene 이동>>" + sceneName);
                 Runner.LoadScene(sceneName);
             }
         }
+        
         void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
         {
             Debug.Log("GameManager OnPlayerLeft Runner.IsServer" + Runner.IsServer);
@@ -138,6 +156,38 @@ namespace Projectiles
             if (FindObjectOfType<Gameplay>())
             {
                 FindObjectOfType<Gameplay>().SceneLoadedCharacterMoves();
+            }
+            /* NetworkObject localPlayer = Runner.GetPlayerObject(Runner.LocalPlayer);
+             if (localPlayer)
+             {
+                 if (localPlayer.GetComponent<Player>() && localPlayer.GetComponent<Player>().ActiveAgent)
+                 {
+                     Debug.Log($"GameManager OnSceneLoadDone 씬 이동 이후 씬 로드시에 캐릭터 입력조작 복귀 {localPlayer.GetComponent<Player>().ActiveAgent.transform.name}");
+                     localPlayer.GetComponent<Player>().ActiveAgent.GetComponent<PlayerInput>().InputRecover();
+                 }
+             }*/
+
+            if (context.ObjectCache && GetComponent<NetworkObjectPool>())
+            {
+                Debug.Log($"GameManager OnSceneLoadDone , ObjectCache랑 NetworkObjectPool 싹다 비우기");
+
+                context.ObjectCache.ClearExecute();
+
+                GetComponent<NetworkObjectPool>().ClearExecute();              
+            }
+
+            Gameplay gameplayObj = FindObjectOfType<Gameplay>();
+            if(gameplayObj && gameplayObj.Players.Capacity > 0)
+            {
+                int t = 0;
+                foreach (var e in gameplayObj.Players)
+                {
+                    Debug.Log(t + $"| GameManager OnSceneLoadDone {e.Key} => {e.Value.transform.name}");
+                    Player playerlocal = Runner.GetPlayerObject(e.Key).GetComponent<Player>();
+                    Debug.Log(t + $"| GameManager OnSceneLoadDone 씬 이동 이후 씬 로드시에 모든 접속 캐릭터별 입력조작 복귀 {playerlocal.transform.name}{playerlocal.ActiveAgent.transform.name} 별 입력복귀");
+                    playerlocal.ActiveAgent.GetComponent<PlayerInput>().InputRecover();
+                    t++;
+                }
             }
         }
         void INetworkRunnerCallbacks.OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }

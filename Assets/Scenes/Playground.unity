@@ -9098,7 +9098,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6644884553799285948, guid: b4f323704510ce04a89922336d8df42f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8524437414455044250, guid: b4f323704510ce04a89922336d8df42f, type: 3}
       propertyPath: SortKey

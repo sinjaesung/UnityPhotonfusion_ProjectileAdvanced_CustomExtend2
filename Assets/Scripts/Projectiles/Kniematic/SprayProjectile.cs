@@ -89,7 +89,9 @@ namespace Projectiles
 
             // Only fire velocity is used for rotating projectile visuals as including also move velocity
             // (data.InheritedVelocity) would cause particles to rotate to one side when firing while strafing
+           
             transform.rotation = Quaternion.LookRotation(data.Velocity);
+            
         }
 
         // PRIVATE METHODS
