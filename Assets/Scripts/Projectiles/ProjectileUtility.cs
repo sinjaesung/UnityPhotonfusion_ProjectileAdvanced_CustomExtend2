@@ -18,7 +18,7 @@ namespace Projectiles
             {
                 hitOptions |= HitOptions.IgnoreInputAuthority;
             }
-            Debug.Log("ProjectileUtility ProjectileCast runner.LagCompensation.Raycast");
+           // Debug.Log("ProjectileUtility ProjectileCast runner.LagCompensation.Raycast");
             return runner.LagCompensation.Raycast(firePosition, direction, distance, owner, out hit, hitMask, hitOptions);
         }
 
@@ -102,7 +102,7 @@ namespace Projectiles
                 {
                     float angle = angleStep * (i - 1);
                     var offset = new Vector3(radius * Mathf.Cos(angle), radius * Mathf.Sin(angle), 0f);
-                    Debug.Log("CircleCast offset and rotationMatrix.MultiplyPoint3x4(offset)" + position + "+=" + rotationMatrix.MultiplyPoint3x4(offset) + ",offset:" + offset);
+                    //Debug.Log("CircleCast offset and rotationMatrix.MultiplyPoint3x4(offset)" + position + "+=" + rotationMatrix.MultiplyPoint3x4(offset) + ",offset:" + offset);
                     position += rotationMatrix.MultiplyPoint3x4(offset);
                 }
 
@@ -110,7 +110,7 @@ namespace Projectiles
                 {
                     if (hit.Type == HitType.None || currentHit.Distance < hit.Distance)
                     {
-                        Debug.Log(i+"| CircleCast ProjectileCast currentHit.Distance < hit.Distance" + currentHit.Distance + "<" + hit.Distance);
+                        //Debug.Log(i+"| CircleCast ProjectileCast currentHit.Distance < hit.Distance" + currentHit.Distance + "<" + hit.Distance);
                         hit = currentHit;
                     }
                 }

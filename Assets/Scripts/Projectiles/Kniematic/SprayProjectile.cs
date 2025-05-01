@@ -48,7 +48,7 @@ namespace Projectiles
                 float elapsedDistanceSqr = (previousPosition - data.Position).sqrMagnitude;
                 float projectileLength = elapsedDistanceSqr > _length * _length ? _length : Mathf.Sqrt(elapsedDistanceSqr);
 
-                Debug.Log("SprayProjectile OnFixedUpdate projectileLength>>" + elapsedDistanceSqr + ">" + _length * _length + "->>" + projectileLength);
+                //Debug.Log("SprayProjectile OnFixedUpdate projectileLength>>" + elapsedDistanceSqr + ">" + _length * _length + "->>" + projectileLength);
                 previousPosition -= direction * projectileLength;
                 distance += projectileLength;
             }
@@ -61,7 +61,7 @@ namespace Projectiles
             if (ProjectileUtility.CircleCast(runner, Context.Owner, previousPosition, direction, distance, radius, 5, _hitMask, out LagCompensatedHit hit) == true)
             {
                 float damage = _damageOverLifetime.Evaluate(lifetimeProgress);
-                Debug.Log("SprayProjectile Damage>>" + damage+">>hit"+ hit.Point);
+                //Debug.Log("SprayProjectile Damage>>" + damage+">>hit"+ hit.Point);
                 HitUtility.ProcessHit(Context.Owner, direction, hit, damage, _hitType);
 
                 data.ImpactPosition = hit.Point;
@@ -79,7 +79,7 @@ namespace Projectiles
             var runner = Context.Runner;
 
             float renderTime = Context.Owner == runner.LocalPlayer ? runner.LocalRenderTime : runner.RemoteRenderTime;
-            Debug.Log("SprayProjectile GetRenderPosition rendertimes runner.LocalPlayer:" + runner.LocalPlayer + ">>" + renderTime+"/"+runner.DeltaTime);
+           // Debug.Log("SprayProjectile GetRenderPosition rendertimes runner.LocalPlayer:" + runner.LocalPlayer + ">>" + renderTime+"/"+runner.DeltaTime);
             return GetMovePosition(ref data, renderTime / runner.DeltaTime, runner.DeltaTime);
         }
 
@@ -100,7 +100,7 @@ namespace Projectiles
         {
             float time = (currentTick - data.FireTick) * deltaTime;
 
-            Debug.Log("SprayProjectile GetMovePosition currentTick" + currentTick + "-" + data.FireTick + "*" + deltaTime);
+            //Debug.Log("SprayProjectile GetMovePosition currentTick" + currentTick + "-" + data.FireTick + "*" + deltaTime);
             if (time <= 0f)
                 return data.Position;
 

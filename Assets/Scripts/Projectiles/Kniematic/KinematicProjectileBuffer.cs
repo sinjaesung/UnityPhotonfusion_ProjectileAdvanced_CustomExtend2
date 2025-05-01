@@ -120,7 +120,7 @@ namespace Projectiles
 
             // Temporarily assign correct context
             prefab.Context = _context;
-            Debug.Log("KinematicProjectileBufer UpdateData");
+            //Debug.Log("KinematicProjectileBufer UpdateData");
             prefab.OnFixedUpdate(ref data);
             prefab.Context = null;
         }
@@ -131,11 +131,11 @@ namespace Projectiles
 
             if (projectile)
             {
-                Debug.Log("KinematicProjectileBufer GetView Context.ObjectCache.Get projectile>>" + projectile);
+                //Debug.Log("KinematicProjectileBufer GetView Context.ObjectCache.Get projectile>>" + projectile);
                 Runner.MoveToRunnerScene(projectile);
                 if (Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple)
                 {
-                    Debug.Log("KinematicProjectileBufer Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple");
+                    //Debug.Log("KinematicProjectileBufer Runner.Config.PeerMode == NetworkProjectConfig.PeerModes.Multiple");
                     Runner.AddVisibilityNodes(projectile.gameObject);
                 }
 
@@ -151,9 +151,9 @@ namespace Projectiles
         {
             if (projectile == null)
                 return;
-            Debug.Log("KinematicProjectileBufer ReturnView>" + projectile);
+            //Debug.Log("KinematicProjectileBufer ReturnView>" + projectile);
             projectile.Deactivate();
-            Debug.Log("KinematicProjectileBufer Context.ObjectCache.Return>" + projectile);
+            //Debug.Log("KinematicProjectileBufer Context.ObjectCache.Return>" + projectile);
 
             Context.ObjectCache.Return(projectile);
         }

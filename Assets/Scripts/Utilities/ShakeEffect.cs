@@ -60,7 +60,7 @@ namespace Projectiles
 
             if (IsPlaying == false || force == EShakeForce.Add)
             {
-                Debug.Log("ShakeEffect Play IsPlaying == false || force == EShakeForce.Add AddShake");
+                //Debug.Log("ShakeEffect Play IsPlaying == false || force == EShakeForce.Add AddShake");
                 AddShake(setup);
             }
             else if (force == EShakeForce.ReplaceSame)
@@ -71,13 +71,13 @@ namespace Projectiles
 
                     if (shake.Setup == setup)
                     {
-                        Debug.Log(i+"| ShakeEffect Play shake.Setup==setup setup.Duration - setup.FadeIn,shake.Cooldown"
-                            + (setup.Duration)+"-"+ (setup.FadeIn) + "," + shake.Cooldown);
+                       /* Debug.Log(i+"| ShakeEffect Play shake.Setup==setup setup.Duration - setup.FadeIn,shake.Cooldown"
+                            + (setup.Duration)+"-"+ (setup.FadeIn) + "," + shake.Cooldown);*/
                         shake.Cooldown = Mathf.Max(setup.Duration - setup.FadeIn, shake.Cooldown);
                         return;
                     }
                 }
-                Debug.Log($"ShakeEffect Play force == EShakeForce.ReplaceSame AddShake {setup}");
+                //Debug.Log($"ShakeEffect Play force == EShakeForce.ReplaceSame AddShake {setup}");
                 AddShake(setup);
             }
         }
@@ -152,8 +152,8 @@ namespace Projectiles
                 {
                     rotationOffset += shake.GetOffset(Time.deltaTime);
                 }
-                Debug.Log(i+ "| ShakeEffect Update shake pos,rot offset positionOffset change>>" + positionOffset);
-                Debug.Log(i+ "| ShakeEffect Update shake pos,rot offset rotationOffset change>>" + rotationOffset);
+                //Debug.Log(i+ "| ShakeEffect Update shake pos,rot offset positionOffset change>>" + positionOffset);
+                //Debug.Log(i+ "| ShakeEffect Update shake pos,rot offset rotationOffset change>>" + rotationOffset);
             }
 
             transform.localPosition = _defaultPosition + positionOffset;
@@ -163,7 +163,7 @@ namespace Projectiles
             {
                 if (_activeShakes[i].IsFinished == true)
                 {
-                    Debug.Log(i + "| ShakeEffect Update _activeShakes IsFinished removeshake>>");
+                    //Debug.Log(i + "| ShakeEffect Update _activeShakes IsFinished removeshake>>");
                     RemoveShake(i);
                 }
             }

@@ -36,6 +36,8 @@ namespace Projectiles.UI
         public Button leavebutton;
         // MONOBEHAVIOUR
 
+        [SerializeField] public GameObject SceneLoading;
+
         protected void Awake()
         {
             ClearObservedAgent(true);

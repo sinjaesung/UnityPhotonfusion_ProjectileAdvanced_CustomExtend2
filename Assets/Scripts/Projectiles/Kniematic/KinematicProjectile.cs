@@ -45,7 +45,7 @@ namespace Projectiles
                 int maxDistanceTicks = Mathf.RoundToInt((_maxDistance / _startSpeed) * Context.Runner.TickRate);
                 int maxTimeTicks = Mathf.RoundToInt(_maxTime * Context.Runner.TickRate);
                 
-                Debug.Log("KinematicProjectile maxDistanceTicks maxTimeTicks>>" + maxDistanceTicks + "," + maxTimeTicks);
+               // Debug.Log("KinematicProjectile maxDistanceTicks maxTimeTicks>>" + maxDistanceTicks + "," + maxTimeTicks);
 
                 // GetFireData is called on prefab directly, but it is safe to save
                 // the value here as it does not change for different instances
@@ -53,8 +53,8 @@ namespace Projectiles
                     : (maxDistanceTicks > 0 ? maxDistanceTicks : maxTimeTicks);
             }
 
-            Debug.Log("KinematicProjectile GetFireData>>" + firePosition + "," + fireDirection);
-            Debug.Log("KinematicProjectile _lifetimeTicks>>" + _lifetimeTicks);
+           // Debug.Log("KinematicProjectile GetFireData>>" + firePosition + "," + fireDirection);
+           // Debug.Log("KinematicProjectile _lifetimeTicks>>" + _lifetimeTicks);
 
             return new KinematicData()
             {
@@ -67,7 +67,7 @@ namespace Projectiles
         {
             if (Context.Runner.Tick >= data.FireTick + _lifetimeTicks)
             {
-                Debug.Log("KinematicProjectile OnFixedUpdate Context.Runner.Tick data.FireTick + _lifetimeTicks >>" + Context.Runner.Tick+">="+data.FireTick + "+" + _lifetimeTicks);
+                //Debug.Log("KinematicProjectile OnFixedUpdate Context.Runner.Tick data.FireTick + _lifetimeTicks >>" + Context.Runner.Tick+">="+data.FireTick + "+" + _lifetimeTicks);
                 data.IsFinished = true;
             }
         }

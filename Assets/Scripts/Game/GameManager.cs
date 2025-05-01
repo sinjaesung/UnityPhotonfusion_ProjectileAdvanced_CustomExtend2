@@ -1,6 +1,7 @@
 using System;
 using Fusion.Sockets;
 using System.Collections;
+using Projectiles.UI;
 
 namespace Projectiles
 {
@@ -69,27 +70,26 @@ namespace Projectiles
         public void RequestSceneChange(string sceneName)
         {
             var context = FindObjectOfType<Scene>().Context;
-            if (context.ObjectCache && GetComponent<NetworkObjectPool>())
+
+            /* Debug.Log($"RequestSceneChange Changing scene 할때 ObjectCache랑 NetworkObjectPool 싹다 비우기");
+
+            context.ObjectCache.ClearExecute();
+
+            GetComponent<NetworkObjectPool>().ClearExecute();*/
+            FindObjectOfType<UIGameplayView>().SceneLoading.gameObject.SetActive(true);
+
+            Gameplay gameplayObj=FindObjectOfType<Gameplay>();
+            int t = 0;
+            foreach(var e in gameplayObj.Players)
             {
-               /* Debug.Log($"RequestSceneChange Changing scene 할때 ObjectCache랑 NetworkObjectPool 싹다 비우기");
+                Debug.Log(t + $"| RequestSceneChange {e.Key} => {e.Value.transform.name}");
+                Player playerlocal = Runner.GetPlayerObject(e.Key).GetComponent<Player>();
+                Debug.Log(t+ $"| RequestSceneChange Changing scene 대기동안 모든 컴퓨터 플레이어{playerlocal.transform.name}{playerlocal.ActiveAgent.transform.name} 별 입력제한");
+                playerlocal.ActiveAgent.GetComponent<PlayerInput>().InputReset();
+                t++;
+            }
 
-                context.ObjectCache.ClearExecute();
-
-                GetComponent<NetworkObjectPool>().ClearExecute();*/
-
-                Gameplay gameplayObj=FindObjectOfType<Gameplay>();
-                int t = 0;
-                foreach(var e in gameplayObj.Players)
-                {
-                    Debug.Log(t + $"| RequestSceneChange {e.Key} => {e.Value.transform.name}");
-                    Player playerlocal = Runner.GetPlayerObject(e.Key).GetComponent<Player>();
-                    Debug.Log(t+ $"| RequestSceneChange Changing scene 대기동안 모든 컴퓨터 플레이어{playerlocal.transform.name}{playerlocal.ActiveAgent.transform.name} 별 입력제한");
-                    playerlocal.ActiveAgent.GetComponent<PlayerInput>().InputReset();
-                    t++;
-                }
-
-                StartCoroutine(MoveSceneExecute(sceneName));
-            } 
+            StartCoroutine(MoveSceneExecute(sceneName)); 
         }
         private IEnumerator MoveSceneExecute(string sceneName)
         {
@@ -123,6 +123,7 @@ namespace Projectiles
         {
             Debug.Log("GameManager OnSceneLoadDone Runner.Spawn runner.LocalPlayer>>" + runner.LocalPlayer);
             //roomPlayer.RPC_SetCharId(ClientInfo.CharId);
+            FindObjectOfType<UIGameplayView>().SceneLoading.gameObject.SetActive(false);
 
             // Prepare context
             //var scene = runner.SimulationUnityScene.GetComponent<Scene>(true);
@@ -166,7 +167,7 @@ namespace Projectiles
                      localPlayer.GetComponent<Player>().ActiveAgent.GetComponent<PlayerInput>().InputRecover();
                  }
              }*/
-
+             
             if (context.ObjectCache && GetComponent<NetworkObjectPool>())
             {
                 Debug.Log($"GameManager OnSceneLoadDone , ObjectCache랑 NetworkObjectPool 싹다 비우기");

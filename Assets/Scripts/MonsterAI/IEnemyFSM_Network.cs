@@ -396,7 +396,7 @@ namespace Projectiles
                 {
                     if (targetHealth != null && targetHealth.Health && targetHealth.Health.IsAlive)
                     {
-                        Debug.Log("IEnemyFSM 타깃 공격범위내로발견 타깃을 공격!");
+                        //Debug.Log("IEnemyFSM 타깃 공격범위내로발견 타깃을 공격!");
 
                         if (anim != null)
                         {
@@ -426,17 +426,17 @@ namespace Projectiles
                         LookRotationToTarget();
                         CalcTimer += Time.deltaTime;
                         //MonsterChase.Play();
-                        Debug.Log("CalcTimer" + (CalcTimer) + ">" + (AudioRate));
+                        //Debug.Log("CalcTimer" + (CalcTimer) + ">" + (AudioRate));
                         if (CalcTimer > (AudioRate))
                         {
-                            Debug.Log("IEnemyFSM 타깃 추적 추적사운드>>");
+                            //Debug.Log("IEnemyFSM 타깃 추적 추적사운드>>");
                             // AudioManager.PlayAndFollow("HugeManStamp", transform, AudioManager.MixerTarget.SFX);
                             _WalkAudioEffects.PlaySound(_WalkingSound, EForceBehaviour.ForceAny);
                             CalcTimer = 0;
                         }
                         else
                         {
-                            Debug.Log("IEnemyFSM 오디오 추적 타깃 사운드 쿨타임>>");
+                            //Debug.Log("IEnemyFSM 오디오 추적 타깃 사운드 쿨타임>>");
                         }
 
                         navAgent.speed = status.RunSpeed;

@@ -47,7 +47,7 @@ namespace Projectiles
             DataBuffer.Set(dataIndex, data);
 
             _dataCount++;
-            Debug.Log("NetworkDataBuffer AddData _datacount>>" + dataIndex+">>"+_dataCount);
+           // Debug.Log("NetworkDataBuffer AddData _datacount>>" + dataIndex+">>"+_dataCount);
         }
 
         // NetworkBehaviour INTERFACE
@@ -55,7 +55,7 @@ namespace Projectiles
         public override void Spawned()
         {
             _viewCount = _dataCount;
-            Debug.Log("NetworkDataBuffer Spawned>>" + _viewCount);
+            //Debug.Log("NetworkDataBuffer Spawned>>" + _viewCount);
 
             _dataBufferReader = GetArrayReader<TData>(nameof(DataBuffer));
             _dataCountReader = GetPropertyReader<int>(nameof(_dataCount));
@@ -105,7 +105,7 @@ namespace Projectiles
                 if (_views.TryGetValue(i, out var viewEntry) == false)
                     continue;
 
-                Debug.Log(i + "| NetworkDataBufferRender fromDataCount/_viewCount ReturnEntry" + fromDataCount+"/"+ _viewCount);
+                //Debug.Log(i + "| NetworkDataBufferRender fromDataCount/_viewCount ReturnEntry" + fromDataCount+"/"+ _viewCount);
                 ReturnEntry(viewEntry, true);
                 _views.Remove(i);
             }
@@ -116,7 +116,7 @@ namespace Projectiles
                 int bufferIndex = i % bufferLength;
                 var data = fromDataBuffer[bufferIndex];
 
-                Debug.Log(i + "| bufferIndex:"+ bufferIndex+"| NetworkDataBufferRender _viewCount < fromDataCount GetView" + _viewCount + "<" + fromDataCount);
+                //Debug.Log(i + "| bufferIndex:"+ bufferIndex+"| NetworkDataBufferRender _viewCount < fromDataCount GetView" + _viewCount + "<" + fromDataCount);
 
                 var view = GetView(data);
                 if (view == null)
@@ -142,19 +142,19 @@ namespace Projectiles
                 if (pair.Key >= minDataKey)
                 {
                     int bufferIndex = pair.Key % bufferLength;
-                    Debug.Log("NetworkDataBufferRender pair.Key>=minDataKey" + pair.Key + ">=" + toDataCount+"-"+bufferLength + "=" + bufferIndex);
+                   // Debug.Log("NetworkDataBufferRender pair.Key>=minDataKey" + pair.Key + ">=" + toDataCount+"-"+bufferLength + "=" + bufferIndex);
 
                     var data = toDataBuffer[bufferIndex];
                     var fromData = fromDataBuffer[bufferIndex];
 
-                    Debug.Log("NetworkDataBufferRender fromdata,data,view Render" + fromData + "~" + data+" bufferalpha:"+ bufferAlpha);
+                   // Debug.Log("NetworkDataBufferRender fromdata,data,view Render" + fromData + "~" + data+" bufferalpha:"+ bufferAlpha);
                    
                     view.Render(ref data, ref fromData, bufferAlpha);
                     pair.Value.LastData = data;
                 }
                 else
                 {
-                    Debug.Log("NetworkDataBufferRender pair.Key < minDataKey" + pair.Key + "<" + minDataKey);
+                    //Debug.Log("NetworkDataBufferRender pair.Key < minDataKey" + pair.Key + "<" + minDataKey);
 
                     // Use last data to Render when there are no data available in the buffer
                     view.Render(ref pair.Value.LastData, ref pair.Value.LastData, 0f);
@@ -162,7 +162,7 @@ namespace Projectiles
 
                 if (view.IsFinished == true)
                 {
-                    Debug.Log("NetworkDataBufferRender view Completed ReturnEntry");
+                    //Debug.Log("NetworkDataBufferRender view Completed ReturnEntry");
 
                     ReturnEntry(pair.Value, false);
                     _finishedViews.Add(pair.Key);
@@ -171,7 +171,7 @@ namespace Projectiles
 
             for (int i = 0; i < _finishedViews.Count; i++)
             {
-                Debug.Log(i + "| NetworkDataBufferRender CompletedView Removes");
+                //Debug.Log(i + "| NetworkDataBufferRender CompletedView Removes");
 
                 _views.Remove(_finishedViews[i]);
             }
