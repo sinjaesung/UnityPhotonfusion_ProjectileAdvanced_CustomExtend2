@@ -3,6 +3,8 @@ using Fusion;
 using UnityEngine;
 using static Fusion.NetworkEvents;
 using static Unity.Collections.Unicode;
+using TMPro;
+using System.Collections;
 
 namespace Projectiles
 {
@@ -15,7 +17,6 @@ namespace Projectiles
 
         [Networked, Capacity(200)]
         public NetworkDictionary<PlayerRef, Player> Players { get; }
-
         // PRIVATE METHODS
 
         private SpawnPoint[] _spawnPoints;
@@ -24,6 +25,7 @@ namespace Projectiles
         private List<SpawnRequest> _spawnRequests = new();
 
         // PUBLIC METHODS
+        public bool IsNickNameAssigned { get; set; }
 
         private void Start()
         {
@@ -99,7 +101,24 @@ namespace Projectiles
 
                 Debug.Log(i + "| GamePlay FixedUpdateNetwork SpawnPlayerAgent" + request.Player.transform.name);
                 SpawnPlayerAgent(request.Player);
+            }  
+        }
+        public override void Render()
+        {
+            int e = 0;
+            foreach(var playeritem in Players)
+            {
+                Player player_instance = playeritem.Value;
+                //Debug.Log(e + $"| GamePlay Render {playeritem.Key}:{player_instance.name}");
+
+                if(player_instance && player_instance.ActiveAgent && player_instance.ActiveAgent.GetComponentInChildren<Nickname>()) 
+                {
+                    player_instance.ActiveAgent.GetComponentInChildren<Nickname>().GetComponent<TextMeshPro>().text = player_instance.nickname;
+                    //Debug.Log(e+$"| >>GamePlay Render set nickname object:{player_instance.ActiveAgent.GetComponentInChildren<Nickname>().transform.name}=>{player_instance.nickname}>>");
+                    e++;
+                }
             }
+            IsNickNameAssigned = true;
         }
         public void SceneLoadedCharacterMoves()
         {
@@ -118,6 +137,7 @@ namespace Projectiles
                 Debug.Log(e + $"|Gameplay SceneLoadedCharacterMoves  접속 플레이어 agent:{player.Value.ActiveAgent.transform.name},set position:{spawnPoint.position}");
 
                 player.Value.ActiveAgent.transform.position = spawnPoint.position;
+                //player.Value.ActiveAgent.KCC.SetPosition(spawnPoint.position);
 
                 e++;
             }
@@ -162,7 +182,9 @@ namespace Projectiles
             DespawnPlayerAgent(player);
 
             var agent = SpawnAgent(player.Object.InputAuthority, player.AgentPrefab) as PlayerAgent;
+            Debug.Log("spawnagentname>>" + agent.transform.name);
             player.AssignAgent(agent);
+            //PlayerNicknames.Add(player.Object.InputAuthority, agent.GetComponentInChildren<Nickname>());
 
             agent.Health.FatalHitTaken += OnFatalHitTaken;
 

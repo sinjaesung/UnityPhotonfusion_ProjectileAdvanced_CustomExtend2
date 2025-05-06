@@ -2,6 +2,7 @@ using Fusion;
 using Fusion.LagCompensation;
 using System.Web;
 using UnityEngine;
+using System;
 
 namespace Projectiles
 {
@@ -114,6 +115,9 @@ namespace Projectiles
             {
                 var target = targets[i];
                 var targetPosition = GetTargetPosition(target);
+
+                if (targetPosition == Vector3.zero)
+                    continue;
 
                 var direction = targetPosition - firePosition;
                 if (direction.sqrMagnitude > maxSqrDistance)
@@ -253,9 +257,16 @@ namespace Projectiles
                     positionOffset = target.BodyPivot.position - target.BodyHitbox.Position;
                     break;
             }
-
-            Context.Runner.LagCompensation.PositionRotation(target.BodyHitbox, Context.Owner, out var compensatedPosition, out _, true);
-            return compensatedPosition + positionOffset;
+            try
+            {
+                Context.Runner.LagCompensation.PositionRotation(target.BodyHitbox, Context.Owner, out var compensatedPosition, out _, true);
+                return compensatedPosition + positionOffset;
+            }
+            catch (Exception e)
+            {
+                Debug.Log("LagCompansation homingprojectile>>" + e.Message);
+            }
+            return Vector3.zero;
         }
 
         // HELPERS

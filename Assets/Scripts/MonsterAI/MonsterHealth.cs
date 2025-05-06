@@ -38,7 +38,8 @@ public class MonsterHealth : NetworkBehaviour
        }*/
     public override void FixedUpdateNetwork()
     {
-        CurrentHealth = healthRefer.CurrentHealth;
+        if(healthRefer.IsSpawned)
+            CurrentHealth = healthRefer.CurrentHealth;
 
        /* if (healthRefer.IsAlive == false)
         {
@@ -48,7 +49,8 @@ public class MonsterHealth : NetworkBehaviour
     }
     public void Revive()
     {
-        CurrentHealth = healthRefer.MaxHealth;
+        if (healthRefer.IsSpawned)
+            CurrentHealth = healthRefer.MaxHealth;
         _deathCooldown = default;
     }
     public override void Spawned()
@@ -69,10 +71,13 @@ public class MonsterHealth : NetworkBehaviour
         // (= player won't be visible before KCC teleport that is interpolated as well).
         // var interpolator = new NetworkBehaviourBufferInterpolator(this);
         // bool isAlive = interpolator.Float(nameof(CurrentHealth)) > 0;
-        bool isAlive = healthRefer.IsAlive;
+        if (healthRefer.IsSpawned)
+        {
+            bool isAlive = healthRefer.IsAlive;
 
-        VisualRoot.SetActive(isAlive);
-        DeathRoot.SetActive(isAlive == false);
+            VisualRoot.SetActive(isAlive);
+            DeathRoot.SetActive(isAlive == false);
+        }
     }
 
     private void OnCurrentHealthChanged()

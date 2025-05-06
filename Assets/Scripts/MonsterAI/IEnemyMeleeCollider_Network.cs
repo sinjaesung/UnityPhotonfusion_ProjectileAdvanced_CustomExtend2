@@ -91,7 +91,7 @@ namespace Projectiles
                         float damage = (_damagePerSecond * damageflag);
                         Debug.Log("IEnemyMeleeCollider_Network damageSwing Targets>>" + (target as MonoBehaviour).transform.name + ">damage:" + damage);
                         //AudioManager.PlayAndFollow("Hit", referMother.transform, AudioManager.MixerTarget.SFX);
-                        _AttackAudioEffects.PlaySound(_AttackSound, EForceBehaviour.ForceAny);
+                        RPC_Monster_Sound();
 
                         HitData hitData = new HitData();
                         hitData.Action = EHitAction.Damage;
@@ -108,6 +108,12 @@ namespace Projectiles
                 }
                
             } 
+        }
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+        public void RPC_Monster_Sound()
+        {
+            Debug.Log("¸ó½ºÅÍ Attack Sound Rpc targets All>>");
+            _AttackAudioEffects.PlaySound(_AttackSound, EForceBehaviour.ForceAny);
         }
 
         private void OnTriggerExit(Collider other)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using System;
 
 namespace Projectiles
 {
@@ -123,7 +124,13 @@ namespace Projectiles
             else
             {
                 Debug.Log("NetworkObjectgPool ReleaseInstance runner.IsShutdown Destroy" + instance.name);
-                Destroy(instance.gameObject);
+                try
+                {
+                    Destroy(instance.gameObject);
+                }catch(Exception e)
+                {
+                    Debug.Log("NetworkObjectgPool ReleaseInstance Destroy" + e.Message);
+                }
             }
         }
 

@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using System.Xml.Linq;
 using static Unity.Collections.Unicode;
 using static UnityEngine.EventSystems.PointerEventData;
+using TMPro;
 
 namespace Projectiles
 {
@@ -61,6 +62,12 @@ namespace Projectiles
 
         // NetworkBehaviour INTERFACE
         public Animator anim;
+
+        [Networked]
+        public bool IsSceneLoading { get; set; }
+
+        [Networked]
+        public bool IsValid { get; set; }
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -74,15 +81,29 @@ namespace Projectiles
             // This saves network traffic by not synchronizing networked properties to other clients except local player.
             ReplicateToAll(false);
             ReplicateTo(Object.InputAuthority, true);
+
+            Debug.Log("[[PlayerAgent]] Spawned>>" + transform.name);
+
+            IsValid = true;
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
             Owner = null;
+
+            Debug.Log("[[PlayerAgent]] Despawned>>" + runner.LocalPlayer + "," + transform.name);
+
+            IsValid = false;
         }
 
         public override void FixedUpdateNetwork()
         {
+            if (IsSceneLoading)
+            {
+                KCC.SetGravity(0);
+                return;
+            }
+
             if (Owner != null && Health.IsAlive == true)
             {
                 ProcessMovementInput();
@@ -118,12 +139,18 @@ namespace Projectiles
 
         protected void LateUpdate()
         {
+            if (IsSceneLoading) {
+                KCC.SetGravity(0);
+                return;
+            }
+
             if (HasInputAuthority == true && Owner != null && Health.IsAlive == true)
             {
                 // For responsive look experience we use last FUN look + accumulated look rotation delta
                 KCC.SetLookRotation(_lastFUNLookRotation + Input.AccumulatedLook, -_maxCameraAngle, _maxCameraAngle);
             }
-
+            //Debug.Log("PlayerAgent Owner>>" + Owner.transform.name);
+     
             // Update camera pitch
             // Camera pivot influences also weapon rotation so it needs to be set on proxies as well
             var pitchRotation = KCC.GetLookRotation(true, false);
@@ -136,6 +163,14 @@ namespace Projectiles
                 // Setting base camera transform based on handle
                 cameraTransform.position = _cameraHandle.position+new Vector3(0,0.3f,0f);
                 cameraTransform.rotation = _cameraHandle.rotation;
+
+                var playernicknames = FindObjectsOfType<Nickname>();
+
+                for(int e=0; e<playernicknames.Length; e++)
+                {
+                    Transform nicknameitem = playernicknames[e].transform;
+                    nicknameitem.transform.rotation = _cameraHandle.rotation;
+                }
             }
         }
 
@@ -143,6 +178,12 @@ namespace Projectiles
 
         private void ProcessMovementInput()
         {
+            if (IsSceneLoading)
+            {
+                KCC.SetGravity(0);
+                return;
+            }
+
             if (GetInput(out GameplayInput input) == false)
                 return;
 
@@ -150,7 +191,6 @@ namespace Projectiles
 
             // It feels better when player falls quicker
             KCC.SetGravity(KCC.RealVelocity.y >= 0f ? _upGravity : _downGravity);
-
             // Calculate input direction based on recently updated look rotation (the change propagates internally also to KCC.TransformRotation)
             var inputDirection = KCC.TransformRotation * new Vector3(input.MoveDirection.x, 0f, input.MoveDirection.y);
 

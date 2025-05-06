@@ -40,7 +40,7 @@ public class IEnemySpawner_Network : NetworkBehaviour
 
             if (enemyObj)
             {
-                if (/*enemyObj.IsDied*/enemyObj.Health_.IsFinished)
+                if (/*enemyObj.IsDied*/enemyObj.Health_.healthRefer.IsSpawned && enemyObj.Health_.IsFinished)
                 {
                     enemyObj.gameObject.SetActive(false);
                     //enemyObj.OnDieReset();

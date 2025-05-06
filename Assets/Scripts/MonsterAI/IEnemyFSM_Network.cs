@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 namespace Projectiles
 {
@@ -43,11 +44,11 @@ namespace Projectiles
         [Header("Attack")]
         public Status status; //이동속도 등의 정보
                               //protected IEnemySpawner enemyMemoryPool; //적 메모리 풀 (적 오브젝트 비활성화에 사용)
-        protected PlayerAgent targetHealth;
+        protected PlayerAgent targetHealth { get; set; }
         [SerializeField] float naviMeshSpeed;
 
         [SerializeField] IEnemyMeleeCollider_Network[] enemymeleeColliders;
-        [SerializeField] public bool attacking = false;
+        [SerializeField] public bool attacking { get; set; }
 
         [SerializeField]
         protected float attackRange = 5; //공격 범위 (이 범위 안에 들어오면 "Attack" 상태로 변경)
@@ -57,8 +58,7 @@ namespace Projectiles
 
         //PlayerAI WITH관련 2차기능추가
         //public GameObject ShootingRaycastArea;//발사체 발사기준origin raycasting 2차기능추가
-        public Transform attacktarget; //적의 공격 대상 (플레이어류) 동적변경가능 2차기능추가
-        public Transform playerTransform;//적의 추적 대상
+        public Transform attacktarget { get; set; } //적의 공격 대상 (플레이어류) 동적변경가능 2차기능추가
         public LayerMask PlayerLayer;//탐색감지 checkSphere layer
         public LayerMask AttackLayer;//공격레이어
         public Vector3 AttackDirection;//공격방향 동적변경
@@ -68,7 +68,7 @@ namespace Projectiles
         public float CalcTimer = 0;
 
         public NetworkTransform NetworkTransform;
-        public bool IsDied = false;
+        [Networked] public bool IsDied { get; set; }
 
         public Animator anim;
         // public bool IsRevivePosExecute = false;
@@ -79,6 +79,8 @@ namespace Projectiles
         [SerializeField]
         private AudioSetup _WalkingSound;
         private AudioEffect[] _WalkAudioEffects;
+
+        public bool IsSpawned { get; set; }
 
         protected void Awake()
         {
@@ -182,7 +184,9 @@ namespace Projectiles
                 colliderTarget.referMother = this;
             }
             // Experience = experienceCond;
-            StartCoroutine(UpdateAttackTarget());
+
+            if (IsSpawned && Object.HasStateAuthority)
+                StartCoroutine(UpdateAttackTarget());
         }
         private void OnDisable()
         {
@@ -216,6 +220,7 @@ namespace Projectiles
         }*/
         void UpdateAnim()
         {
+            //Host StateAuthority에서만 실행>> NetworkAnim적용 동기화
             //NetworkType Animator Anim데이터 조회
             //Vector3 velocity = GetComponent<NavMeshAgent>().velocity;
             if (navAgent != null)
@@ -237,17 +242,22 @@ namespace Projectiles
             _collider.enabled = _useLagCompensation == false;
             _hitboxRoot.HitboxRootActive = _useLagCompensation;
             Debug.Log("IEnemyFSM_Network Spawned>>");
+
+            IsSpawned = true;
+
+            if (Object.HasStateAuthority)
+                StartCoroutine(UpdateAttackTarget());
         }
 
         public override void FixedUpdateNetwork()
         {
             if (_useLagCompensation == true)
             {
-                _hitboxRoot.HitboxRootActive = _health.IsAlive;
+                _hitboxRoot.HitboxRootActive = _health.IsSpawned && _health.IsAlive;
             }
             else
             {
-                _collider.enabled = _health.IsAlive;
+                _collider.enabled = _health.IsSpawned && _health.IsAlive;
             }
 
             /*if (_health.IsAlive == false)
@@ -262,7 +272,7 @@ namespace Projectiles
                     _reviveCooldown = TickTimer.CreateFromSeconds(Runner, _reviveTime);
                 }
             }*/
-            Debug.Log("IEnemyFSM_Network FxedUpdateNetwork>>");
+            //Debug.Log("IEnemyFSM_Network FxedUpdateNetwork>>");
             if (_health.IsSpawned && !_health.IsAlive)
             {
                 return;
@@ -296,14 +306,22 @@ namespace Projectiles
                     returningToPoint = false;
                 }
                 //Debug.Log("DistanceTOpOINTS:" + DistanceToPoint);
-                if (!returningToPoint)
+                if (!returningToPoint && attacktarget &&  attacktarget.gameObject.activeSelf)
                 {
-                    if (targetHealth != null &&  targetHealth.Health && targetHealth.Health.IsAlive)
+                    try
                     {
-                        //ChasePlayer(withinAggroColliders[0].GetComponent<PlayerControls>());
-                        if (attacktarget)
-                            ChasePlayer(attacktarget);
+                        if (attacktarget && attacktarget.gameObject.activeSelf && targetHealth && targetHealth.gameObject.activeSelf &&
+                      targetHealth.Health && targetHealth.Health.IsSpawned && targetHealth.Health.IsAlive)
+                        {
+                            //ChasePlayer(withinAggroColliders[0].GetComponent<PlayerControls>());
+                            if (attacktarget)
+                                ChasePlayer(attacktarget);
+                        }
+                    }catch(Exception e)
+                    {
+                        Debug.Log("attacktarget reference error>>" + e.Message);
                     }
+                  
                 }
                 else
                 {
@@ -352,7 +370,7 @@ namespace Projectiles
                     //공격주기가 되야 공격할 수 있도록 하기 위해 현재 시간 저장
                     lastAttackTime = Time.time;
 
-                    if (targetHealth != null && targetHealth.Health && !targetHealth.Health.IsAlive)
+                    if (attacktarget && attacktarget.gameObject.activeSelf && targetHealth != null && targetHealth.Health && !targetHealth.Health.IsAlive)
                     {
                         Debug.Log("캐릭터가 공격중에 죽었으면 공격을 중단!");
                         if (anim != null)
@@ -394,7 +412,7 @@ namespace Projectiles
             {
                 if (distanceToPlayer <= attackRange && returningToPoint == false)
                 {
-                    if (targetHealth != null && targetHealth.Health && targetHealth.Health.IsAlive)
+                    if (attacktarget && attacktarget.gameObject.activeSelf && targetHealth != null && targetHealth.Health && targetHealth.Health.IsAlive)
                     {
                         //Debug.Log("IEnemyFSM 타깃 공격범위내로발견 타깃을 공격!");
 
@@ -421,7 +439,7 @@ namespace Projectiles
                     AttackReset();
 
                     //타겟 방향 주시
-                    if (targetHealth != null && targetHealth.Health && targetHealth.Health.IsAlive)
+                    if (attacktarget && attacktarget.gameObject.activeSelf && targetHealth != null && targetHealth.Health && targetHealth.Health.IsAlive)
                     {
                         LookRotationToTarget();
                         CalcTimer += Time.deltaTime;
@@ -431,7 +449,7 @@ namespace Projectiles
                         {
                             //Debug.Log("IEnemyFSM 타깃 추적 추적사운드>>");
                             // AudioManager.PlayAndFollow("HugeManStamp", transform, AudioManager.MixerTarget.SFX);
-                            _WalkAudioEffects.PlaySound(_WalkingSound, EForceBehaviour.ForceAny);
+                            RPC_Monster_Sound();
                             CalcTimer = 0;
                         }
                         else
@@ -454,6 +472,14 @@ namespace Projectiles
                 ReturnToSpawn();
             }
         }
+
+        [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+        public void RPC_Monster_Sound()
+        {
+            Debug.Log("몬스터 Chasing Sound Rpc targets All>>");
+            _WalkAudioEffects.PlaySound(_WalkingSound, EForceBehaviour.ForceAny);
+        }
+
         private IEnumerator UpdateAttackTarget()
         {
             playerInshootingRadius = Physics.CheckSphere(transform.position, AggroAreaDistance, PlayerLayer);
@@ -512,7 +538,7 @@ namespace Projectiles
                 }
                 if (filterPerceptions.Count > 0)
                 {
-                    int random_index = Random.Range(0, filterPerceptions.Count);
+                    int random_index = UnityEngine.Random.Range(0, filterPerceptions.Count);
                     // if(filterPerceptions[random_index])
                     // Debug.Log("n개의 타깃 Players대상체들중 0~n인댁스중에서 선택index:" + filterPerceptions.Count
                     //   + "개" + 0 + "~" + (filterPerceptions.Count - 1) + "," + random_index);
@@ -524,15 +550,22 @@ namespace Projectiles
                     {
                         //AttackplayerBody = pickRandomTarget.transform;
                         attacktarget = pickRandomTarget.transform;
+                        //RPC_Set_AttackTarget(pickRandomTarget.transform);
                         //transform.LookAt(attacktarget);// 공격범위내에서 랜덤지정선택(3초마다변경) 선정한 공격타깃을 바라본다.
                         AttackDirection = new Vector3(attacktarget.position.x - transform.position.x, attacktarget.position.y - transform.position.y,
                            attacktarget.position.z - transform.position.z);
 
-                        Debug.Log("최종지정 AttackplayerBody! 3초간격!:3초마다 어택할 플레이어류 랜덤선택변경" + attacktarget.name);
+                        Debug.Log("최종지정 AttackplayerBody! 6초간격!:6초마다 어택할 플레이어류 랜덤선택변경" + attacktarget.name+"enemyObj:"+transform.name+",ExecuteComputer:"+Runner.LocalPlayer);
                     }
                 }
             }
         }
+        /*[Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+        public void RPC_Set_AttackTarget(Transform target)
+        {
+            Debug.Log("몬스터 RPC_Set_AttackTargetRpc targets All>>"+ target);
+            attacktarget = target;
+        }*/
         protected void ReturnToSpawn()
         {
             if (anim != null)

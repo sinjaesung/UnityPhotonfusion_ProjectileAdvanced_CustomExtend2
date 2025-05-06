@@ -11,8 +11,11 @@ public class TestRoomPlayer : NetworkBehaviour
     public static readonly List<TestRoomPlayer> Players = new List<TestRoomPlayer>();
 
     [Networked] public int CharId { get; set; }
+    [Networked] public string nickname { get; set; }
+
     public static TestRoomPlayer Local;
     public GameManager gamemanger;
+
     void Start()
     {
         Debug.Log("TestRoomPlayer Start??");
@@ -32,6 +35,7 @@ public class TestRoomPlayer : NetworkBehaviour
 
             Debug.Log($"{Object.InputAuthority} >> TestRoomPlayer Spawned>> HasInputAuthority 선택했었던 CharId>>" + ClientInfo.CharId);
             RPC_SetCharId(ClientInfo.CharId,Object.InputAuthority);
+            RPC_SetName(ClientInfo.Name, Object.InputAuthority);
         }
         Players.Add(this);
         Debug.Log("TestRoomPlayer Spawned PlayersAdd playersCount:" + Players.Count);
@@ -44,7 +48,18 @@ public class TestRoomPlayer : NetworkBehaviour
         CharId = id;
 
         gamemanger.SpawnPlayer(playerref, id);
+        Debug.Log("gamemanager roomconnectplayer>>" + gamemanger.roomconnectplayer.name);
     }
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority)]
+    public void RPC_SetName(string name, PlayerRef playerref)
+    {
+        Debug.Log($"{playerref} >> TestRoomPlayer RPC_SetName>>" + name);
+        nickname = name;
+
+        gamemanger.roomconnectplayer.nickname = name;
+        Debug.Log($"TestRoomPlayer RPC_SetName {gamemanger.roomconnectplayer.name}=>>" + gamemanger.roomconnectplayer.nickname);
+    }
+
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
     public void RPC_RequestSceneChange(string targetSceneName, PlayerRef playerref)
     {

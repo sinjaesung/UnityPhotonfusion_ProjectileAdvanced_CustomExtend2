@@ -33,6 +33,8 @@ namespace Projectiles
         [SerializeField]
         private TestRoomPlayer roomplayerprefab;
 
+        public Player roomconnectplayer;
+
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -60,6 +62,7 @@ namespace Projectiles
 
             var player = Runner.Spawn(_playerPrefabs[charIndex], inputAuthority: playerref);
             Runner.SetPlayerObject(playerref, player.Object);
+            roomconnectplayer = player;
         }
         public void LeaveGame()
         {
@@ -86,6 +89,8 @@ namespace Projectiles
                 Player playerlocal = Runner.GetPlayerObject(e.Key).GetComponent<Player>();
                 Debug.Log(t+ $"| RequestSceneChange Changing scene 대기동안 모든 컴퓨터 플레이어{playerlocal.transform.name}{playerlocal.ActiveAgent.transform.name} 별 입력제한");
                 playerlocal.ActiveAgent.GetComponent<PlayerInput>().InputReset();
+                playerlocal.ActiveAgent.IsSceneLoading = true;
+                playerlocal.ActiveAgent.KCC.SetGravity(0);
                 t++;
             }
 
@@ -101,7 +106,7 @@ namespace Projectiles
                 Runner.LoadScene(sceneName);
             }
         }
-        
+
         void INetworkRunnerCallbacks.OnPlayerLeft(NetworkRunner runner, PlayerRef playerRef)
         {
             Debug.Log("GameManager OnPlayerLeft Runner.IsServer" + Runner.IsServer);
@@ -109,14 +114,25 @@ namespace Projectiles
             if (Runner.IsServer == false)
                 return;
 
-            var player = Runner.GetPlayerObject(playerRef);
-            Debug.Log($"GameManager OnPlayerLeft {playerRef}");
-            if (player != null)
+            Debug.Log($"GameManager OnPlayerLeft playerRef {playerRef}");
+            //var player = runner.GetPlayerObject(playerRef);
+            Gameplay gameplayObj = FindObjectOfType<Gameplay>();
+           /* foreach (var e in gameplayObj.Players) { 
+                if(e.Key == playerRef)
+                {
+                    player = e.Value;
+                    break;
+                }
+            }*/
+            if(gameplayObj.Players.TryGet(playerRef,out Player player))
             {
-                Debug.Log("GameManager OnPlayerLeft Player Despawn");
-               Runner.Despawn(player);
+                if (player != null)
+                {
+                    Debug.Log("GameManager OnPlayerLeft Player Despawn" + player.name);
+                    Runner.Despawn(player.GetComponent<NetworkObject>());
+                }
+                TestRoomPlayer.RemovePlayer(runner, playerRef);
             }
-           TestRoomPlayer.RemovePlayer(runner, playerRef);
         }
 
         void INetworkRunnerCallbacks.OnSceneLoadDone(NetworkRunner runner)
@@ -153,11 +169,7 @@ namespace Projectiles
                 var renderSettingsUpdated = scene.GetComponent<RenderSettingsUpdater>();
                 renderSettingsUpdated.ApplySettings();
             }
-
-            if (FindObjectOfType<Gameplay>())
-            {
-                FindObjectOfType<Gameplay>().SceneLoadedCharacterMoves();
-            }
+      
             /* NetworkObject localPlayer = Runner.GetPlayerObject(Runner.LocalPlayer);
              if (localPlayer)
              {
@@ -177,6 +189,11 @@ namespace Projectiles
                 GetComponent<NetworkObjectPool>().ClearExecute();              
             }
 
+        /*    if (FindObjectOfType<Gameplay>())
+            {
+                FindObjectOfType<Gameplay>().SceneLoadedCharacterMoves();
+            }*/
+
             Gameplay gameplayObj = FindObjectOfType<Gameplay>();
             if(gameplayObj && gameplayObj.Players.Capacity > 0)
             {
@@ -187,6 +204,8 @@ namespace Projectiles
                     Player playerlocal = Runner.GetPlayerObject(e.Key).GetComponent<Player>();
                     Debug.Log(t + $"| GameManager OnSceneLoadDone 씬 이동 이후 씬 로드시에 모든 접속 캐릭터별 입력조작 복귀 {playerlocal.transform.name}{playerlocal.ActiveAgent.transform.name} 별 입력복귀");
                     playerlocal.ActiveAgent.GetComponent<PlayerInput>().InputRecover();
+                    playerlocal.ActiveAgent.IsSceneLoading = false;
+
                     t++;
                 }
             }

@@ -28,6 +28,7 @@ namespace Projectiles
         // PUBLIC METHODS
         public bool ContextGameplayJoin { get; private set; }
 
+        [Networked] public string nickname { get; set; }
         private void Start()
         {
             DontDestroyOnLoad(gameObject);
@@ -37,9 +38,11 @@ namespace Projectiles
         {
             ActiveAgent = agent;
             ActiveAgent.Owner = this;
+            Debug.Log("Player AssignAgent>>" + agent.name);
 
             if (HasStateAuthority == true && _lastWeaponSlot != 0)
             {
+                Debug.Log("Player AssignAgent HasStateAuthority>>");
                 agent.Weapons.SwitchWeapon(_lastWeaponSlot, true);
             }
         }
